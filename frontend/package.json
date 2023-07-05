@@ -14,7 +14,7 @@
   },
   "lint-staged": {
     "**/*.{tsx,ts,jsx,js}": [
-      "eslint –-fix .",
+      "eslint",
       "prettier -–write",
       "git add"
     ]
