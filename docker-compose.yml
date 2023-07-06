@@ -16,7 +16,7 @@ services:
       - mysql_data:/var/lib/mysql
 
   backend:
-    build: ./backend/backend
+    build: backend/django_back
 
     command: >
       bash -c "python wait_mysql.py &&
@@ -27,6 +27,16 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./backend/backend:/app
+      - ./backend/django_back:/app
     depends_on:
       - mysqldb
+
+#  swagger-ui:
+#    image: swaggerapi/swagger-ui
+#    container_name: swagger_ui_container
+#    ports:
+#      - "80:8080"
+#    volumes:
+#      - ./doc:/usr/share/nginx/html/doc
+#    environment:
+#      API_URL: doc/openapi.yaml
