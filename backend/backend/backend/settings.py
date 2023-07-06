@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-5-d$3sb4g!gco0qnt4%nn7it8*p4gb)dx1)s5+n4#hgwg73x-n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -79,7 +79,7 @@ DATABASES = {
         'NAME': 'memory_capsule',
         'USER': 'root',
         'PASSWORD': '20031105',
-        'HOST': 'localhost',
+        'HOST': 'mysqldb',
         'PORT': '3306',
     }
 }
