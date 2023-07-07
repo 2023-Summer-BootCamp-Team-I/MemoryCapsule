@@ -1,0 +1,42 @@
+version: "3.8"
+
+volumes:
+  mysql_data:
+  build_folder:
+
+services:
+  mysqldb:
+    build: ./backend/db
+    container_name: mysqldb
+    env_file:
+      - "./backend/db/.env"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build: backend/django_back
+
+    command: >
+      bash -c "python wait_mysql.py &&
+               python manage.py makemigrations &&
+               python manage.py migrate &&
+               python manage.py runserver 0.0.0.0:8080"
+
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend/django_back:/app
+    depends_on:
+      - mysqldb
+
+#  swagger-ui:
+#    image: swaggerapi/swagger-ui
+#    container_name: swagger_ui_container
+#    ports:
+#      - "80:8080"
+#    volumes:
+#      - ./doc:/usr/share/nginx/html/doc
+#    environment:
+#      API_URL: doc/openapi.yaml
