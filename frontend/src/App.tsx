@@ -1,31 +1,34 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import FirstPage from './pages/FirstPage'; // 시작페이지
 
-function App() {
-  const [count, setCount] = useState(0);
+import MainOpenedPage from './pages/MainOpenedPage'; // 메인페이지 개봉 캡슐 리스트
+import MainUnOpenedPage from './pages/MainUnOpenedPage'; // 메인페이지 미개봉 캡슐 리스트
+import CreateCapsulePage from './pages/CreateCapsulePage'; // 캡슐 생성 페이지
 
+import CapsuleGalleryPage from './pages/CapsuleGalleryPage'; // 캡슐 모두보기 페이지
+import UnOpenedCapsulePage from './pages/UnOpenedCapsulePage'; // 미개봉 리스트 페이지
+
+import OpenedCapsulePage from './pages/OpenedCapsulePage'; // 개봉 버튼 페이지
+import OpenedStoryPage from './pages/OpenedStoryPage'; // 개봉 사진 페이지
+import OpenedVideoPage from './pages/OpenedVideoPage'; // 개봉 비디오 페이지
+
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p className="text-lg">
-          Edit <code>src/App.tsx</code> and save to test HMR Wow
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" Component={FirstPage} />
+        <Route path="/mainopened" Component={MainOpenedPage} />
+        <Route path="/mainunopened" Component={MainUnOpenedPage} />
+        <Route path="/create" Component={CreateCapsulePage} />
+
+        <Route path="/gallery" Component={CapsuleGalleryPage} />
+        <Route path="/unopened" Component={UnOpenedCapsulePage} />
+
+        <Route path="/opened" Component={OpenedCapsulePage} />
+        <Route path="/story" Component={OpenedStoryPage} />
+        <Route path="/video" Component={OpenedVideoPage} />
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;
