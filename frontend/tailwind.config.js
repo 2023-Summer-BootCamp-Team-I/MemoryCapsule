@@ -4,9 +4,9 @@ export default {
   content: ['./src/**/*.{js,jsx,ts,tsx}', './index.html'],
   theme: {
     extend: {
-      colors: {
-        openedCapsuleColor1: '#FFD26D',
-        openedCapsuleColor2: '#60C6CF',
+      boxShadow: {
+        // open capsule page
+        ButtonShadow: '7px 7px 5px 1px rgba(0, 0, 0, 0.3)',
       },
     },
   },
