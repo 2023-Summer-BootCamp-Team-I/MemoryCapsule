@@ -5,7 +5,7 @@ export default function FirstPage() {
   return (
     <div>
       <div>FirstPage</div>
-      <OpenButton imageName="photo" />
+      <OpenButton imageName="video" />
     </div>
   );
 }
