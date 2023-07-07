@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import environ
+import datetime
 env = environ.Env()
 env.read_env()
 import os
@@ -46,7 +47,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'capsules.apps.CapsulesConfig',
     'images.apps.ImagesConfig',
-    'baseapp',
+    'baseapp.apps.BaseappConfig',
     'storages',
 ]
 
