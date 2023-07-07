@@ -2,7 +2,7 @@
 FROM python:3.9
 
 # 작업 디렉토리 설정
-WORKDIR /code
+WORKDIR /app
 
 # 의존성 설치
 COPY requirements.txt .

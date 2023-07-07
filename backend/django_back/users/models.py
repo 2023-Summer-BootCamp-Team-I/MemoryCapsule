@@ -11,7 +11,7 @@ from baseapp.models import BaseModel
 
 class User(BaseModel):
     user_id = models.AutoField(primary_key=True)
-    id = models.CharField(max_length=60)
+    id = models.CharField(unique=True, max_length=60)
     password = models.CharField(max_length=60)
     email = models.CharField(unique=True, max_length=200, null=True, blank=True)
     nickname = models.CharField(max_length=60)
