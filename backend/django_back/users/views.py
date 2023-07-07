@@ -33,8 +33,6 @@ def signUp(request):
             for user in users:
                 if request.POST["id"] == user.id:
                     return JsonResponse({'code': '500', 'message': '이미 존재하는 아이디 입니다'}, status=500)
-                elif request.POST["password"] == user.password:
-                    return JsonResponse({'code': '500', 'message': '이미 존재하는 비밀번호 입니다'}, status=500)
                 elif request.POST["email"] == user.email:
                     return JsonResponse({'code': '500', 'message': '이미 존재하는 이메일 입니다'}, status=500)
 
