@@ -11,6 +11,7 @@ inflection==0.5.1
 jmespath==1.0.1
 mysqlclient==2.2.0
 packaging==23.1
+PyJWT==1.7.1
 PyMySQL==1.1.0
 python-dateutil==2.8.2
 pytz==2023.3
