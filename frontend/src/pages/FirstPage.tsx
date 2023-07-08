@@ -1,5 +1,6 @@
 import React from 'react';
-import Capsule from '../components/Capsule';
+import MainOpenCapsule from '../components/MainOpenCapsule';
+import MainUnOpenCapsule from '../components/MainUnOpenCapsule';
 
 // 로그인/ 회원가입
 // import TextInput from '../components/TextInput';
@@ -12,7 +13,8 @@ export default function FirstPage() {
   return (
     <div>
       <div>FirstPage</div>
-      <Capsule />
+      <MainOpenCapsule />
+      <MainUnOpenCapsule />
     </div>
   );
 }
