@@ -5,19 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a274433b-f04f-4270-8662-5c40252cefdb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/MemoryCapsule.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/django_back/capsules/migrations/0004_remove_story_capsule_id_remove_story_creator_id_and_more.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/django_back/capsules/migrations/0005_alter_capsule_limit_count.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/django_back/capsules/migrations/0006_alter_capsule_due_date.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/django_back/capsules/migrations/0007_alter_capsule_due_date_alter_capsule_limit_count.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/django_back/capsules/serializers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/django_back/users/migrations/0005_alter_user_password.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/django_back/capsules/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/django_back/capsules/serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/django_back/capsules/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/django_back/capsules/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
