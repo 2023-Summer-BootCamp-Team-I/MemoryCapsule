@@ -37,16 +37,14 @@ def capsule_GET(request) -> (json, int):
     count: int = int(request.GET.get('count', -1))
     user_id: int = int(request.GET.get('user_id', 1))
 
-    # due_date 가 현재 날짜보다 작은 경우는 open 되어 있는 캡슐이므로, __lt를 통해 open 되어 있는 캡슐을 가져왔다
-    # 일반 캡슐의 경우 exclude를 사용하여, __lt의 반대인 __gte를 사용해준다
-    if is_open == False:
-        my_capsules = Capsule.objects.filter(user_id=user_id, due_date__lt=datetime.now()).order_by('due_date')[:count]
-        capsules = Capsule.objects.exclude(user_id=user_id).filter(due_date__lt=datetime.now()).order_by('due_date')[:count]
-    # due_date 가 현재 날짜보다 크거나 같은 경우는 close 되어 있는 캡슐이므로, __gte를 통해 closed 되어 있는 캡슐을 가져온다
-    # 일반 캡슐의 경우 exclude를 사용하여, __gte의 반대인 __lt를 사용해준다
+    # due_date 가 현재 날짜보다 큰 경우는 open 되어 있는 캡슐이므로, __lt를 통해 open 되어 있는 캡슐을 가져왔다
+    if is_open:
+        my_capsules = Capsule.objects.filter(user_id=user_id, due_date__gt=datetime.now()).order_by('due_date')[:count]
+        capsules = Capsule.objects.exclude(user_id=user_id).filter(due_date__gt=datetime.now()).order_by('due_date')[:count]
+    # due_date 가 현재 날짜보다 작거나 같은 경우는 close 되어 있는 캡슐이므로, __gte를 통해 closed 되어 있는 캡슐을 가져온다
     else:
-        my_capsules = Capsule.objects.filter(user_id=user_id, due_date__gte=datetime.now()).order_by('due_date')[:count]
-        capsules = Capsule.objects.exclude(user_id=user_id).filter(due_date__gte=datetime.now()).order_by('due_date')[:count]
+        my_capsules = Capsule.objects.filter(user_id=user_id, due_date__lte=datetime.now()).order_by('due_date')[:count]
+        capsules = Capsule.objects.exclude(user_id=user_id).filter(due_date__lte=datetime.now()).order_by('due_date')[:count]
 
     my_capsules_list = []
     capsules_list = []
