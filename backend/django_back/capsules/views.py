@@ -1,3 +1,4 @@
+
 import json
 from datetime import datetime
 
@@ -32,10 +33,19 @@ def capsule_func(request) -> json:
 
 
 def capsule_GET(request) -> (json, int):
-    is_open: bool = bool(request.GET.get('is_open', False))
-    count: int = int(request.GET.get('count', 1))
-    my_capsules = Capsule.objects.filter(user_id=1).order_by('due_date')
-    capsules = Capsule.objects.exclude(user_id=1).order_by('due_date')
+    is_open: bool = json.loads((request.GET.get('is_open', 'False').lower()))
+    count: int = int(request.GET.get('count', -1))
+    user_id: int = int(request.GET.get('user_id', 1))
+
+    # due_date 가 현재 날짜보다 큰 경우는 open 되어 있는 캡슐이므로, __lt를 통해 open 되어 있는 캡슐을 가져왔다
+    if is_open:
+        my_capsules = Capsule.objects.filter(user_id=user_id, due_date__gt=datetime.now()).order_by('due_date')[:count]
+        capsules = Capsule.objects.exclude(user_id=user_id).filter(due_date__gt=datetime.now()).order_by('due_date')[:count]
+    # due_date 가 현재 날짜보다 작거나 같은 경우는 close 되어 있는 캡슐이므로, __gte를 통해 closed 되어 있는 캡슐을 가져온다
+    else:
+        my_capsules = Capsule.objects.filter(user_id=user_id, due_date__lte=datetime.now()).order_by('due_date')[:count]
+        capsules = Capsule.objects.exclude(user_id=user_id).filter(due_date__lte=datetime.now()).order_by('due_date')[:count]
+
     my_capsules_list = []
     capsules_list = []
 
@@ -94,6 +104,7 @@ def capsule_POST(request) -> (json, int):
             'due_date': serializer.data['due_date'],
             'limit_count': serializer.data['limit_count'],
             'capsule_img_url': capsule_img_url,
+            'created_at': serializer.data['created_at']
         }
     else:
         status_code = 400
