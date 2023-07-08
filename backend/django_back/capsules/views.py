@@ -49,22 +49,23 @@ def capsule_GET(request) -> (json, int):
 def capsule_POST(request) -> (json, int):
     val: json
     status_code: int
-    form = PostForm(request.POST)
 
-    if form.is_valid():
-        form.save()
+    serializer = CapsuleSerializer(data=request.POST)
+    capsule_img_url = upload_image_for_api(request.FILES['file_name'])
+
+    if serializer.is_valid():
+        serializer.save()
         status_code = 201
         val = {
             'code': 201,
             'message': 'capsule이 생성되었습니다',
-            'capsule_name': form.cleaned_data['capsule_name'],
-            'user_id': form.cleaned_data['user_id'],
-            'theme_id': form.cleaned_data['theme_id'],
-            'due_date': form.cleaned_data['due_date'],
-            'limit_count': form.cleaned_data['limit_count'],
-            'capsule_img_url': form.cleaned_data['capsule_img_url'],
+            'capsule_name': serializer.data['capsule_name'],
+            'user_id': serializer.data['user_id'],
+            'theme_id': serializer.data['theme_id'],
+            'due_date': serializer.data['due_date'],
+            'limit_count': serializer.data['limit_count'],
+            'capsule_img_url': capsule_img_url,
         }
-
     else:
         status_code = 400
         val = {
@@ -73,3 +74,4 @@ def capsule_POST(request) -> (json, int):
         }
 
     return val, status_code
+
