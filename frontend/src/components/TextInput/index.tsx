@@ -4,9 +4,10 @@ type TextInputProps = {
   label: string;
   placeholder: string;
   title: string;
+  type: string;
 };
 
-function TextInput({ label, placeholder, title }: TextInputProps) {
+function TextInput({ label, placeholder, title, type }: TextInputProps) {
   const [colorToShow, setColorToShow] = useState('');
   const [borderToShow, setBorderToShow] = useState('');
 
@@ -26,8 +27,7 @@ function TextInput({ label, placeholder, title }: TextInputProps) {
       <label className="w-20 text-xs text-left">{label}</label>
       <input
         className={`text-xs text-center ${colorToShow} outline=none focus:outline-none bg-transparent`}
-        type="text"
-        name="DD"
+        type={type}
         placeholder={placeholder}
       ></input>
     </div>
