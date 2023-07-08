@@ -1,8 +1,8 @@
 from rest_framework.decorators import api_view
 from django.urls import path
-from .views import signUp
-
+from .views import sign_up, sign_in
 
 urlpatterns = [
-    path('sign-in', signUp),
+    path('sign-up', sign_up),
+    path('sign-in', sign_in),
 ]
