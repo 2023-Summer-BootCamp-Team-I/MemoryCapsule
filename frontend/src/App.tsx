@@ -12,10 +12,12 @@ import UnOpenedCapsulePage from './pages/UnOpenedCapsulePage'; // 미개봉 리�
 import OpenedCapsulePage from './pages/OpenedCapsulePage'; // 개봉 버튼 페이지
 import OpenedStoryPage from './pages/OpenedStoryPage'; // 개봉 사진 페이지
 import OpenedVideoPage from './pages/OpenedVideoPage'; // 개봉 비디오 페이지
+// import Background from './components/common/Background';
 
 export default function App() {
   return (
     <BrowserRouter>
+      {/* <Background/> */}
       <Routes>
         <Route path="/" Component={FirstPage} />
         <Route path="/mainopened" Component={MainOpenedPage} />
