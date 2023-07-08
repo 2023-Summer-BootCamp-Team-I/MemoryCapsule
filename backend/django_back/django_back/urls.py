@@ -27,7 +27,7 @@ from django.conf import settings
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Memory capsule222",  # 타이틀
+        title="Memory capsule",  # 타이틀
         default_version='v1',   # 버전
         description="Memory capsule",   # 설명
         terms_of_service="https://google.com",
