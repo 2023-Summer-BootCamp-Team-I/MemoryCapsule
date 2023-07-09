@@ -34,7 +34,6 @@ def sign_up(request):
                 elif request.POST["email"] == user.email:
                     return JsonResponse({'code': '500', 'message': '이미 존재하는 이메일 입니다'}, status=500)
 
-
 @api_view(['post'])
 def sign_in(request):
     if request.method == 'POST':
