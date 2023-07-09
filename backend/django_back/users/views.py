@@ -16,6 +16,7 @@ def signUp(request):
         user = User.objects.get(user_id=1)
         print(user.email)
         return JsonResponse({'message':user.email}, status=201)
+
     if request.method == 'POST':
         try:
             user = createUser(
