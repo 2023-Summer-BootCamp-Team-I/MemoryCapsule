@@ -5,14 +5,18 @@ from django.db import models
 
 from baseapp.models import BaseModel
 from users.models import User
+from themes.models import Theme
+# from videos.models import Video
+# from stories.models import Story
 
 class Capsule(BaseModel):
     capsule_id = models.AutoField(primary_key=True)
-    # user_id = models.ManyToManyField(User, db_column='user_id', through='UserCapsule')
+    # user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     # test를 위해 relation 임시 제거
-    user_id = models.IntegerField(null=True)
-    # theme_id = models.ForeignKey('Theme', on_delete=models.CASCADE, db_column='user_id')
-    theme_id = models.IntegerField(null=True)
+    # user_id = models.IntegerField(null=True)
+    creator_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    theme_id = models.ForeignKey(Theme, on_delete=models.CASCADE)
+    # theme_id = models.IntegerField(null=True)
     capsule_name = models.CharField(max_length=60)
     due_date = models.DateTimeField()
     limit_count = models.IntegerField(null=True, validators=[MinValueValidator(1), MaxValueValidator(30)])
@@ -20,6 +24,14 @@ class Capsule(BaseModel):
 
     class Meta:
         db_table = 'capsule'
+class UserCapsule(models.Model):
+    user_capsule_id = models.AutoField(primary_key=True)
+    capsule_id = models.ForeignKey(Capsule, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'user_capsule'
+
 
 # class Theme(BaseModel):
 #     theme_id = models.AutoField(primary_key=True)
@@ -29,19 +41,14 @@ class Capsule(BaseModel):
 #     class Meta:
 #         db_table = 'theme'
 #
-# class UserCapsule(models.Model):
-#     user_capsule_id = models.AutoField(primary_key=True)
-#     capsule_id = models.ForeignKey(Capsule, on_delete=models.CASCADE)
-#     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 #
-#     class Meta:
-#         db_table = 'user_capsule'
+#
 #
 # class Story(BaseModel):
 #     story_id = models.AutoField(primary_key=True)
-#     capsule_id = models.ForeignKey(Capsule, on_delete=models.CASCADE)
+#     capsule_id = models.ForeignKey('Capsule', on_delete=models.CASCADE)
 #     creator_id = models.ForeignKey(User, on_delete=models.CASCADE)
-#     video_id = models.ManyToManyField('Video', through='StoryVideo')
+#     video_id = models.ManyToManyField(Video, through='StoryVideo')
 #     story_title = models.CharField(max_length=60)
 #     story_content = models.CharField(max_length=60)
 #     story_img_url = models.CharField(max_length=255)
@@ -57,7 +64,6 @@ class Capsule(BaseModel):
 #     story_video_url = models.CharField(max_length=255)
 #
 #     class Meta:
-#         db_table = 'video'
 #
 #
 # class StoryVideo(models.Model):

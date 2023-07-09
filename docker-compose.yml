@@ -20,8 +20,22 @@ services:
 
     command: >
       bash -c "python wait_mysql.py &&
-               python manage.py makemigrations &&
+               python manage.py makemigrations baseapp &&
                python manage.py migrate &&
+               python manage.py makemigrations users &&
+               python manage.py migrate &&
+               python manage.py makemigrations musics &&
+               python manage.py migrate &&
+               python manage.py makemigrations themes &&
+               python manage.py migrate && 
+               python manage.py makemigrations capsules &&
+               python manage.py migrate &&
+               python manage.py makemigrations videos &&
+               python manage.py migrate &&
+               python manage.py makemigrations stories &&
+               python manage.py migrate && 
+               
+
                python manage.py runserver 0.0.0.0:8080"
 
     ports:
