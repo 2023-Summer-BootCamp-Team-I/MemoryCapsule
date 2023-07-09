@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import note from '../../../assets/images/note/note1.png';
 import StoryCreateContent from '../../StoryCreateContent';
@@ -29,7 +29,7 @@ function StoryModal({ content }: StoryModalProps) {
         >
           <div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
             <div
-              className="fixed inset-0 transition-opacity bg-gray-800 bg-opacity-75"
+              className="fixed inset-0 transition-opacity bg-gray-700 bg-opacity-75"
               aria-hidden="true"
             ></div>
             <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
