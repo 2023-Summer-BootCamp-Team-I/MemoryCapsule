@@ -12,25 +12,26 @@ import UnOpenedCapsulePage from './pages/UnOpenedCapsulePage'; // 미개봉 리�
 import OpenedCapsulePage from './pages/OpenedCapsulePage'; // 개봉 버튼 페이지
 import OpenedStoryPage from './pages/OpenedStoryPage'; // 개봉 사진 페이지
 import OpenedVideoPage from './pages/OpenedVideoPage'; // 개봉 비디오 페이지
-// import Background from './components/common/Background';
+import Background from './components/common/Background';
 
 export default function App() {
   return (
     <BrowserRouter>
-      {/* <Background/> */}
-      <Routes>
-        <Route path="/" Component={FirstPage} />
-        <Route path="/mainopened" Component={MainOpenedPage} />
-        <Route path="/mainunopened" Component={MainUnOpenedPage} />
-        <Route path="/create" Component={CreateCapsulePage} />
+      <Background>
+        <Routes>
+          <Route path="/" Component={FirstPage} />
+          <Route path="/mainopened" Component={MainOpenedPage} />
+          <Route path="/mainunopened" Component={MainUnOpenedPage} />
+          <Route path="/create" Component={CreateCapsulePage} />
 
-        <Route path="/gallery" Component={CapsuleGalleryPage} />
-        <Route path="/unopened" Component={UnOpenedCapsulePage} />
+          <Route path="/gallery" Component={CapsuleGalleryPage} />
+          <Route path="/unopened" Component={UnOpenedCapsulePage} />
 
-        <Route path="/opened" Component={OpenedCapsulePage} />
-        <Route path="/story" Component={OpenedStoryPage} />
-        <Route path="/video" Component={OpenedVideoPage} />
-      </Routes>
+          <Route path="/opened" Component={OpenedCapsulePage} />
+          <Route path="/story" Component={OpenedStoryPage} />
+          <Route path="/video" Component={OpenedVideoPage} />
+        </Routes>
+      </Background>
     </BrowserRouter>
   );
 }

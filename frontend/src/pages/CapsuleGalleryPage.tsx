@@ -1,3 +1,10 @@
+import GalleryTopBookmark from '../components/CapsuleGallery/GalleryTopBookmark';
+
 export default function CapsuleGalleryPage() {
-  return <div>CapsuleGalleryPage</div>;
+  return (
+    <div>
+      {/* CapsuleGalleryPage */}
+      <GalleryTopBookmark />
+    </div>
+  );
 }

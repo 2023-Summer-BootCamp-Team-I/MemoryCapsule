@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent } from 'react';
 import pink from '../../assets/images/stickers/pink.png';
 
 function StoryCreateContent() {

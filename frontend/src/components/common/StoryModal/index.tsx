@@ -5,10 +5,11 @@ import StoryCreateContent from '../../StoryCreateContent';
 import StoryDetailContent from '../../StoryDetailContent';
 
 type StoryModalProps = {
+  title: string;
   content: string;
 };
 
-function StoryModal({ content }: StoryModalProps) {
+function StoryModal({ title, content }: StoryModalProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = () => setIsOpen(true);
@@ -17,7 +18,7 @@ function StoryModal({ content }: StoryModalProps) {
   return (
     <div>
       <button className="px-4 py-2 font-bold text-white bg-blue-500 rounded" onClick={handleOpen}>
-        Open Modal
+        {title}
       </button>
 
       {isOpen && (

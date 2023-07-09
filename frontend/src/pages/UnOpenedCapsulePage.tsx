@@ -4,7 +4,8 @@ export default function UnOpenedCapsulePage() {
   return (
     <div>
       {/* UnOpenedCapsulePage */}
-      <StoryModal content="create" />
+      <StoryModal title="Detail" content="detail" />
+      <StoryModal title="Create" content="create" />
     </div>
   );
 }

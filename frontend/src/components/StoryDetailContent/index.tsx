@@ -1,4 +1,3 @@
-import React from 'react';
 import pink from '../../assets/images/stickers/pink.png';
 
 function StoryDetailContent() {

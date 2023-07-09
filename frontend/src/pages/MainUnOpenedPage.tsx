@@ -1,9 +1,5 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-
-export default function MainUnOpenedPage() {
-  const { id } = useParams();
-  console.log(id);
-
-  return <div>MainUnOpenedPage</div>;
+function MainUnOpenedPage() {
+  return <div>{/* MainUnOpenedPage */}</div>;
 }
+
+export default MainUnOpenedPage;

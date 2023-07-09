@@ -1,18 +1,31 @@
-import Bookmark from './Bookmark';
+import { useState, useEffect } from 'react';
+import RightBookmark from '../RightBookmark';
 
-export default function Background() {
+type ChildrenProps = {
+  children: React.ReactNode;
+};
+
+export default function Background({ children }: ChildrenProps) {
+  const [isMain, setIsMain] = useState(false);
+
+  useEffect(() => {
+    if (
+      window.location.href === 'http://localhost:5173/mainunopened' ||
+      window.location.href === 'http://localhost:5173/mainopened'
+    ) {
+      setIsMain(true);
+    }
+  }, []);
+
   return (
-    <div className="relative flex items-center justify-center w-full h-screen">
-      <div className="relative h-[43.75rem] w-[81.25rem] bg-[#B1CFEC] rounded-[1.875rem] flex justify-center items-center z-10">
-        얍
-      </div>
-      <div className="sticky z-20 right-60 hover:z-30">
-        <Bookmark />
-      </div>
+    <div className="relative z-0 flex items-center justify-center w-full h-screen overflow-hidden">
+      <div className="absolute left-[53%] transform -translate-x-1/2 h-[47rem] w-[80rem] bg-[#B1CFEC] rounded-[1.875rem] flex justify-center items-center z-10 shadow-lg" />
 
-      <div className="absolute h-[43.75rem] w-[81.25rem] bg-white rounded-[1.875rem] flex justify-center items-center z-30 left-[3.125rem]">
-        얍
-      </div>
+      {isMain && <RightBookmark />}
+
+      <div className="absolute left-1/2 transform -translate-x-1/2 h-[47rem] w-[80rem] bg-white rounded-[1.875rem] flex justify-center items-center z-30 shadow-lg" />
+
+      <div className="relative z-40">{children}</div>
     </div>
   );
 }
