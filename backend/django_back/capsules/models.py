@@ -5,6 +5,8 @@ from django.db import models
 
 from baseapp.models import BaseModel
 from users.models import User
+from videos.models import Video
+from stories.models import Story
 
 class Capsule(BaseModel):
     capsule_id = models.AutoField(primary_key=True)
@@ -21,6 +23,7 @@ class Capsule(BaseModel):
     class Meta:
         db_table = 'capsule'
 
+
 # class Theme(BaseModel):
 #     theme_id = models.AutoField(primary_key=True)
 #     theme_name = models.CharField(max_length=60)
@@ -28,27 +31,29 @@ class Capsule(BaseModel):
 #
 #     class Meta:
 #         db_table = 'theme'
-#
-# class UserCapsule(models.Model):
-#     user_capsule_id = models.AutoField(primary_key=True)
-#     capsule_id = models.ForeignKey(Capsule, on_delete=models.CASCADE)
-#     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-#
-#     class Meta:
-#         db_table = 'user_capsule'
-#
+
+
+class UserCapsule(models.Model):
+    user_capsule_id = models.AutoField(primary_key=True)
+    capsule_id = models.ForeignKey(Capsule, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'user_capsule'
+
+
 # class Story(BaseModel):
 #     story_id = models.AutoField(primary_key=True)
-#     capsule_id = models.ForeignKey(Capsule, on_delete=models.CASCADE)
+#     capsule_id = models.ForeignKey('Capsule', on_delete=models.CASCADE)
 #     creator_id = models.ForeignKey(User, on_delete=models.CASCADE)
-#     video_id = models.ManyToManyField('Video', through='StoryVideo')
+#     video_id = models.ManyToManyField(Video, through='StoryVideo')
 #     story_title = models.CharField(max_length=60)
 #     story_content = models.CharField(max_length=60)
 #     story_img_url = models.CharField(max_length=255)
 #
 #     class Meta:
 #         db_table = 'story'
-#
+
 # class Video(BaseModel):
 #     video_id = models.AutoField(primary_key=True)
 #     capsule_id = models.ForeignKey(Capsule, on_delete=models.CASCADE)
@@ -57,17 +62,16 @@ class Capsule(BaseModel):
 #     story_video_url = models.CharField(max_length=255)
 #
 #     class Meta:
-#         db_table = 'video'
-#
-#
-# class StoryVideo(models.Model):
-#     story_video_id = models.AutoField(primary_key=True)
-#     story_id = models.ForeignKey(Story, on_delete=models.CASCADE)
-#     video_id = models.ForeignKey(Video, on_delete=models.CASCADE)
-#
-#     class Meta:
-#         db_table = 'story_video'
-#
+
+
+class StoryVideo(models.Model):
+    story_video_id = models.AutoField(primary_key=True)
+    story_id = models.ForeignKey(Story, on_delete=models.CASCADE)
+    video_id = models.ForeignKey(Video, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'story_video'
+
 # class Music(BaseModel):
 #     music_id = models.AutoField(primary_key=True)
 #     music_name = models.CharField(max_length=60)
