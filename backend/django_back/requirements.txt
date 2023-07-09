@@ -10,6 +10,8 @@ drf-yasg==1.21.6
 inflection==0.5.1
 jmespath==1.0.1
 mysqlclient==2.2.0
+numpy==1.25.1
+opencv-python==4.8.0.74
 packaging==23.1
 PyJWT==1.7.1
 PyMySQL==1.1.0

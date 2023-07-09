@@ -1,10 +1,11 @@
 import jwt
 from rest_framework.decorators import api_view
-from django.http import JsonResponse
+from django.http import HttpResponse
 from .models import User
 from .utils import create_user, user_find_by_id, check_encrypted_password
 from django.db import IntegrityError
 from django_back.settings import JWT_SECRET_KEY, ALGORITHM
+from videos.utils import make_video
 
 import datetime
 
@@ -55,3 +56,15 @@ def sign_in(request):
                 return JsonResponse({'message': '옳지 않은 비밀번호 입니다.'}, status=500)
         except User.DoesNotExist:
             return JsonResponse({'message': '입력한 정보는 옳지 않은 정보입니다'}, status=500)
+
+
+
+@api_view(['get'])
+def video(request):
+    if request.method == 'get':
+        try:
+            make_video()
+            return HttpResponse("영상 제작 성공입니다")
+
+        except:
+            return HttpResponse("영상 제작 실패입니다")
