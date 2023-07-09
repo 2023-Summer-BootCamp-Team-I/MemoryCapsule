@@ -1,8 +1,8 @@
 from django.db import models
 from baseapp.models import BaseModel
 from users.models import User
-from music.models import Music
 from capsules.models import Capsule
+from musics.models import Music
 
 class Video(BaseModel):
     video_id = models.AutoField(primary_key=True)
@@ -13,3 +13,4 @@ class Video(BaseModel):
 
     class Meta:
         db_table = 'video'
+

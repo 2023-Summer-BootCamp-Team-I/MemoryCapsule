@@ -48,9 +48,9 @@ INSTALLED_APPS = [
     'capsules.apps.CapsulesConfig',
     'images.apps.ImagesConfig',
     'baseapp.apps.BaseappConfig',
-    'music.apps.MusicConfig',
+    'musics.apps.MusicConfig',
     'videos.apps.VideosConfig',
-    'stories.apps.StoriesConfig'
+    'stories.apps.StoriesConfig',
     'themes.apps.ThemesConfig',
     'storages',
 ]
