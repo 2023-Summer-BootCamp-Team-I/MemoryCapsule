@@ -9,7 +9,7 @@ class Story(BaseModel):
     story_id = models.AutoField(primary_key=True)
     capsule_id = models.ForeignKey(Capsule, on_delete=models.CASCADE)
     creator_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    video_id = models.ForeignKey(Video, on_delete=models.CASCADE)
+    #video_id = models.ForeignKey(Video, on_delete=models.CASCADE)
     story_title = models.CharField(max_length=60)
     story_content = models.CharField(max_length=60)
     story_img_url = models.CharField(max_length=255)

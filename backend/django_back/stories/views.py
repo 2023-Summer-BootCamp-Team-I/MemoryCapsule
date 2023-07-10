@@ -20,13 +20,13 @@ def story_create(request, capsule_id):
 
         user = capsule.creator_id
 
-        video = Video.objects.get(video_id = request.data['video_id'])
+        #video = Video.objects.get(video_id = request.data['video_id'])
         #video = request.data['video_id']
         story = Story.objects.create(
             story_id=request.data['story_id'],
             creator_id=user,
             capsule_id=capsule,
-            video_id=video,
+            #video_id=video,
             story_title=request.data['story_title'],
             story_content=request.data['story_content'],
             story_img_url=request.data['story_img_url'],
