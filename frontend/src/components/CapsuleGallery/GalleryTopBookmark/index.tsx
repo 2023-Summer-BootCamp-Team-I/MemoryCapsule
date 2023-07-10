@@ -26,7 +26,7 @@ function GalleryTopBookmark({ activeBookmark, setActiveBookmark }: TopBookmarkPr
   };
 
   return (
-    <div className="fixed z-50 top-6 left-36">
+    <div className="fixed z-50 top-4 left-36">
       <div className="flex gap-4">
         <TopBookmark
           title="내가 만든 캡슐"
