@@ -5,9 +5,9 @@ from django.http import JsonResponse
 from videos.models import Video
 
 @api_view(['get', 'post'])
-def video(request, capsule_id):
+def video(request):
     if request.method == 'GET':
-        videos = Video.get.filter(capsule_id=capsule_id)
+        # videos = Video.get.filter(capsule_id=capsule_id)
 
 
         return JsonResponse({'message': "영상 제작 성공입니다!!",
@@ -40,4 +40,4 @@ def video(request, capsule_id):
         data = []
 
         video_url = make_video(6, 5, image_urls, music_url)  # 회원 아이디, 회원 비디오 개수,
-        return JsonResponse({'message': "영상 제작 성공입니다!!"})
+        return JsonResponse({'message': video_url})
