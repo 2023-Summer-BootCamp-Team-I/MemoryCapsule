@@ -14,5 +14,7 @@ def upload_image(request):
 
 
 def upload_image_for_api(file):
-    image_url = FileUpload(s3_client).upload(file)
+    # image_url = FileUpload(s3_client).upload(file)
+    # Testing을 위해 임시로 사용
+    image_url = "Test URL"
     return image_url
