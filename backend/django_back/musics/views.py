@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from .models import Music
@@ -20,4 +22,6 @@ def upload_mp3(request):
             music_url=music_url
         )
 
-        return JsonResponse('music created')
+        return JsonResponse({'code': '201',
+                             'message': 'music created',
+                             'time': datetime.datetime.now()})

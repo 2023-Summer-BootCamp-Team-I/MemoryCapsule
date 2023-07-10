@@ -1,61 +1,75 @@
 import cv2
 import urllib.request
 import numpy as np
+import moviepy.editor as mp
 import boto3
 import os
-import uuid
-from concurrent.futures import ThreadPoolExecutor
 
-
-def make_video(user_id, video_number, image_urls):
+def make_video(user_id, video_number, image_urls, music_url):
     s3_client = boto3.client('s3')
     s3_resource = boto3.resource('s3')
-
     bucket_name = 'author-picture'
 
     output_video_key = f'video-of-{user_id}-no{video_number}.mp4'
 
-
-    # 이미지 다운로드 및 영상 생성을 위한 이미지 배열
+    # Download and process images
     images = []
-
-    # 이미지 다운로드 및 배열에 추가
     for image_url in image_urls:
         image_data = urllib.request.urlopen(image_url).read()
         image_array = np.asarray(bytearray(image_data), dtype=np.uint8)
         image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
         images.append(image)
 
-    # 영상 크기 설정 (가장 큰 이미지의 크기 기준)
+    # Determine video dimensions
     max_height = max(image.shape[0] for image in images)
     max_width = max(image.shape[1] for image in images)
 
-    # 영상 파일 생성 및 설정
+    # Create video writer
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out_video = cv2.VideoWriter()
-
-    # 영상 설정 및 S3에 업로드
-    s3_client = boto3.client('s3')
+    out_video = cv2.VideoWriter(output_video_key, fourcc, 1, (max_width, max_height))
 
     try:
-        for i, image in enumerate(images):
+        # Write images to video
+        for image in images:
             resized_image = cv2.resize(image, (max_width, max_height), interpolation=cv2.INTER_LANCZOS4)
-            if i == 0:
-                out_video.open(output_video_key, fourcc, 1, (max_width, max_height))
             out_video.write(resized_image)
 
-        # 영상 파일 종료
+        # Close video writer
         out_video.release()
 
-        # S3에 영상 파일 업로드
-        with open(output_video_key, 'rb') as f:
-            s3_client.upload_fileobj(f, bucket_name, output_video_key)
+        # Download and process music
+        music_data = urllib.request.urlopen(music_url).read()
+        with open('music.mp3', 'wb') as f:
+            f.write(music_data)
 
-        print('Output video uploaded to S3:', output_video_key)
-        return f'https://{bucket_name}.s3.ap-northeast-2.amazonaws.com/{output_video_key}'
+        # Load video and music using moviepy
+        video_clip = mp.VideoFileClip(output_video_key)
+        audio_clip = mp.AudioFileClip('music.mp3')
+
+        # Set audio for the video
+        video_clip = video_clip.set_audio(audio_clip)
+
+        # Generate final video with music
+        final_output = f'final_video_of_{user_id}_no_{video_number}.mp4'
+        video_duration = len(images)  # Duration of the video in seconds
+        video_clip = video_clip.subclip(0, video_duration)  # Truncate the video to match the duration of the images
+        final_clip = mp.concatenate_videoclips([video_clip])
+        final_clip.write_videofile(final_output, codec='libx264', audio_codec='aac')
+
+        # Upload the final video to S3
+        s3_client.upload_file(final_output, bucket_name, final_output)
+
+        print('Final video uploaded to S3:', final_output)
+
+        # Delete temporary files
+        os.remove(output_video_key)
+        os.remove('music.mp3')
+        os.remove(final_output)
+
+        return f'https://{bucket_name}.s3.ap-northeast-2.amazonaws.com/{final_output}'
 
     finally:
-        # 영상 파일 제거
+        # Clean up video writer
         if out_video.isOpened():
             out_video.release()
         cv2.destroyAllWindows()
