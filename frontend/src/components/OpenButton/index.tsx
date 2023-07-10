@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import openedCapsuleImg1 from '../../assets/images/openedCapsule_img1.png';
-import openedCapsuleImg2 from '../../assets/images/openedCapsule_img2.png';
+import openedCapsuleImg1 from '../../assets/images/openedCapsule/openedCapsule_img1.png';
+import openedCapsuleImg2 from '../../assets/images/openedCapsule/openedCapsule_img2.png';
 
 type OpenButtonProps = {
   imageName: string;
