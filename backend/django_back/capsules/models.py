@@ -11,10 +11,10 @@ from themes.models import Theme
 
 class Capsule(BaseModel):
     capsule_id = models.AutoField(primary_key=True)
-    # creator_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    creator_id = models.CharField(max_length=60)
-    # theme_id = models.ForeignKey(Theme, on_delete=models.CASCADE)
-    theme_id = models.IntegerField(null=True)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    # creator_id = models.CharField(max_length=60)
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
+    # theme_id = models.IntegerField(null=True)
     capsule_name = models.CharField(max_length=60)
     due_date = models.DateTimeField()
     limit_count = models.IntegerField(null=True, validators=[MinValueValidator(1), MaxValueValidator(30)])
@@ -22,10 +22,11 @@ class Capsule(BaseModel):
 
     class Meta:
         db_table = 'capsule'
+
 class UserCapsule(models.Model):
     user_capsule_id = models.AutoField(primary_key=True)
-    capsule_id = models.ForeignKey(Capsule, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    capsule = models.ForeignKey(Capsule, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'user_capsule'
