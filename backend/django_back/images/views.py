@@ -11,7 +11,8 @@ def upload_image(request):
         file = request.FILES['filename']
         image_url = upload_image_for_api(file)
         return JsonResponse({'image_url': image_url})
-      
+
+
 def upload_image_for_api(file):
     # image_url = FileUpload(s3_client).upload(file)
     # Testing을 위해 임시로 사용
