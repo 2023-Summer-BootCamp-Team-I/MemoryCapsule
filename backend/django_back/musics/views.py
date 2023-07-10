@@ -14,7 +14,10 @@ def upload_mp3(request):
 
         # POST 요청에서 Mp3 파일 가져오기
         mp3_file = request.FILES['filename']
-        music_url = upload_music(mp3_file)
+        music_url = "music created"
+
+        # s3 업로드용 함수
+        # upload_music(mp3_file)
 
         Music.objects.create(
             music_name=request.POST['name'],
