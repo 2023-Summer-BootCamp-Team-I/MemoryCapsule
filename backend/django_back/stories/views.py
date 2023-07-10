@@ -47,6 +47,26 @@ def story_create(request, capsule_id):
     else:
         return JsonResponse({"code": "400", "message": "스토리 생성에 실패하였습니다."}, status=400)
 
+@api_view(["GET"])
+def story_detail(request, capsule_id, story_id) :
+    if request.method == 'GET' :
+        try:
+            story = Story.objects.get(story_id = story_id)
+            capsule = Capsule.objects.get(capsule_id = capsule_id)
+        except Story.DoesNotExist:
+            return JsonResponse({"code": "404", "message": "Capsule이 존재하지 않습니다."}, status=404)
+
+        return JsonResponse({
+            "code": "200",
+            "message": "스토리 조회가 완료되었습니다.",
+            "capsule_id" : capsule.capsule_id,
+            "story_title": story.story_title,
+            "story_content": story.story_content,
+            "story_img_url": story.story_img_url,
+            "created_at": story.created_at,
+            "story_id": story.story_id
+        })
+
     # if request.method == "POST" :
     #     serializer = StorySerializer(data=request.POST)
     #     story_info = []
@@ -73,3 +93,9 @@ def story_create(request, capsule_id):
     #     #     }
     #
     # return JsonResponse(val)
+# @api_view(['PUT'])
+# def story_update(requset, capsule_id, story_id):
+#
+#
+#     if requset.response == 'PUT':
+#         story.story_title = request.data.get('story_title', story.story_title)
