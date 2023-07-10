@@ -16,7 +16,7 @@ import MainUnOpenCapsule from '../components/MainUnopenCapsule';
 
 export default function FirstPage() {
   return (
-    <div>
+    <div className="h-[42rem] w-[75rem] border">
       <div>FirstPage</div>
       <MainOpenCapsule />
       <MainUnOpenCapsule />
