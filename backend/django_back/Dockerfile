@@ -7,6 +7,9 @@ WORKDIR /app
 # 의존성 설치
 COPY requirements.txt .
 RUN pip install -r requirements.txt
+RUN apt-get update
+RUN apt-get -y install libgl1-mesa-glx
+RUN apt-get update && apt-get install -y ffmpeg
 
 # 소스 코드 복사
 COPY . .

@@ -1,13 +1,12 @@
 import jwt
 from rest_framework.decorators import api_view
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from .models import User
 from .utils import create_user, user_find_by_id, check_encrypted_password
 from django.db import IntegrityError
 from django_back.settings import JWT_SECRET_KEY, ALGORITHM
 
 import datetime
-
 
 @api_view(['post'])
 def sign_up(request):
