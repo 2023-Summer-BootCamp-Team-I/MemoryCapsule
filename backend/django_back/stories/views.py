@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
-from .serializers import StorySerializer
-from .models import Story, Capsule, Video
+from .models import Story
+from capsules.models import Capsule
+from musics.models import Music
 from users.models import User
+from videos.models import Video
 from django.http import HttpResponse, JsonResponse
 import json
 
@@ -16,17 +18,20 @@ def story_create(request, capsule_id):
         except Capsule.DoesNotExist:
             return JsonResponse({"code": "404", "message": "Capsule이 존재하지 않습니다."}, status=404)
 
-        user = capsule.user_id.all().first()
+        user = capsule.creator_id
+
         video = Video.objects.get(video_id = request.data['video_id'])
+        #video = request.data['video_id']
         story = Story.objects.create(
             story_id=request.data['story_id'],
             creator_id=user,
             capsule_id=capsule,
+            video_id=video,
             story_title=request.data['story_title'],
             story_content=request.data['story_content'],
             story_img_url=request.data['story_img_url'],
         )
-        story.video_id.set([video])
+        #story.video_id.set([video])
 
         return JsonResponse({
             "code": "201",
