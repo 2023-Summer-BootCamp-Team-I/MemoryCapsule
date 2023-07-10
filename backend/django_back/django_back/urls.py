@@ -45,6 +45,7 @@ urlpatterns = [
     path('api/v1/images/', include('images.urls')),
     path('api/v1/musics/', include('musics.urls')),
     path('api/v1/videos/', include('videos.urls')),
+    path('api/v1/stories/', include('stories.urls'))
 ]
 
 if settings.DEBUG:
