@@ -2,5 +2,8 @@
   "devDependencies": {
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3"
+  },
+  "dependencies": {
+    "react-toastify": "^9.1.3"
   }
 }

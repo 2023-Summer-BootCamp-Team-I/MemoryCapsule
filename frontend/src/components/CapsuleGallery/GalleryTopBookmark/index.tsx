@@ -5,9 +5,10 @@ interface TopBookmarkProps {
   activeBookmark: string;
   // eslint-disable-next-line no-unused-vars
   setActiveBookmark: (value: string) => void;
+  is_open: string;
 }
 
-function GalleryTopBookmark({ activeBookmark, setActiveBookmark }: TopBookmarkProps) {
+function GalleryTopBookmark({ activeBookmark, setActiveBookmark, is_open }: TopBookmarkProps) {
   const navigate = useNavigate();
 
   const handleBookmarkClick = (bookmarkColor: string) => {
@@ -15,10 +16,10 @@ function GalleryTopBookmark({ activeBookmark, setActiveBookmark }: TopBookmarkPr
 
     switch (bookmarkColor) {
       case 'orange':
-        navigate('/mygallery');
+        navigate(`/mygallery/${is_open}`);
         break;
       case 'purple':
-        navigate('/joingallery');
+        navigate(`/joingallery/${is_open}`);
         break;
       default:
         break;
@@ -26,7 +27,7 @@ function GalleryTopBookmark({ activeBookmark, setActiveBookmark }: TopBookmarkPr
   };
 
   return (
-    <div className="fixed z-50 top-4 left-36">
+    <div className="z-50 ">
       <div className="flex gap-4">
         <TopBookmark
           title="내가 만든 캡슐"

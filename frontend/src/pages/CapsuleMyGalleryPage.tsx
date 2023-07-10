@@ -1,31 +1,25 @@
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import GalleryTopBookmark from '../components/CapsuleGallery/GalleryTopBookmark';
 
 function CapsuleMyGalleryPage() {
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate('/mainunopened');
-  };
+  const { is_open } = useParams();
+  const [activeTopBookmark, setActiveTopBookmark] = useState('orange');
 
   return (
     <div className="relative h-[42rem] w-[75rem]">
-      <div className="top-0 left-0 cursor-pointer" onClick={handleClick}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
+      <div className="absolute top-0 -mt-[4.5rem]">
+        {is_open !== undefined && (
+          <GalleryTopBookmark
+            activeBookmark={activeTopBookmark}
+            setActiveBookmark={setActiveTopBookmark}
+            is_open={is_open}
           />
-        </svg>
+        )}
       </div>
       CapsuleMyGalleryPage
+      <br />
+      is_open: {is_open}
     </div>
   );
 }

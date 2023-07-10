@@ -23,11 +23,11 @@ export default function App() {
         <Routes>
           <Route path="/" Component={FirstPage} />
           <Route path="/mainopened" Component={MainOpenedPage} />
-          <Route path="/mainunopened" Component={MainUnOpenedPage} />
+          <Route path="/mainunopen" Component={MainUnOpenedPage} />
           <Route path="/create" Component={CreateCapsulePage} />
 
-          <Route path="/mygallery" Component={CapsuleMyGalleryPage} />
-          <Route path="/joingallery" Component={CapsuleJoinGalleryPage} />
+          <Route path="/mygallery/:is_open" Component={CapsuleMyGalleryPage} />
+          <Route path="/joingallery/:is_open" Component={CapsuleJoinGalleryPage} />
           <Route path="/unopened" Component={UnOpenedCapsulePage} />
 
           <Route path="/opened" Component={OpenedCapsulePage} />

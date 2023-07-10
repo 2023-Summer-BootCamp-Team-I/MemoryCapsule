@@ -1,6 +1,5 @@
-import React from 'react';
-import MainOpenCapsule from '../components/MainOpenCapsule';
-import MainUnOpenCapsule from '../components/MainUnopenCapsule';
+import MainOpenCapsule from '../components/MainOpenCapsule/OpenCapsule';
+import MainUnOpenCapsule from '../components/MainUnopenCapsule/UnopenCapsule';
 
 // 로그인/ 회원가입
 //  import TextInput from '../components/TextInput';

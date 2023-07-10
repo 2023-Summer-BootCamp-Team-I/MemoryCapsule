@@ -1,9 +1,8 @@
-import React from 'react';
-import capsuleLabel from '../../assets/images/capsule_label.png';
+import capsuleLabel from '../../../assets/images/capsule_label.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock, faUser } from '@fortawesome/free-solid-svg-icons';
 
-function MainUnOpenCapsule() {
+function UnopenCapsule() {
   const capsules = [
     {
       img: 'https://cdn.aitimes.kr/news/photo/202303/27617_41603_044.jpg',
@@ -14,19 +13,18 @@ function MainUnOpenCapsule() {
   ];
 
   return (
-    <div className="flex flex-col items-center w-36 text-xs">
+    <div className=" flex flex-col items-center text-xs w-36 mt-[1rem] ml-[1rem]">
       <div
-        className="flex items-center justify-center w-20 h-24 rounded-full relative"
+        className="relative flex items-center justify-center w-20 h-24 rounded-full shadow-ButtonShadow"
         style={{
-          width: '8rem',
-          height: '10rem',
+          width: '10.5rem',
+          height: '12.5rem',
           borderRadius: '50%',
           overflow: 'hidden',
         }}
       >
         <div
-          className="
-          bg-no-repeat bg-center"
+          className="bg-center bg-no-repeat "
           style={{
             backgroundImage: `url(${capsules[0].img})`,
             backgroundSize: 'cover',
@@ -37,7 +35,7 @@ function MainUnOpenCapsule() {
           }}
         ></div>
         <div
-          className="text-white absolute inset-0 flex flex-col items-center justify-center"
+          className="absolute inset-0 flex flex-col items-center justify-center text-white"
           style={{ zIndex: '1' }}
         >
           <div className="flex ">
@@ -48,9 +46,9 @@ function MainUnOpenCapsule() {
           <div>개봉일: {capsules[0].day}</div>
         </div>
       </div>
-      <div className="relative  w-28 -mt-5">
+      <div className="relative -mt-4 w-28">
         <img src={capsuleLabel} />
-        <div className="absolute  top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-sm font-semibold">
+        <div className="absolute text-xl font-semibold text-white transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
           {capsules[0].name}
         </div>
       </div>
@@ -58,4 +56,4 @@ function MainUnOpenCapsule() {
   );
 }
 
-export default MainUnOpenCapsule;
+export default UnopenCapsule;
