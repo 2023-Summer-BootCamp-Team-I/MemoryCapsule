@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import FirstPage from './pages/FirstPage'; // 시작페이지
+//import FirstPage from './pages/FirstPage'; // 시작페이지
 
 import MainOpenedPage from './pages/MainOpenedPage'; // 메인페이지 개봉 캡슐 리스트
 import MainUnOpenedPage from './pages/MainUnOpenedPage'; // 메인페이지 미개봉 캡슐 리스트
@@ -28,7 +28,7 @@ export default function App() {
           <Route path="/mygallery" Component={CapsuleMyGalleryPage} />
           <Route path="/joingallery" Component={CapsuleJoinGalleryPage} />
           <Route path="/unopened" Component={UnOpenedCapsulePage} />
-
+          
           <Route path="/opened" Component={OpenedCapsulePage} />
           <Route path="/story" Component={OpenedStoryPage} />
           <Route path="/video" Component={OpenedVideoPage} />
