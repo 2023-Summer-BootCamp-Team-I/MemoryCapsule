@@ -44,6 +44,7 @@ urlpatterns = [
     path('api/v1/users/', include("users.urls")),
     path('api/v1/capsules/', include('capsules.urls')),
     path('api/v1/images/', include('images.urls')),
+    path('api/v1/musics/', include('musics.urls')),
 ]
 
 if settings.DEBUG:

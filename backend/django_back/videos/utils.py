@@ -1,62 +1,63 @@
-import boto3
 import cv2
 import urllib.request
 import numpy as np
-import io
+import boto3
+import os
+import uuid
+from concurrent.futures import ThreadPoolExecutor
 
-def make_video():
+
+def make_video(user_id, video_number, image_urls):
     s3_client = boto3.client('s3')
     s3_resource = boto3.resource('s3')
 
-    bucket_name = 'your-bucket-name'
-    image_urls = [
-        'https://author-picture.s3.ap-northeast-2.amazonaws.com/e5b5c3ee-cee3-4c9d-8c8b-1fbb6c0fc601',
-        'https://author-picture.s3.ap-northeast-2.amazonaws.com/8c84b7c8-81fe-4bff-88fc-c44ab6eb9432',
-        'https://author-picture.s3.ap-northeast-2.amazonaws.com/8c84b7c8-81fe-4bff-88fc-c44ab6eb9432'
+    bucket_name = 'author-picture'
 
-    ]
-    output_video_key = 'output-video.mp4'
+    output_video_key = f'video-of-{user_id}-no{video_number}.mp4'
 
-    # 이미지들의 최대 너비와 높이 구하기
-    max_width = 0
-    max_height = 0
 
+    # 이미지 다운로드 및 영상 생성을 위한 이미지 배열
+    images = []
+
+    # 이미지 다운로드 및 배열에 추가
     for image_url in image_urls:
-        # 이미지 다운로드
         image_data = urllib.request.urlopen(image_url).read()
         image_array = np.asarray(bytearray(image_data), dtype=np.uint8)
         image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+        images.append(image)
 
-        height, width, _ = image.shape
+    # 영상 크기 설정 (가장 큰 이미지의 크기 기준)
+    max_height = max(image.shape[0] for image in images)
+    max_width = max(image.shape[1] for image in images)
 
-        if width > max_width:
-            max_width = width
-        if height > max_height:
-            max_height = height
+    # 영상 파일 생성 및 설정
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out_video = cv2.VideoWriter()
 
-    out_video = None
+    # 영상 설정 및 S3에 업로드
+    s3_client = boto3.client('s3')
 
-    for image_url in image_urls:
-        # 이미지 다운로드
-        image_data = urllib.request.urlopen(image_url).read()
-        image_array = np.asarray(bytearray(image_data), dtype=np.uint8)
-        image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+    try:
+        for i, image in enumerate(images):
+            resized_image = cv2.resize(image, (max_width, max_height), interpolation=cv2.INTER_LANCZOS4)
+            if i == 0:
+                out_video.open(output_video_key, fourcc, 1, (max_width, max_height))
+            out_video.write(resized_image)
 
-        # 이미지 크기 조정
-        resized_image = cv2.resize(image, (max_width, max_height), interpolation=cv2.INTER_LANCZOS4)
+        # 영상 파일 종료
+        out_video.release()
 
-        if out_video is None:
-            # 영상 파일 생성 및 설정
-            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            out_video = cv2.VideoWriter(output_video_key, fourcc, 1, (max_width, max_height))
+        # S3에 영상 파일 업로드
+        with open(output_video_key, 'rb') as f:
+            s3_client.upload_fileobj(f, bucket_name, output_video_key)
 
-        # 이미지를 프레임으로 추가하여 영상에 저장
-        out_video.write(resized_image)
+        print('Output video uploaded to S3:', output_video_key)
+        return f'https://{bucket_name}.s3.ap-northeast-2.amazonaws.com/{output_video_key}'
 
-    out_video.release()
-
-    # 영상 파일을 S3에 업로드
-    with open(output_video_key, 'rb') as file:
-        s3_resource.Bucket(bucket_name).put_object(Key=output_video_key, Body=file)
-
-    print('Output video uploaded to S3:', output_video_key)
+    finally:
+        # 영상 파일 제거
+        if out_video.isOpened():
+            out_video.release()
+        cv2.destroyAllWindows()
+        if os.path.exists(output_video_key):
+            os.remove(output_video_key)

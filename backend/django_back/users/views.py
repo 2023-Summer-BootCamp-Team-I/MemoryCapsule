@@ -1,6 +1,6 @@
 import jwt
 from rest_framework.decorators import api_view
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .models import User
 from .utils import create_user, user_find_by_id, check_encrypted_password
 from django.db import IntegrityError
@@ -61,10 +61,12 @@ def sign_in(request):
 
 @api_view(['get'])
 def video(request):
-    if request.method == 'get':
-        try:
-            make_video()
-            return HttpResponse("영상 제작 성공입니다")
-
-        except:
-            return HttpResponse("영상 제작 실패입니다")
+    if request.method == 'GET':
+        image_urls = [
+            "https://author-picture.s3.ap-northeast-2.amazonaws.com/fa1103cd-09a6-4117-a6b1-abb90cdb2c9d",
+            "https://author-picture.s3.ap-northeast-2.amazonaws.com/7815cd1a-2b8f-4cd9-9dac-8aba996995cd",
+            "https://author-picture.s3.ap-northeast-2.amazonaws.com/28573595-2508-426c-8b5b-6f4d060b8320",
+            "https://author-picture.s3.ap-northeast-2.amazonaws.com/8953673a-d264-4f36-9d50-d6eb7222165b"
+        ]
+        print(make_video(6, 5, image_urls)) # 영상 개수 카운팅 해서 넘기세여
+        return HttpResponse("영상 제작 성공입니다!!")
