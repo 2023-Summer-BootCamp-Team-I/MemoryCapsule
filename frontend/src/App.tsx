@@ -6,7 +6,8 @@ import MainOpenedPage from './pages/MainOpenedPage'; // 메인페이지 개봉 �
 import MainUnOpenedPage from './pages/MainUnOpenedPage'; // 메인페이지 미개봉 캡슐 리스트
 import CreateCapsulePage from './pages/CreateCapsulePage'; // 캡슐 생성 페이지
 
-import CapsuleGalleryPage from './pages/CapsuleGalleryPage'; // 캡슐 모두보기 페이지
+import CapsuleMyGalleryPage from './pages/CapsuleMyGalleryPage'; // 캡슐 모두보기 페이지
+import CapsuleJoinGalleryPage from './pages/CapsuleJoinGalleryPage'; // 캡슐 모두보기 페이지
 import UnOpenedCapsulePage from './pages/UnOpenedCapsulePage'; // 미개봉 리스트 페이지
 
 import OpenedCapsulePage from './pages/OpenedCapsulePage'; // 개봉 버튼 페이지
@@ -24,7 +25,8 @@ export default function App() {
           <Route path="/mainunopened" Component={MainUnOpenedPage} />
           <Route path="/create" Component={CreateCapsulePage} />
 
-          <Route path="/gallery" Component={CapsuleGalleryPage} />
+          <Route path="/mygallery" Component={CapsuleMyGalleryPage} />
+          <Route path="/joingallery" Component={CapsuleJoinGalleryPage} />
           <Route path="/unopened" Component={UnOpenedCapsulePage} />
 
           <Route path="/opened" Component={OpenedCapsulePage} />

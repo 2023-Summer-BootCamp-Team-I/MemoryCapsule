@@ -4,10 +4,7 @@ interface BookmarkProps {
   markImage: string;
   alt: string;
   activeState: boolean;
-  // eslint-disable-next-line no-unused-vars
-  setActiveState: (value: boolean) => void;
-  // eslint-disable-next-line no-unused-vars
-  setInactiveState: (value: boolean) => void;
+  setActiveState: () => void;
   text: string;
   svgPath: string;
   top: string;
@@ -18,18 +15,19 @@ export default function Bookmark({
   alt,
   activeState,
   setActiveState,
-  setInactiveState,
   text,
   svgPath,
   top,
 }: BookmarkProps) {
   return (
-    <div className={`absolute w-44 p-4 flex justify-end items-center ml-[81rem] top-[${top}rem]`}>
+    <div
+      style={{ top: `${top}rem` }}
+      className={'absolute w-44 p-4 flex justify-end items-center ml-[81rem]'}
+    >
       <div
         className={`absolute h-20 hover:cursor-pointer ${activeState ? 'z-40' : 'z-30 hover:z-40'}`}
         onClick={() => {
-          setActiveState(true);
-          setInactiveState(false);
+          setActiveState();
         }}
       >
         <img src={markImage} alt={alt} />

@@ -1,5 +1,5 @@
 function MainUnOpenedPage() {
-  return <div>{/* MainUnOpenedPage */}</div>;
+  return <div>MainUnOpenedPage</div>;
 }
 
 export default MainUnOpenedPage;
