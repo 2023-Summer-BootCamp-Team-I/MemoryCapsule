@@ -1,10 +1,44 @@
+mysql -uroot -p
+password: 20031105
+
 use memory_capsule;
 
 Insert into user (created_at, updated_at, deleted_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '2023-07-09 00:00:00', 'testsql', 'test', 'testemail.com', 'test', 0, 'test.com');
-
 Insert into theme (created_at, updated_at, deleted_at, theme_id, theme_name, theme_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '2023-07-09 00:00:00', '1', 'test', 'testemail.com');
-
 Insert into user (created_at, updated_at, deleted_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '2023-07-09 00:00:00', '2', '2', 'a', '2', 0, 'test.com');
-
 Insert into theme (created_at, updated_at, deleted_at, theme_id, theme_name, theme_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '2023-07-09 00:00:00', '2', 'test', 'testemail.com');
 
+
+
+# 캡슐 입력
+[POST]  http://0.0.0.0:8080/api/v1/capsules/
+creator_id:1
+theme_id:1
+capsule_name:1
+due_date:2025-07-09 16:50:43
+limit_count:30
+file_name: 파일 선택              # 파일로 선택지 바꾸고 실행할 것
+
+# 캡슐 전체 조회
+[GET]  http://0.0.0.0:8080/api/v1/capsules/
+count:-1        # -1일때 전체 조회
+is_open:true
+user_id:1
+
+# 캡슐 수정
+[PUT]  http://0.0.0.0:8080/api/v1/capsules/<capsule_id>/
+creator_id:1
+theme_id:1
+capsule_name:4                  # creator와 theme은 외래키가 걸려있으므로, capsule_name만 수정해서 체크할 것
+due_date:2025-07-09 16:50:43
+limit_count:30
+file_name: 파일 선택              # 파일로 선택지 바꾸고 실행할 것
+
+=> 캡슐의 creator와 POST로 받은 creator가 다르면, 캡슐 수정 불가능!
+
+# 캡슐 삭제
+[DELETE]  http://0.0.0.0:8080/api/v1/capsules/<capsule_id>/
+
+
+# 단일 캡슐 조회
+[GET]  http://0.0.0.0:8080/api/v1/capsules/<capsule_id>/

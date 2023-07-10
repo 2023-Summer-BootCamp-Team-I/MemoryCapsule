@@ -12,8 +12,6 @@ from images.views import upload_image_for_api
 
 from .serializers import CapsuleSerializer
 
-cur_time = timezone.localtime()
-
 # /api/v1/capsules/capsule_func/
 @api_view(['GET', 'POST'])
 def capsule_func(request) -> json:
@@ -58,17 +56,17 @@ def capsule_GET(request) -> (json, int):
     # due_date 가 현재 날짜보다 큰 경우는 open 되어 있는 캡슐이므로, __lt를 통해 open 되어 있는 캡슐을 가져왔다
     # 열려 있는 캡슐의 경우 due_date가 가까운 순으로 정렬하였다
     if is_open:
-        my_capsules = Capsule.objects.filter(creator_id=user_id, due_date__gt=cur_time,
+        my_capsules = Capsule.objects.filter(creator_id=user_id, due_date__gt=timezone.localtime(),
                                              deleted_at__isnull=True).order_by('due_date')
         # my_capsules = Capsule.objects.all()
-        capsules = Capsule.objects.exclude(creator_id=user_id).filter(due_date__gt=cur_time,
+        capsules = Capsule.objects.exclude(creator_id=user_id).filter(due_date__gt=timezone.localtime(),
                                                                       deleted_at__isnull=True).order_by('due_date')
     # due_date 가 현재 날짜보다 작거나 같은 경우는 close 되어 있는 캡슐이므로, __gte를 통해 closed 되어 있는 캡슐을 가져온다
     # 닫혀 있는 캡슐의 경우 닫힌 날짜(due_date) 가 최신순이 되도록 입력하였다
     else:
-        my_capsules = Capsule.objects.filter(creator_id=user_id, due_date__lte=cur_time,
+        my_capsules = Capsule.objects.filter(creator_id=user_id, due_date__lte=timezone.localtime(),
                                              deleted_at__isnull=True).order_by('-due_date')
-        capsules = Capsule.objects.exclude(creator_id=user_id).filter(due_date__lte=cur_time,
+        capsules = Capsule.objects.exclude(creator_id=user_id).filter(due_date__lte=timezone.localtime(),
                                                                       deleted_at__isnull=True).order_by('-due_date')
 
     if count != -1:
@@ -88,6 +86,7 @@ def capsule_GET(request) -> (json, int):
             'limit_count': capsule.limit_count,
             'capsule_img_url': capsule.capsule_img_url,
             'created_at': capsule.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'updated_at': capsule.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
         }
         my_capsules_list.append(capsule_data)
 
@@ -101,6 +100,7 @@ def capsule_GET(request) -> (json, int):
             'limit_count': capsule.limit_count,
             'capsule_img_url': capsule.capsule_img_url,
             'created_at': capsule.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'updated_at': capsule.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
         }
         capsules_list.append(capsule_data)
 
@@ -109,7 +109,7 @@ def capsule_GET(request) -> (json, int):
         'message': '캡슐 리스트 전송',
         'my_capsule_list': my_capsules_list,
         'capsule_list': capsules_list,
-        'time': cur_time.strftime('%Y-%m-%d %H:%M:%S')
+        'time': timezone.localtime().strftime('%Y-%m-%d %H:%M:%S')
     }
     return result, 200
 
@@ -138,7 +138,8 @@ def capsule_POST(request) -> (json, int):
             'limit_count': instance.limit_count,
             'capsule_img_url': instance.capsule_img_url,
             'created_at': instance.created_at,
-            'time': cur_time.strftime('%Y-%m-%d %H:%M:%S')
+            'updated_at': instance.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'time': timezone.localtime().strftime('%Y-%m-%d %H:%M:%S')
         }
     else:
         status_code = 400
@@ -164,13 +165,14 @@ def capsule_parm_GET(request, capsule_id) -> (json, int):
         'limit_count': capsule.limit_count,
         'capsule_img_url': capsule.capsule_img_url,
         'created_at': capsule.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+        'updated_at': capsule.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
     }
 
     result = {
         'code': 200,
         'message': '개별 캡슐 정보 전송',
         'capsule_data': capsule_data,
-        'time': cur_time.strftime('%Y-%m-%d %H:%M:%S')
+        'time': timezone.localtime().strftime('%Y-%m-%d %H:%M:%S')
     }
 
     return result, 200
@@ -206,7 +208,8 @@ def capsule_parm_PUT(request, capsule_id) -> (json, int):
             'limit_count': updated_capsule.limit_count,
             'capsule_img_url': updated_capsule.capsule_img_url,
             'created_at': updated_capsule.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-            'time': cur_time.strftime('%Y-%m-%d %H:%M:%S')
+            'updated_at': updated_capsule.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'time': timezone.localtime().strftime('%Y-%m-%d %H:%M:%S')
         }
         return val, 200
     else:
@@ -219,6 +222,6 @@ def capsule_parm_DELETE(request, capsule_id) -> (json, int):
         capsule.deleted_at = timezone.localtime()
         capsule.save()
         return {'code': 200, 'message': '캡슐 삭제 완료', 'deleted_at': capsule.deleted_at,
-                'time': timezone.localtimze().strftime('%Y-%m-%d %H:%M:%S')}, 200
+                'time': timezone.localtime().strftime('%Y-%m-%d %H:%M:%S')}, 200
     except Capsule.DoesNotExist:
         return {'code': 404, 'message': '캡슐을 찾을 수 없습니다.'}, 404
