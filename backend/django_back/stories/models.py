@@ -4,7 +4,6 @@ from users.models import User
 from videos.models import Video
 from capsules.models import Capsule
 
-
 class Story(BaseModel):
     story_id = models.AutoField(primary_key=True)
     capsule_id = models.ForeignKey(Capsule, on_delete=models.CASCADE)
