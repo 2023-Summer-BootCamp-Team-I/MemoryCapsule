@@ -16,7 +16,7 @@ class Story(BaseModel):
     class Meta:
         db_table = 'story'
 
-class StoryVideo(models.Model):
+class StoryVideo(BaseModel):
     story_video_id = models.AutoField(primary_key=True)
     story = models.ForeignKey(Story, on_delete=models.CASCADE)
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
