@@ -2,9 +2,13 @@ import { useNavigate } from 'react-router-dom';
 import HighLight from '../components/common/HightLight';
 import UnopenCapsule from '../components/MainUnopenCapsule/UnopenCapsule';
 
+import unopen_join_capsule from '../assets/data/unopen_join_capsule';
+import unopen_my_capsule from '../assets/data/unopen_my_capsule';
+
 function MainUnOpenedPage() {
   const navigate = useNavigate();
-  const capsuleCount = 5;
+  const unopenMyCapsules = unopen_my_capsule();
+  const unopenJoinCapsules = unopen_join_capsule();
   const is_open = false;
 
   return (
@@ -15,9 +19,15 @@ function MainUnOpenedPage() {
           <div className="">
             <HighLight color="blue" title="내가 만든 캡슐" />
           </div>
-          <div className="flex flex-row space-x-[5rem]">
-            {Array.from({ length: capsuleCount }).map((_, index) => (
-              <UnopenCapsule key={index} />
+          <div className="flex flex-row space-x-[4rem]">
+            {unopenMyCapsules.slice(0, 5).map((capsule) => (
+              <div
+                key={capsule.id}
+                onClick={() => navigate(`/unopened/${capsule.id}`)}
+                className="hover:cursor-pointer"
+              >
+                <UnopenCapsule capsule={capsule} />
+              </div>
             ))}
           </div>
           <div
@@ -45,9 +55,15 @@ function MainUnOpenedPage() {
           <div className="">
             <HighLight color="blue" title="내가 참여한 캡슐" />
           </div>
-          <div className="flex flex-row space-x-[5rem]">
-            {Array.from({ length: capsuleCount }).map((_, index) => (
-              <UnopenCapsule key={index} />
+          <div className="flex flex-row space-x-[4rem]">
+            {unopenJoinCapsules.slice(0, 5).map((capsule) => (
+              <div
+                key={capsule.id}
+                onClick={() => navigate(`/unopened/${capsule.id}`)}
+                className="hover:cursor-pointer"
+              >
+                <UnopenCapsule capsule={capsule} />
+              </div>
             ))}
           </div>
           <div

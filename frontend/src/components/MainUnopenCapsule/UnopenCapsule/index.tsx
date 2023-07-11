@@ -2,16 +2,19 @@ import capsuleLabel from '../../../assets/images/capsule_label.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock, faUser } from '@fortawesome/free-solid-svg-icons';
 
-function UnopenCapsule() {
-  const capsules = [
-    {
-      img: 'https://cdn.aitimes.kr/news/photo/202303/27617_41603_044.jpg',
-      name: '제주도',
-      num: '3',
-      day: '2023.11.21',
-    },
-  ];
+interface Capsule {
+  id: string;
+  img: string;
+  name: string;
+  num: string;
+  day: string;
+}
 
+interface OpenCapsuleProps {
+  capsule: Capsule;
+}
+
+function UnopenCapsule({ capsule }: OpenCapsuleProps) {
   return (
     <div className=" flex flex-col items-center text-xs w-36 mt-[1rem] ml-[1rem]">
       <div
@@ -26,7 +29,7 @@ function UnopenCapsule() {
         <div
           className="bg-center bg-no-repeat "
           style={{
-            backgroundImage: `url(${capsules[0].img})`,
+            backgroundImage: `url(${capsule.img})`,
             backgroundSize: 'cover',
             objectFit: 'cover',
             width: '100%',
@@ -40,16 +43,16 @@ function UnopenCapsule() {
         >
           <div className="flex ">
             <FontAwesomeIcon icon={faUser} />
-            <div className="flex pl-1">{capsules[0].num}</div>
+            <div className="flex pl-1">{capsule.num}</div>
           </div>
           <FontAwesomeIcon className="pt-1 pb-3" size="2x" icon={faLock} />
-          <div>개봉일: {capsules[0].day}</div>
+          <div>개봉일: {capsule.day}</div>
         </div>
       </div>
-      <div className="relative -mt-4 w-28">
-        <img src={capsuleLabel} />
+      <div className="relative w-32 -mt-4">
+        <img src={capsuleLabel} className="h-12" />
         <div className="absolute text-xl font-semibold text-white transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-          {capsules[0].name}
+          {capsule.name}
         </div>
       </div>
     </div>

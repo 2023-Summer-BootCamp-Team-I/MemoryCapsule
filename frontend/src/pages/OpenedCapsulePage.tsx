@@ -1,15 +1,12 @@
-import React from 'react';
-import UnopenedStory from '../components/UnopenedStory';
-
-// 공통 컴포넌트 (버튼)
-// <OpenButton imageName="photo" />
-// <OpenButton imageName="video" />
+import { useParams } from 'react-router-dom';
 
 export default function OpenedCapsulePage() {
+  const { capsule_id } = useParams();
+
   return (
     <div>
+      capsule_id: {capsule_id} <br />
       OpenedCapsulePage
-      <UnopenedStory />
     </div>
   );
 }

@@ -2,10 +2,15 @@ import { useNavigate } from 'react-router-dom';
 import HighLight from '../components/common/HightLight';
 import OpenCapsule from '../components/MainOpenCapsule/OpenCapsule';
 
+import open_join_capsule from '../assets/data/open_join_capsule';
+import open_my_capsule from '../assets/data/open_my_capsule';
+
 function MainOpenedPage() {
   const navigate = useNavigate();
-  const capsuleCount = 5;
   const is_open = true;
+
+  const openMyCapsules = open_my_capsule();
+  const openJoinCapsules = open_join_capsule();
 
   return (
     <div className="h-[42rem] w-[75rem] font-Omu grid grid-rows-2 grid-flow-row-dense">
@@ -15,9 +20,15 @@ function MainOpenedPage() {
           <div className="">
             <HighLight color="blue" title="내가 만든 캡슐" />
           </div>
-          <div className="flex flex-row space-x-[5rem]">
-            {Array.from({ length: capsuleCount }).map((_, index) => (
-              <OpenCapsule key={index} />
+          <div className="flex flex-row space-x-[4rem]">
+            {openMyCapsules.slice(0, 5).map((capsule) => (
+              <div
+                key={capsule.id}
+                onClick={() => navigate(`/opened/${capsule.id}`)}
+                className="hover:cursor-pointer"
+              >
+                <OpenCapsule capsule={capsule} />
+              </div>
             ))}
           </div>
           <div
@@ -45,9 +56,15 @@ function MainOpenedPage() {
           <div className="">
             <HighLight color="blue" title="내가 참여한 캡슐" />
           </div>
-          <div className="flex flex-row space-x-[5rem]">
-            {Array.from({ length: capsuleCount }).map((_, index) => (
-              <OpenCapsule key={index} />
+          <div className="flex flex-row space-x-[4rem]">
+            {openJoinCapsules.slice(0, 5).map((capsule) => (
+              <div
+                key={capsule.id}
+                onClick={() => navigate(`/opened/${capsule.id}`)}
+                className="hover:cursor-pointer"
+              >
+                <OpenCapsule capsule={capsule} />
+              </div>
             ))}
           </div>
           <div
