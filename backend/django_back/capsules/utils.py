@@ -15,6 +15,8 @@ from users.models import User
 from images.views import upload_image_for_api
 
 from .serializers import CapsuleSerializer
+
+
 def capsule_GET(request) -> (json, int):
     is_open: bool = json.loads((request.GET.get('is_open', 'False').lower()))
     count: int = int(request.GET.get('count', 5))
@@ -80,6 +82,7 @@ def capsule_GET(request) -> (json, int):
     }
     return result, 200
 
+
 def capsule_POST(request) -> (json, int):
     if 'file_name' not in request.FILES:
         return {'code': 400, 'message': '파일이 제공되지 않았습니다.'}, 400
@@ -123,8 +126,8 @@ def capsule_POST(request) -> (json, int):
 
     return val, status_code
 
-def capsule_url_parm_GET(request, capsule_id) -> (json, int):
 
+def capsule_url_parm_GET(request, capsule_id) -> (json, int):
     capsule = Capsule.objects.filter(deleted_at__isnull=True, capsule_id=capsule_id).first()
     if not capsule:
         return {'code': 404, 'message': '캡슐을 찾을 수 없습니다.'}, 404
@@ -149,6 +152,7 @@ def capsule_url_parm_GET(request, capsule_id) -> (json, int):
     }
 
     return result, 200
+
 
 def capsule_url_parm_PUT(request, capsule_id) -> (json, int):
     if 'file_name' not in request.FILES:
@@ -188,6 +192,7 @@ def capsule_url_parm_PUT(request, capsule_id) -> (json, int):
     else:
         return {'code': 400, 'message': '입력값에 오류가 있습니다. 다시 확인해 주세요.'}, 400
 
+
 def capsule_url_parm_DELETE(request, capsule_id) -> (json, int):
     try:
         capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
@@ -197,6 +202,7 @@ def capsule_url_parm_DELETE(request, capsule_id) -> (json, int):
                 'time': timezone.now().strftime('%Y-%m-%d %H:%M:%S')}, 200
     except Capsule.DoesNotExist:
         return {'code': 404, 'message': '캡슐을 찾을 수 없습니다.'}, 404
+
 
 def user_capsule_GET(request) -> (json, int):
     capsule_id: int = int(request.GET.get('capsule_id', 1))
@@ -209,7 +215,7 @@ def user_capsule_GET(request) -> (json, int):
 
     # 현재 캡슐에 포함된 유저가 맞는지 체크
     try:
-        UserCapsule.objects.get(user_id=user_id, capsule_id=capsule_id)
+        UserCapsule.objects.get(user_id=user_id, capsule_id=capsule_id, deleted_at__isnull=True)
     except UserCapsule.DoesNotExist:
         return {'code': 404, 'message': '캡슐에 포함되지 않은 유저입니다'}, 404
 
@@ -224,7 +230,7 @@ def user_capsule_GET(request) -> (json, int):
     except User.DoesNotExist:
         return {'code': 404, 'message': '호스트 유저가 삭제 되었습니다'}, 404
 
-    user_capsules = UserCapsule.objects.exclude(user_id=capsule.creator_id).filter(capsule_id=capsule_id)
+    user_capsules = UserCapsule.objects.exclude(user_id=capsule.creator_id).filter(capsule_id=capsule_id, deleted_at__isnull=True)
     user_list = []
 
     for user_capsule in user_capsules:
@@ -245,6 +251,7 @@ def user_capsule_GET(request) -> (json, int):
 
     return result, 200
 
+
 def user_capsule_POST(request) -> (json, int):
     capsule_id: int = request.POST['capsule_id']
     user_id: int = request.POST['user_id']
@@ -259,7 +266,7 @@ def user_capsule_POST(request) -> (json, int):
     except User.DoesNotExist:
         return {'code': 404, 'message': '유저를 찾을 수 없습니다.'}, 404
 
-    if UserCapsule.objects.filter(capsule_id=capsule_id, user_id=user_id):
+    if UserCapsule.objects.filter(capsule_id=capsule_id, user_id=user_id, deleted_at__isnull=True):
         return {'code': 400, 'message': '이미 캡슐에 포함된 유저입니다.'}, 400
 
     try:
@@ -281,3 +288,39 @@ def user_capsule_POST(request) -> (json, int):
 
     return result, 200
 
+
+def user_capsule_DELETE(request) -> (json, int):
+    capsule_id: int = int(request.GET.get('capsule_id', 1))
+    user_id: int = int(request.GET.get('user_id', 1))
+
+    try:
+        capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
+    except Capsule.DoesNotExist:
+        return {'code': 404, 'message': '캡슐을 찾을 수 없습니다.'}, 404
+
+    try:
+        user = User.objects.get(user_id=user_id, deleted_at__isnull=True)
+    except User.DoesNotExist:
+        return {'code': 404, 'message': '유저를 찾을 수 없습니다.'}, 404
+
+    try:
+        user_capsule = UserCapsule.objects.get(capsule_id=capsule_id, user_id=user_id, deleted_at__isnull=True)
+        user_capsule.deleted_at = timezone.now()
+        user_capsule.save()
+    except UserCapsule.DoesNotExist:
+        return {'code': 404, 'message': '캡슐에 포함된 유저가 아닙니다.'}, 404
+
+    # host가 방을 나갈 시, host user를 다른 유저로 변경
+    # 만약, host가 마지막 유저였을 경우, capsule을 삭제
+    if capsule.creator_id == user.user_id:
+        try:
+            another_user = UserCapsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True).user
+            capsule.creator_id = another_user.user_id
+            capsule.save()
+        except UserCapsule.DoesNotExist:
+            capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
+            capsule.deleted_at = timezone.now()
+            capsule.save()
+
+    return {'code': 200, 'message': '캡슐 나가기 성공', 'deleted_at': user_capsule.deleted_at,
+            'time': timezone.now().strftime('%Y-%m-%d %H:%M:%S')}, 200

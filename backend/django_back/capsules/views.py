@@ -53,6 +53,6 @@ def user_capsule_func(request):
 
     # 캡슐 정보 삭제
     elif request.method == 'DELETE':
-        result, status_code = capsule_parm_DELETE(request)
+        result, status_code = user_capsule_DELETE(request)
 
     return JsonResponse(result, safe=False, status=status_code)

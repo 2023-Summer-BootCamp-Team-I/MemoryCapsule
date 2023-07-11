@@ -4,8 +4,10 @@ password: 20031105
 use memory_capsule;
 
 Insert into user (created_at, updated_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', 'testsql', 'test', 'testemail.com', 'test', 0, 'test.com');
+Insert into user (created_at, updated_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '2', '2', '2', '2', 0, 'test.com');
+Insert into user (created_at, updated_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '3', '3', '3', '3', 0, 'test.com');
+Insert into user (created_at, updated_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '4', '4', '4', '4', 0, 'test.com');
 Insert into theme (created_at, updated_at, theme_id, theme_name, theme_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '1', 'test', 'testemail.com');
-Insert into user (created_at, updated_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '2', '2', 'a', '2', 0, 'test.com');
 Insert into theme (created_at, updated_at, theme_id, theme_name, theme_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '2', 'test', 'testemail.com');
 
 
