@@ -21,7 +21,7 @@ class Capsule(BaseModel):
     class Meta:
         db_table = 'capsule'
 
-class UserCapsule(models.Model):
+class UserCapsule(BaseModel):
     user_capsule_id = models.AutoField(primary_key=True)
     capsule = models.ForeignKey(Capsule, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
