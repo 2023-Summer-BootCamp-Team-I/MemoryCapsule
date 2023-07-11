@@ -20,7 +20,7 @@ export default function RightBookmark({ activeBookmark, setActiveBookmark }: Rig
 
     switch (bookmarkColor) {
       case 'blue':
-        navigate('/mainunopen');
+        navigate('/mainunopened');
         break;
       case 'green':
         navigate('/mainopened');
@@ -34,7 +34,7 @@ export default function RightBookmark({ activeBookmark, setActiveBookmark }: Rig
   };
 
   useEffect(() => {
-    if (location.pathname === '/mainunopen') {
+    if (location.pathname === '/mainunopened') {
       setActiveBookmark('blue');
     } else if (location.pathname === '/mainopened') {
       setActiveBookmark('green');

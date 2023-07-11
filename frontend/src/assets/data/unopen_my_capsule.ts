@@ -1,5 +1,7 @@
+import { UnopenCapsuleType } from '../../utils/types';
+
 export default function unopen_my_capsule() {
-  const data = [
+  const data: UnopenCapsuleType[] = [
     {
       id: 'unopen_my_capsule_1',
       img: 'http://news.samsungdisplay.com/wp-content/uploads/2018/08/8.jpg',

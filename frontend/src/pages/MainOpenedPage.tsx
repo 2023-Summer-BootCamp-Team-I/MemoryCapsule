@@ -16,11 +16,11 @@ function MainOpenedPage() {
     <div className="h-[42rem] w-[75rem] font-Omu grid grid-rows-2 grid-flow-row-dense">
       <div className="mt-[3.5rem]">
         {/* 내가 만든 캡슐 */}
-        <div className="flex flex-col space-y-[1.5rem]">
+        <div className="flex flex-col space-y-[1.3rem]">
           <div className="">
             <HighLight color="blue" title="내가 만든 캡슐" />
           </div>
-          <div className="flex flex-row space-x-[4rem]">
+          <div className="flex flex-row space-x-[5rem] ml-[0.7rem]">
             {openMyCapsules.slice(0, 5).map((capsule) => (
               <div
                 key={capsule.id}
@@ -40,7 +40,7 @@ function MainOpenedPage() {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
               fill="currentColor"
-              className="w-5 h-5 mt-[0.2rem] ml-2 mr-[7rem]"
+              className="w-5 h-5 mt-[0.2rem] ml-2 mr-[4rem]"
             >
               <path
                 fillRule="evenodd"
@@ -52,11 +52,11 @@ function MainOpenedPage() {
         </div>
 
         {/* 내가 참여한 캡슐 */}
-        <div className="flex flex-col space-y-[1.5rem]">
+        <div className="flex flex-col space-y-[1.3rem]">
           <div className="">
             <HighLight color="blue" title="내가 참여한 캡슐" />
           </div>
-          <div className="flex flex-row space-x-[4rem]">
+          <div className="flex flex-row space-x-[5rem] ml-[0.7rem]">
             {openJoinCapsules.slice(0, 5).map((capsule) => (
               <div
                 key={capsule.id}
@@ -76,7 +76,7 @@ function MainOpenedPage() {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
               fill="currentColor"
-              className="w-5 h-5 mt-[0.2rem] ml-2 mr-[7rem]"
+              className="w-5 h-5 mt-[0.2rem] ml-2 mr-[4rem]"
             >
               <path
                 fillRule="evenodd"

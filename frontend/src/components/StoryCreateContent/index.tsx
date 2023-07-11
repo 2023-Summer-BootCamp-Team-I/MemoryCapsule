@@ -1,5 +1,6 @@
 import { useState, ChangeEvent } from 'react';
 import pink from '../../assets/images/stickers/pink.png';
+import StoryInput from '../common/StoryInput';
 
 function StoryCreateContent() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -72,9 +73,10 @@ function StoryCreateContent() {
       />
 
       <div className="max-w-sm p-4 mt-5 bg-white rounded-lg shadow-lg h-80 font-Omu">
-        <div className="pb-2 text-2xl break-words border-b border-gray-200">
-          <input placeholder="제목을 입력하세요" className="w-full" />
-        </div>
+        {/* <div className="pb-2 text-2xl break-words border-b border-gray-200">
+          <input placeholder="제목을 입력하세요" className="w-full" maxLength={10} />
+        </div> */}
+        <StoryInput />
         <div className="max-w-sm pt-2 break-words">
           <textarea placeholder="내용을 입력하세요" className="w-full resize-none" rows={10} />
         </div>

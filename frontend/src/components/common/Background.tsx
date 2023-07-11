@@ -3,15 +3,19 @@ import { useLocation } from 'react-router-dom';
 import RightBookmark from '../RightBookmark';
 import Header from './Header';
 
+import { useRecoilValue } from 'recoil';
+import { loggedInState } from '../../utils/Recoil';
+
 type ChildrenProps = {
   children: React.ReactNode;
 };
 
 function Background({ children }: ChildrenProps) {
   const location = useLocation();
+  const loggedIn = useRecoilValue(loggedInState);
 
   const isMain =
-    location.pathname === '/mainunopen' ||
+    location.pathname === '/mainunopened' ||
     location.pathname === '/mainopened' ||
     location.pathname === '/create';
   const isGallery =
@@ -29,8 +33,8 @@ function Background({ children }: ChildrenProps) {
 
       <div className="absolute left-1/2 transform -translate-x-1/2 h-[47rem] w-[80rem] bg-white rounded-[1.875rem] flex justify-center items-center z-30 shadow-lg" />
 
-      {location.pathname !== '/' && (
-        <div className="absolute top-[4rem] z-40 right-[9rem]">
+      {location.pathname !== '/' && loggedIn === true && (
+        <div className="absolute top-[4rem] z-50 right-[9rem]">
           <Header />
         </div>
       )}

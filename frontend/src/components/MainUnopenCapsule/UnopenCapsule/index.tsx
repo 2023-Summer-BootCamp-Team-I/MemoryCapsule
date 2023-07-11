@@ -51,7 +51,7 @@ function UnopenCapsule({ capsule }: OpenCapsuleProps) {
       </div>
       <div className="relative w-32 -mt-4">
         <img src={capsuleLabel} className="h-12" />
-        <div className="absolute text-xl font-semibold text-white transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+        <div className="absolute text-xl font-semibold text-white transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-36">
           {capsule.name}
         </div>
       </div>

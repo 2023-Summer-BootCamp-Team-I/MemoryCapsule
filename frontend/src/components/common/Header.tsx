@@ -1,28 +1,36 @@
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+// import { useContext } from 'react';
+// import { AuthContext } from '../../utils/AuthContext'; // AuthContext.tsx가 저장된 경로를 입력해주세요
+
+import { useSetRecoilState } from 'recoil';
+import { loggedInState } from '../../utils/Recoil';
 
 function Header() {
   const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const setLoggedIn = useSetRecoilState(loggedInState)!;
 
   const handleLogout = async () => {
     await toast.promise(
       new Promise((resolve) => {
-        setTimeout(resolve, 2000); // 2초 대기
+        setTimeout(resolve, 2000);
       }),
       {
         pending: '로그아웃되었습니다.',
-        success: '로그아웃되었습니다.', // 사실 이 경우에는 success나 error 상태는 발생하지 않지만 필요한 경우에 사용하실 수 있습니다.
+        success: '로그아웃되었습니다.',
         error: '오류가 발생했습니다.',
       }
     );
 
     navigate('/');
+    setLoggedIn(false);
   };
 
   return (
     <div className="flex space-x-10 text-xl font-Omu">
-      <div className="mt-1 cursor-pointer" onClick={() => navigate('/mainunopen')}>
+      <div className="mt-1 cursor-pointer" onClick={() => navigate('/mainunopened')}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
