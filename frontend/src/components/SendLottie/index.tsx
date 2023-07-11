@@ -38,7 +38,7 @@ const SendLottie: React.FC = () => {
 
   return (
     <div
-      className="w-32 h-32 -mt-10 -ml-4 cursor-pointer"
+      className="w-32 h-32 cursor-pointer -ml-4 "
       id="lottieContainer"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -47,3 +47,5 @@ const SendLottie: React.FC = () => {
 };
 
 export default SendLottie;
+
+// -mt-10 -ml-4
