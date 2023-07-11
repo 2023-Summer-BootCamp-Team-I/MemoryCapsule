@@ -10,6 +10,7 @@ type TextInputProps = {
 function TextInput({ label, placeholder, title, type }: TextInputProps) {
   const [colorToShow, setColorToShow] = useState('');
   const [borderToShow, setBorderToShow] = useState('');
+  const [user, setUser] = useState('');
 
   useEffect(() => {
     if (title === 'login') {
@@ -22,13 +23,17 @@ function TextInput({ label, placeholder, title, type }: TextInputProps) {
 
   return (
     <div
-      className={`h-10 w-72 flex items-center justify-center items-start ${borderToShow} bg-transparent`}
+      className={`h-10 flex items-center justify-center items-start ${borderToShow} bg-transparent`}
     >
-      <label className="w-20 text-xs text-left">{label}</label>
+      <label className="w-24 text-sm text-left p-4">{label}</label>
       <input
-        className={`text-xs text-center ${colorToShow} outline=none focus:outline-none bg-transparent`}
+        className={`w-40 text-sm text-center ${colorToShow} outline=none focus:outline-none bg-transparent`}
         type={type}
+        id={user}
         placeholder={placeholder}
+        onChange={(e) => {
+          setUser(e.target.value);
+        }}
       ></input>
     </div>
   );
