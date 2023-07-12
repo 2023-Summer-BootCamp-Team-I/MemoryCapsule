@@ -1,0 +1,6 @@
+Use memory_capsule;
+
+Insert into user (created_at, updated_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', 'testsql', 'test', 'testemail.com', 'test', 0, 'test.com');
+Insert into theme (created_at, updated_at, theme_id, theme_name, theme_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '1', 'test', 'testemail.com');
+Insert into capsule (created_at, updated_at, capsule_id, capsule_name, due_date, limit_count,capsule_img_url, creator_id, theme_id) values ('2023-07-09 00:00:00', '2023-07-09 00:00:00',1, 'test', '2023-07-09 00:00:00',30,'test.com', 1,1);
+Insert into music (created_at, updated_at,  music_id, music_name, music_context, music_url) values('2023-07-09 00:00:00',  '2023-07-09 00:00:00', 1, 'test', 'test', 'test.com');
