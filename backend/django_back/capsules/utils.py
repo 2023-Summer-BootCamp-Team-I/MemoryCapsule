@@ -253,8 +253,12 @@ def user_capsule_GET(request) -> (json, int):
 
 
 def user_capsule_POST(request) -> (json, int):
-    capsule_id: int = request.POST['capsule_id']
-    user_id: int = request.POST['user_id']
+    try:
+        json_data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return {'code': 400, 'message': '올바른 JSON 형식이 아닙니다.'}, 400
+    capsule_id = json_data.get('capsule_id')
+    user_id = json_data.get('user_id')
 
     try:
         capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
