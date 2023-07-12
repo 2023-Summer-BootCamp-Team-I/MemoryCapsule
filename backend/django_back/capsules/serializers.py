@@ -11,8 +11,8 @@ class CapsuleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Capsule
-        fields = ('capsule_id', 'creator_id', 'theme_id', 'capsule_name', 'due_date', 'limit_count',
-                  'created_at',)
+        fields = ('capsule_id', 'creator_id', 'theme_id', 'capsule_name',
+                  'due_date', 'limit_count','created_at',)
 
     def __init__(self, instance=None, *args, **kwargs):
         kwargs['instance'] = instance

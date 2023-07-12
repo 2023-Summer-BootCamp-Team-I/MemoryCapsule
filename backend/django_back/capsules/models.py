@@ -14,6 +14,7 @@ class Capsule(BaseModel):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
     capsule_name = models.CharField(max_length=60)
+    capsule_password = models.CharField(max_length=80)
     due_date = models.DateTimeField()
     limit_count = models.IntegerField(null=True, validators=[MinValueValidator(1), MaxValueValidator(30)])
     capsule_img_url = models.CharField(max_length=255)

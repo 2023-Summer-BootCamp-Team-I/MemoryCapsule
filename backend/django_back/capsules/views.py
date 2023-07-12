@@ -8,7 +8,7 @@ from .utils import *
 def capsule_func(request) -> json:
     result: json
     status_code: int
-    # Capsule list 조회
+    # Capsule 전체 조회
     if request.method == 'GET':
         result, status_code = capsule_GET(request)
 
@@ -19,7 +19,7 @@ def capsule_func(request) -> json:
     return JsonResponse(result, safe=False, status=status_code)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def capsule_url_parm_func(request, capsule_id):
     result: json
     status_code: int
@@ -27,6 +27,10 @@ def capsule_url_parm_func(request, capsule_id):
     # 개별 캡슐 정보 반환
     if request.method == 'GET':
         result, status_code = capsule_url_parm_GET(request, capsule_id)
+
+    # 캡슐 password 확인
+    elif request.method == 'POST':
+        result, status_code = capsule_url_parm_POST(request, capsule_id)
 
     # 캡슐 정보 수정
     elif request.method == 'PUT':
@@ -47,11 +51,11 @@ def user_capsule_func(request):
     if request.method == 'GET':
         result, status_code = user_capsule_GET(request)
 
-    # 캡슐 정보 수정
+    # 캡슐에 유저 추가
     elif request.method == 'POST':
         result, status_code = user_capsule_POST(request)
 
-    # 캡슐 정보 삭제
+    # 캡슐 나가기
     elif request.method == 'DELETE':
         result, status_code = user_capsule_DELETE(request)
 
