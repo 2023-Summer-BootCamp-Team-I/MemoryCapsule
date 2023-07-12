@@ -10,6 +10,7 @@ export default {
       },
       colors: {
         MyYellow: '#FEEFCF',
+        red: '#FF0000',
       },
       fontFamily: {
         Yeongdeok: ['Yeongdeok', 'Yeongdeok'],
