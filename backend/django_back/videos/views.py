@@ -1,46 +1,75 @@
-from django.shortcuts import render
+import datetime
+import random
+import json
+from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
-from .utils import make_video
+from .utils import make_video, random_video_url_maker
 from django.http import JsonResponse
 from videos.models import Video
+from capsules.models import Capsule
+from users.models import User
+from stories.models import Story, StoryVideo
+from musics.models import Music
+
 
 @api_view(['get', 'post'])
-def video(request):
+def video_work(request, capsule_id):
     if request.method == 'GET':
-        # videos = Video.get.filter(capsule_id=capsule_id)
+        videos = Video.objects.filter(capsule=capsule_id)
+        default_video = videos.first()
 
+        data = {
+            'default_video': {
+                "creator_id": default_video.creator,
+                "video_url": default_video.story_video_url,
+                "music": default_video.music,
+                "created_at": default_video.created_at
+            },
+            'added_video': []
+        }
 
-        return JsonResponse({'message': "영상 제작 성공입니다!!",
+        for video in videos:
+            data['added_video'].append({
+                "creator_id": video.creator,
+                "video_url": video.story_video_url,
+                "music": default_video.music,
+                "created_at": video.created_at
+            })
 
-                             })
+        return JsonResponse({'code': 200, 'data': data, 'time': datetime.datetime.now()})
     if request.method == 'POST':
-        image_urls = [
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/6fba73b7-164c-45f6-b224-6398c283fd06",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/6fba73b7-164c-45f6-b224-6398c283fd06",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/7815cd1a-2b8f-4cd9-9dac-8aba996995cd",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/7815cd1a-2b8f-4cd9-9dac-8aba996995cd",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/28573595-2508-426c-8b5b-6f4d060b8320",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/28573595-2508-426c-8b5b-6f4d060b8320",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/8c84b7c8-81fe-4bff-88fc-c44ab6eb9432",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/8c84b7c8-81fe-4bff-88fc-c44ab6eb9432",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/f806a4aa-baf4-4c1e-850b-29d1aa9ff588",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/f806a4aa-baf4-4c1e-850b-29d1aa9ff588",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/d38f09ff-d567-47a8-9015-6e9f248c6049",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/d38f09ff-d567-47a8-9015-6e9f248c6049",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/6b4703c0-2970-4dc1-8ccd-c0eaaae40c21",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/6b4703c0-2970-4dc1-8ccd-c0eaaae40c21",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/65ed3972-99c2-41ed-9c94-a9b14c047c5e",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/65ed3972-99c2-41ed-9c94-a9b14c047c5e",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/5ee6682a-7dd0-4887-ac4d-51b7c9f8858f",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/5ee6682a-7dd0-4887-ac4d-51b7c9f8858f"
-        ]
 
-        # music_url = "https://author-picture.s3.ap-northeast-2.amazonaws.com/music-no1.mp3"
+        capsule = Capsule.objects.get(capsule_id=capsule_id)
+        creator = User.objects.get(user_id=request.data['creator_id'])
+        music = Music.objects.get(music_id=request.data['music_id'])
 
-        data = []
+        stories = Story.objects.filter(capsule_id=capsule_id)
 
-        video_url = "영상 제작 완료"
+        video_image_url_list_final = random_video_url_maker(capsule, creator, stories)
 
-        # s3 업로드용 함수
-        # make_video(6, 5, image_urls, music_url)  # 회원 아이디, 회원 비디오 개수,
+        music_url = music.music_url
+
+        # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{user_id}_no{video_count})
+        if Video.DoesNotExist:
+            video_count = 1
+        else:
+            video_count = Video.objects.filter(capsule=capsule.capsule_id).count() + 1
+
+        # s3 업로드 용 함수
+        video_url = make_video(creator.id, video_count, video_image_url_list_final, music_url)  # 회원 아이디, 회원 비디오 개수,
+
+        video = Video.objects.create(
+            creator=creator,
+            capsule=capsule,
+            music=music,
+            story_video_url=video_url
+        )
+
+        # story_video 테이블 생성용
+        for story in stories:
+            StoryVideo.objects.create(
+                story=story.story_id,
+                video=video.video_id
+            )
+
         return JsonResponse({'message': video_url})
