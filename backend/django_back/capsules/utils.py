@@ -14,7 +14,18 @@ from .models import UserCapsule
 from users.models import User
 from images.views import upload_image_for_api
 
+from bcrypt import checkpw
+import bcrypt
+
 from .serializers import CapsuleSerializer
+
+
+def check_encrypted_password(input_password, current_password):
+    return checkpw(input_password.encode('utf-8'), current_password.encode('utf-8'))
+
+
+def get_encrypted_password(password):
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
 
 def capsule_GET(request) -> (json, int):
@@ -92,10 +103,10 @@ def capsule_POST(request) -> (json, int):
 
     serializer = CapsuleSerializer(data=request.POST)
     capsule_img_url = upload_image_for_api(request.FILES['img_file'])
+    capsule_password = get_encrypted_password(request.POST['capsule_password'])
 
     if serializer.is_valid():
-        serializer.validated_data['capsule_img_url'] = capsule_img_url
-        instance = serializer.save(capsule_img_url=capsule_img_url)
+        instance = serializer.save(capsule_img_url=capsule_img_url, capsule_password=capsule_password)
 
         try:
             user_capsule = UserCapsule.objects.create(capsule_id=instance.capsule_id, user_id=instance.creator_id)
@@ -103,11 +114,12 @@ def capsule_POST(request) -> (json, int):
             return {'code': 400, 'message': ' 다시 확인해 주세요.'}, 400
 
         status_code = 201
-        val = {
+        result = {
             'code': 201,
             'message': 'capsule이 생성되었습니다',
             'capsule_id': instance.capsule_id,
             'capsule_name': instance.capsule_name,
+            'capsule_password': instance.capsule_password,
             'creator_id': instance.creator_id,
             'theme_id': instance.theme_id,
             'due_date': instance.due_date,
@@ -119,12 +131,12 @@ def capsule_POST(request) -> (json, int):
         }
     else:
         status_code = 400
-        val = {
+        result = {
             'code': 400,
             'message': '입력값에 오류가 있습니다. 다시 확인해 주세요.',
         }
 
-    return val, status_code
+    return result, status_code
 
 
 def capsule_url_parm_GET(request, capsule_id) -> (json, int):
@@ -139,6 +151,7 @@ def capsule_url_parm_GET(request, capsule_id) -> (json, int):
         'capsule_name': capsule.capsule_name,
         'due_date': capsule.due_date.strftime('%Y-%m-%d %H:%M:%S'),
         'limit_count': capsule.limit_count,
+        'capsule_password': capsule.capsule_password,
         'capsule_img_url': capsule.capsule_img_url,
         'created_at': capsule.created_at.strftime('%Y-%m-%d %H:%M:%S'),
         'updated_at': capsule.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
@@ -148,6 +161,24 @@ def capsule_url_parm_GET(request, capsule_id) -> (json, int):
         'code': 200,
         'message': '개별 캡슐 정보 전송',
         'capsule_data': capsule_data,
+        'time': timezone.now().strftime('%Y-%m-%d %H:%M:%S')
+    }
+
+    return result, 200
+
+
+def capsule_url_parm_POST(request, capsule_id) -> (json, int):
+    if 'img_file' not in request.FILES:
+        return {'code': 400, 'message': '파일이 제공되지 않았습니다.'}, 400
+
+    try:
+        capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
+    except Capsule.DoesNotExist:
+        return {'code': 404, 'message': '캡슐을 찾을 수 없습니다.'}, 404
+
+    result = {
+        'code': 200,
+        'message': '캡슐이 수정되었습니다.',
         'time': timezone.now().strftime('%Y-%m-%d %H:%M:%S')
     }
 
@@ -170,10 +201,20 @@ def capsule_url_parm_PUT(request, capsule_id) -> (json, int):
             return {'code': 404, 'message': '캡슐 수정 권한이 없습니다'}, 404
 
         capsule_img_url = upload_image_for_api(request.FILES['img_file'])
-        serializer.validated_data['capsule_img_url'] = capsule_img_url
-        serializer.save()
+        if not check_encrypted_password(request.POST['current_capsule_password'], capsule.capsule_password):
+            return {'code': 404, 'message': '캡슐 비밀번호가 잘못 되었습니다.'}, 404
 
+        # new_capsule_password가 넘어 왔다면, 비밀번호를 변경한다
+        if request.POST['new_capsule_password'] != '':
+            capsule_password = get_encrypted_password(request.POST['new_capsule_password'])
+
+        # 그렇지 않다면, 기존 password를 그대로 사용한다
+        else:
+            capsule_password = capsule.capsule_password
+
+        instance = serializer.save(capsule_img_url=capsule_img_url, capsule_password=capsule_password)
         updated_capsule = Capsule.objects.get(capsule_id=capsule_id)
+
         result = {
             'code': 200,
             'message': '캡슐이 수정되었습니다.',
@@ -183,6 +224,7 @@ def capsule_url_parm_PUT(request, capsule_id) -> (json, int):
             'capsule_name': updated_capsule.capsule_name,
             'due_date': updated_capsule.due_date.strftime('%Y-%m-%d %H:%M:%S'),
             'limit_count': updated_capsule.limit_count,
+            'capsule_password': updated_capsule.capsule_password,
             'capsule_img_url': updated_capsule.capsule_img_url,
             'created_at': updated_capsule.created_at.strftime('%Y-%m-%d %H:%M:%S'),
             'updated_at': updated_capsule.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
@@ -230,7 +272,8 @@ def user_capsule_GET(request) -> (json, int):
     except User.DoesNotExist:
         return {'code': 404, 'message': '호스트 유저가 삭제 되었습니다'}, 404
 
-    user_capsules = UserCapsule.objects.exclude(user_id=capsule.creator_id).filter(capsule_id=capsule_id, deleted_at__isnull=True)
+    user_capsules = UserCapsule.objects.exclude(user_id=capsule.creator_id).filter(capsule_id=capsule_id,
+                                                                                   deleted_at__isnull=True)
     user_list = []
 
     for user_capsule in user_capsules:
