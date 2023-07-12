@@ -8,7 +8,7 @@ from .utils import *
 def capsule_func(request) -> json:
     result: json
     status_code: int
-    # Capsule list 조회
+    # Capsule 전체 조회
     if request.method == 'GET':
         result, status_code = capsule_GET(request)
 
