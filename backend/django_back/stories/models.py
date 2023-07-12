@@ -4,7 +4,6 @@ from users.models import User
 from videos.models import Video
 from capsules.models import Capsule
 
-
 class Story(BaseModel):
     story_id = models.AutoField(primary_key=True)
     capsule_id = models.ForeignKey(Capsule, on_delete=models.CASCADE)
@@ -16,7 +15,7 @@ class Story(BaseModel):
     class Meta:
         db_table = 'story'
 
-class StoryVideo(models.Model):
+class StoryVideo(BaseModel):
     story_video_id = models.AutoField(primary_key=True)
     story = models.ForeignKey(Story, on_delete=models.CASCADE)
     video = models.ForeignKey(Video, on_delete=models.CASCADE)

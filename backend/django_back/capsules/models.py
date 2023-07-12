@@ -12,10 +12,9 @@ from themes.models import Theme
 class Capsule(BaseModel):
     capsule_id = models.AutoField(primary_key=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
-    # creator_id = models.CharField(max_length=60)
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
-    # theme_id = models.IntegerField(null=True)
     capsule_name = models.CharField(max_length=60)
+    capsule_password = models.CharField(max_length=80)
     due_date = models.DateTimeField()
     limit_count = models.IntegerField(null=True, validators=[MinValueValidator(1), MaxValueValidator(30)])
     capsule_img_url = models.CharField(max_length=255)
@@ -23,7 +22,7 @@ class Capsule(BaseModel):
     class Meta:
         db_table = 'capsule'
 
-class UserCapsule(models.Model):
+class UserCapsule(BaseModel):
     user_capsule_id = models.AutoField(primary_key=True)
     capsule = models.ForeignKey(Capsule, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
