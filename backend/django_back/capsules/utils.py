@@ -322,6 +322,7 @@ def user_capsule_POST(request) -> (json, int):
         return {'code': 400, 'message': '올바른 JSON 형식이 아닙니다.'}, 400
     capsule_id = json_data.get('capsule_id')
     user_id = json_data.get('user_id')
+    capsule_password = json_data.get('capsule_password')
 
     try:
         capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
@@ -336,20 +337,22 @@ def user_capsule_POST(request) -> (json, int):
     if UserCapsule.objects.filter(capsule_id=capsule_id, user_id=user_id, deleted_at__isnull=True):
         return {'code': 400, 'message': '이미 캡슐에 포함된 유저입니다.'}, 400
 
+    if not check_encrypted_password(capsule_password, capsule.capsule_password):
+        return {'code': 404, 'message': '캡슐 비밀번호가 잘못 되었습니다.'}, 404
+
     try:
         user_capsule = UserCapsule.objects.create(capsule_id=capsule_id, user_id=user_id)
     except (ValidationError, IntegrityError) as e:
         return {'code': 400, 'message': '입력값에 오류가 있습니다. 다시 확인해 주세요.'}, 400
 
+
     result = {
         'code': 201,
         'message': '유저가 캡슐에 입장하였습니다',
-        'data': {
-            'user_capsule_id': user_capsule.user_capsule_id,
-            'user_id': user_capsule.user_id,
-            'capsule_id': user_capsule.capsule_id,
-            'created_at': user_capsule.created_at,
-        },
+        'user_capsule_id': user_capsule.user_capsule_id,
+        'user_id': user_capsule.user_id,
+        'capsule_id': user_capsule.capsule_id,
+        'created_at': user_capsule.created_at,
         'time': timezone.now().strftime('%Y-%m-%d %H:%M:%S'),
     }
 
