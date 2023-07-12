@@ -314,7 +314,7 @@ def user_capsule_GET(request) -> (json, int):
     return result, 200
 
 
-# 캡슐 정보 수정
+# 캡슐에 유저 추가
 def user_capsule_POST(request) -> (json, int):
     try:
         json_data = json.loads(request.body)
@@ -356,7 +356,7 @@ def user_capsule_POST(request) -> (json, int):
     return result, 200
 
 
-# 캡슐 정보 삭제
+# 캡슐 나가기
 def user_capsule_DELETE(request) -> (json, int):
     capsule_id: int = int(request.GET.get('capsule_id', 1))
     user_id: int = int(request.GET.get('user_id', 1))

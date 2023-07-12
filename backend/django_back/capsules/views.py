@@ -51,11 +51,11 @@ def user_capsule_func(request):
     if request.method == 'GET':
         result, status_code = user_capsule_GET(request)
 
-    # 캡슐 정보 수정
+    # 캡슐에 유저 추가
     elif request.method == 'POST':
         result, status_code = user_capsule_POST(request)
 
-    # 캡슐 정보 삭제
+    # 캡슐 나가기
     elif request.method == 'DELETE':
         result, status_code = user_capsule_DELETE(request)
 
