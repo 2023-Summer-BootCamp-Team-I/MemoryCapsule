@@ -84,14 +84,14 @@ def capsule_GET(request) -> (json, int):
 
 
 def capsule_POST(request) -> (json, int):
-    if 'file_name' not in request.FILES:
+    if 'img_file' not in request.FILES:
         return {'code': 400, 'message': '파일이 제공되지 않았습니다.'}, 400
 
     val: json
     status_code: int
 
     serializer = CapsuleSerializer(data=request.POST)
-    capsule_img_url = upload_image_for_api(request.FILES['file_name'])
+    capsule_img_url = upload_image_for_api(request.FILES['img_file'])
 
     if serializer.is_valid():
         serializer.validated_data['capsule_img_url'] = capsule_img_url
@@ -155,7 +155,7 @@ def capsule_url_parm_GET(request, capsule_id) -> (json, int):
 
 
 def capsule_url_parm_PUT(request, capsule_id) -> (json, int):
-    if 'file_name' not in request.FILES:
+    if 'img_file' not in request.FILES:
         return {'code': 400, 'message': '파일이 제공되지 않았습니다.'}, 400
 
     try:
@@ -169,7 +169,7 @@ def capsule_url_parm_PUT(request, capsule_id) -> (json, int):
         if capsule.creator_id != int(request.POST['creator_id']):
             return {'code': 404, 'message': '캡슐 수정 권한이 없습니다'}, 404
 
-        capsule_img_url = upload_image_for_api(request.FILES['file_name'])
+        capsule_img_url = upload_image_for_api(request.FILES['img_file'])
         serializer.validated_data['capsule_img_url'] = capsule_img_url
         serializer.save()
 
