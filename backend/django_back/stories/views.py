@@ -8,6 +8,7 @@ from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 
 
+
 # Create your views here.
 
 # @api_view(['GET']) #스토리 리스트 전체 반환
@@ -45,9 +46,9 @@ def story_POST(request, capsule_id):
             capsule = Capsule.objects.get(capsule_id=capsule_id)
         except Capsule.DoesNotExist:
             return JsonResponse({"code": "404", "message": "Capsule이 존재하지 않습니다."}, status=404)
-        story_img_url = upload_image_for_api(request.FILES['file_name'])
         user = User.objects.get(pk = capsule.creator_id)
 
+        story_img_url = upload_image_for_api(request.FILES['filename'])
         #user = capsule.creator_id
         #video = Video.objects.get(video_id = request.data['video_id'])
         #video = request.data['video_id']
@@ -57,7 +58,7 @@ def story_POST(request, capsule_id):
             #video_id=video,
             story_title=request.data['story_title'],
             story_content=request.data['story_content'],
-            story_img_url=story_img_url,
+            story_img_url= story_img_url,
         )
         #story.video_id.set([video])
         story.created_at = story.created_at.strftime('%Y-%m-%d %H:%M:%S')
@@ -193,11 +194,11 @@ def story_func(request, capsule_id, story_id) :
         except story.DoesNotExist:
             return JsonResponse({"code": "404", "message": "스토리가 존재하지 않습니다."}, status=404)
 
-        story_img_url = upload_image_for_api(request.FILES['file_name'])
+        #story_img_url =
         if request.method == 'PUT':
             story.story_title = request.data.get('story_title')
             story.story_content = request.data.get('story_content')
-            story.story_img_url = story_img_url
+            story.story_img_url = upload_image_for_api(request.FILES['filename'])
             story.updated_at = request.data.get('updated_at')
             story.save()
 
