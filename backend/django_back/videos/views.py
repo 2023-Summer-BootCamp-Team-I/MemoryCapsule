@@ -39,37 +39,38 @@ def video_work(request, capsule_id):
         return JsonResponse({'code': 200, 'data': data, 'time': datetime.datetime.now()})
     if request.method == 'POST':
 
-        capsule = Capsule.objects.get(capsule_id=capsule_id)
+        capsule = Capsule.objects.get(pk=capsule_id)
         creator = User.objects.get(user_id=request.data['creator_id'])
         music = Music.objects.get(music_id=request.data['music_id'])
+        print(creator.nickname )
+        print(capsule.capsule_name)
+        print(music.music_name)
 
         stories = Story.objects.filter(capsule_id=capsule_id)
 
-        video_image_url_list_final = random_video_url_maker(capsule, creator, stories)
-
+        video_image_url_list_final = random_video_url_maker(capsule, stories)
+        print(video_image_url_list_final)
         music_url = music.music_url
+        print(music_url)
 
         # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{user_id}_no{video_count})
-        if Video.DoesNotExist:
-            video_count = 1
-        else:
-            video_count = Video.objects.filter(capsule=capsule.capsule_id).count() + 1
+        video_count = Video.objects.filter(capsule=capsule.capsule_id).count() + 1
 
         # s3 업로드 용 함수
-        video_url = make_video(creator.id, video_count, video_image_url_list_final, music_url)  # 회원 아이디, 회원 비디오 개수,
+        video_url = make_video(creator.user_id, video_count, video_image_url_list_final, music_url)  # 회원 아이디, 회원 비디오 개수,
 
         video = Video.objects.create(
             creator=creator,
             capsule=capsule,
             music=music,
             story_video_url=video_url
-        )
+         )
 
         # story_video 테이블 생성용
         for story in stories:
             StoryVideo.objects.create(
-                story=story.story_id,
-                video=video.video_id
+                story=story,
+                video=video
             )
 
         return JsonResponse({'message': video_url})

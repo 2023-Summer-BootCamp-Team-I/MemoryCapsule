@@ -89,6 +89,7 @@ def random_video_url_maker(capsule, stories):
     for story in stories:
         story_id_list.append(story.story_id)
 
+
     story_id_list.sort()
     story_count = len(story_id_list)
 
@@ -99,6 +100,7 @@ def random_video_url_maker(capsule, stories):
         for i in range(0, story_count):
             for j in range(2):
                 video_image_list_ready.append(story_id_list[i])
+        print("일열 : ", video_image_list_ready)
     else:
         while len(video_image_list_ready) < capsule.limit_count:
             random_number = random.randint(0, len(story_id_list) - 1)
@@ -106,13 +108,14 @@ def random_video_url_maker(capsule, stories):
                 continue
             video_image_list_ready.append(random_number)
             unique_values.add(random_number)
+        print("랜덤 : ", video_image_list_ready)
 
     video_image_list_ready.sort()
-    video_image_url_list_final = []
+    video_image_url_list = []
     for story_id in video_image_list_ready:
         for j in range(2):
-            # 비디오 제작에 넘길 이미지 url 배열
             story = Story.objects.get(story_id=story_id)
-            video_image_url_list_final.append(Story.objects.get(story.story_img_url))
+            # 비디오 제작에 넘길 이미지 url 배열
+            video_image_url_list.append(story.story_img_url)
 
-    return video_image_url_list_final
+    return video_image_url_list
