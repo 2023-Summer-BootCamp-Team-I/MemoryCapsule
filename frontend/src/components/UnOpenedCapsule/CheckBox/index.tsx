@@ -12,7 +12,7 @@ const Checkbox: React.FC<CheckboxProps> = ({ checked, onChecked }) => {
   };
 
   return (
-    <label className="flex items-center p-1 space-x-2 border">
+    <label className="flex items-center p-1 space-x-2 border cursor-pointer">
       <input type="checkbox" className="hidden" checked={checked} onChange={handleCheckboxChange} />
       <span
         className={`w-5 h-5 inline-block border-2 rounded ${

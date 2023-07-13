@@ -16,7 +16,7 @@ const story_dummy: StoryType[] = [
   {
     img: 'https://newsimg.hankookilbo.com/2022/12/07/edc57134-751b-4e34-8b94-50c6bf39a6fa.jpg',
     owner: 'user3',
-    title: '런던',
+    title: '궁금해?',
     content: '런던 가면 해리포터 스튜디오는 무죠거언 가야쥐~',
   },
   {
@@ -35,7 +35,7 @@ const story_dummy: StoryType[] = [
   {
     img: 'https://newsimg.hankookilbo.com/2022/12/07/edc57134-751b-4e34-8b94-50c6bf39a6fa.jpg',
     owner: 'user3',
-    title: '사이다',
+    title: '궁금하냐구',
     content: '사이다는 소화를 도와주지 ㅎㅎ',
   },
   {
@@ -55,6 +55,37 @@ const story_dummy: StoryType[] = [
     owner: 'user3',
     title: '스위치',
     content: '내가 진짜 닌텐도 스위치 요즘 별로 안하는데 칩은 왜 이렇게 사고 싶지?ㅋㅋ',
+  },
+
+  {
+    img: 'https://newsimg.hankookilbo.com/2022/12/07/edc57134-751b-4e34-8b94-50c6bf39a6fa.jpg',
+    owner: 'user3',
+    title: '야비야비',
+    content: '사이다는 소화를 도와주지 ㅎㅎ',
+  },
+  {
+    img: 'https://ojsfile.ohmynews.com/STD_IMG_FILE/2017/0104/IE002080243_STD.jpg',
+    owner: 'user1',
+    title: '걍귀요미',
+    content: '강호동, 70년생 귀요미라고 한다. \n 사실 난 잘 모르겠다🤔',
+  },
+  {
+    img: 'https://mblogthumb-phinf.pstatic.net/MjAyMTA1MDZfNDcg/MDAxNjIwMjI3OTA4MDcy.ySHWarlpExdoyK_MY22r34Ln6_WVKPews9IFDIlsl5gg.qDTo5UKK_CfDpQ0NsTOjr6T5nazfywvujp_KWUln6yAg.JPEG.miyampuzzy/%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C.jpeg.jpg?type=w800',
+    owner: 'user1',
+    title: '와 궁금?',
+    content: '머리 크기 실화...?',
+  },
+  {
+    img: 'https://newsimg.hankookilbo.com/2022/12/07/edc57134-751b-4e34-8b94-50c6bf39a6fa.jpg',
+    owner: 'user3',
+    title: '스위치',
+    content: '내가 진짜 닌텐도 스위치 요즘 별로 안하는데 칩은 왜 이렇게 사고 싶지?ㅋㅋ',
+  },
+  {
+    img: 'https://newsimg.hankookilbo.com/2022/12/07/edc57134-751b-4e34-8b94-50c6bf39a6fa.jpg',
+    owner: 'user1',
+    title: '?',
+    content: '성훈님 이분은 왜 이러고 계시죠...?',
   },
 ];
 
