@@ -19,6 +19,8 @@ import bcrypt
 
 from .serializers import CapsuleSerializer
 
+from django_back.tasks import schedule_video_creation
+
 
 def check_encrypted_password(input_password, current_password):
     return checkpw(input_password.encode('utf-8'), current_password.encode('utf-8'))
@@ -114,6 +116,9 @@ def capsule_POST(request) -> (json, int):
             user_capsule = UserCapsule.objects.create(capsule_id=instance.capsule_id, user_id=instance.creator_id)
         except:
             return {'code': 400, 'message': ' 다시 확인해 주세요.'}, 400
+
+        # schedule_video_creation task 예약
+        schedule_video_creation.delay(instance.capsule_id, instance.due_date)
 
         status_code = 201
         result = {
