@@ -1,4 +1,3 @@
-import React from 'react';
 import MainOpenCapsule from '../components/MainOpenCapsule';
 import MainUnOpenCapsule from '../components/MainUnopenCapsule';
 

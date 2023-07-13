@@ -1,11 +1,10 @@
-import StoryModal from '../components/common/StoryModal';
+// import StoryModal from '../components/common/StoryModal';
+import StoryList from '../components/UnOpenedCapsule/StoryList';
 
 export default function UnOpenedCapsulePage() {
   return (
     <div>
-      {/* UnOpenedCapsulePage */}
-      <StoryModal title="Detail" content="detail" />
-      <StoryModal title="Create" content="create" />
+      <StoryList />
     </div>
   );
 }
