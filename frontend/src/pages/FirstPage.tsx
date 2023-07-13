@@ -32,10 +32,12 @@ export const FirstPage: React.FC = () => {
       setCapsuleId(storedCapsuleId);
       setModalOpen(true);
 
+      // eslint-disable-next-line no-console
       console.log('isLoggedIn: ', loggedIn);
     } else {
       setLoggedIn(true);
 
+      // eslint-disable-next-line no-console
       console.log('isLoggedIn: ', loggedIn);
 
       navigate('/mainunopened');

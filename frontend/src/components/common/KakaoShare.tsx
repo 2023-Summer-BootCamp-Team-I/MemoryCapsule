@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 declare global {
   interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Kakao: any;
   }
 }
@@ -12,8 +13,6 @@ interface KakaoProps {
 }
 
 function KakaoShare({ capsule_id, state }: KakaoProps) {
-  // const capsule_id = 'open_my_capsule_3ㅋㅋㅋㅋㅋㅋㅋㅋㅋ';
-
   useEffect(() => {
     if (window.Kakao) {
       const kakao = window.Kakao;
@@ -37,10 +36,14 @@ function KakaoShare({ capsule_id, state }: KakaoProps) {
           webUrl: `http://localhost:5173/${state}/${capsule_id}`, // PC에서 연결될 링크
         },
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       success: function (response: any) {
+        // eslint-disable-next-line no-console
         console.log(response);
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       fail: function (error: any) {
+        // eslint-disable-next-line no-console
         console.log(error);
       },
     });

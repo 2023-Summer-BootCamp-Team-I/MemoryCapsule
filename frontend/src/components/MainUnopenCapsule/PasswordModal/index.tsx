@@ -16,12 +16,14 @@ export default function PasswordModal({ capsuleId, closeModal }: PasswordModalPr
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // eslint-disable-next-line no-console
     console.log(`Capsule ID: ${capsuleId}, Password: ${password}`);
 
     // 비밀번호 확인 로직 추가
     if (password === password_answer) {
       // 비밀번호가 올바를 경우 세션 스토리지 clear
       setLoggedIn(true);
+      // eslint-disable-next-line no-console
       console.log('isLoggedIn: ', loggedIn);
 
       alert('로그인 성공하였습니다!');
