@@ -59,7 +59,7 @@ import flowerImg3 from '../assets/images/login/flower3.png';
 import flowerImg4 from '../assets/images/login/flower4.png';
 
 import Login from '../components/Login';
-import LoginModal from '../components/LoginModal';
+import JoinModal from '../components/JoinModal';
 import TreeLottie from '../components/TreeLottie';
 
 const FirstPage: React.FC = () => {
@@ -103,7 +103,7 @@ const FirstPage: React.FC = () => {
             <h1 className="text-9xl ml-24 font-bold italic">capsule</h1>
           </div>
           <Login onSignUp={onSignUp} />
-          {isModalOpen && <LoginModal onClose={closeModal} />}
+          {isModalOpen && <JoinModal onClose={closeModal} />}
         </div>
         <div className="flex flex-col items-center justify-around w-1/6 ">
           <img className="w-16 h-16 relative -mr-32" src={flowerImg3} />
