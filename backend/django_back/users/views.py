@@ -1,13 +1,12 @@
 import jwt
 from rest_framework.decorators import api_view
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from .models import User
 from .utils import create_user, user_find_by_id, check_encrypted_password
 from django.db import IntegrityError
 from django_back.settings import JWT_SECRET_KEY, ALGORITHM
 
 import datetime
-
 
 @api_view(['post'])
 def sign_up(request):
@@ -29,8 +28,6 @@ def sign_up(request):
             for user in users:
                 if request.POST["id"] == user.id:
                     return JsonResponse({'code': '500', 'message': '이미 존재하는 아이디 입니다'}, status=500)
-                elif check_encrypted_password(request.POST["password"], user):
-                    return JsonResponse({'code': '500', 'message': '이미 존재하는 비밀번호 입니다'}, status=500)
                 elif request.POST["email"] == user.email:
                     return JsonResponse({'code': '500', 'message': '이미 존재하는 이메일 입니다'}, status=500)
 

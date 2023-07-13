@@ -11,23 +11,21 @@ from themes.models import Theme
 
 class Capsule(BaseModel):
     capsule_id = models.AutoField(primary_key=True)
-    # user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    # test를 위해 relation 임시 제거
-    # user_id = models.IntegerField(null=True)
-    creator_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    theme_id = models.ForeignKey(Theme, on_delete=models.CASCADE)
-    # theme_id = models.IntegerField(null=True)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
     capsule_name = models.CharField(max_length=60)
+    capsule_password = models.CharField(max_length=80)
     due_date = models.DateTimeField()
     limit_count = models.IntegerField(null=True, validators=[MinValueValidator(1), MaxValueValidator(30)])
     capsule_img_url = models.CharField(max_length=255)
 
     class Meta:
         db_table = 'capsule'
-class UserCapsule(models.Model):
+
+class UserCapsule(BaseModel):
     user_capsule_id = models.AutoField(primary_key=True)
-    capsule_id = models.ForeignKey(Capsule, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    capsule = models.ForeignKey(Capsule, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'user_capsule'

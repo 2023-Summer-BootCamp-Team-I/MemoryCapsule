@@ -5,6 +5,8 @@ import StoryInput from '../common/StoryInput';
 function StoryCreateContent() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [previousImage, setPreviousImage] = useState<string | null>(null);
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length) {
@@ -22,6 +24,15 @@ function StoryCreateContent() {
     if (fileInput) {
       fileInput.click();
     }
+  };
+
+  const handleSubmitClick = () => {
+    if (!selectedImage || !title || !content) {
+      alert('사진, 제목, 내용을 입력해주세요.');
+      return;
+    }
+    alert('업로드되었습니다.');
+    window.location.reload();
   };
 
   return (
@@ -73,13 +84,26 @@ function StoryCreateContent() {
       />
 
       <div className="max-w-sm p-4 mt-5 bg-white rounded-lg shadow-lg h-80 font-Omu">
+
         {/* <div className="pb-2 text-2xl break-words border-b border-gray-200">
           <input placeholder="제목을 입력하세요" className="w-full" maxLength={10} />
         </div> */}
         <StoryInput />
         <div className="max-w-sm pt-2 break-words">
-          <textarea placeholder="내용을 입력하세요" className="w-full resize-none" rows={10} />
+          <textarea
+            placeholder="내용을 입력하세요"
+            className="w-full resize-none"
+            rows={10}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          />
         </div>
+        <button
+          className="fixed px-4 py-1 font-bold text-white bg-[#7DC7A8] rounded bottom-7 right-12 hover:bg-[#449B9C]"
+          onClick={handleSubmitClick}
+        >
+          업로드
+        </button>
       </div>
     </div>
   );

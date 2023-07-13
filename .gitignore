@@ -3,8 +3,6 @@
 *.pot
 *.pyc
 *.env
-backend/django_back/users/migrations/0001_initial.py
-backend/django_back/capsules/migrations/0001_initial.py
 __pycache__/
 local_settings.py
 db.sqlite3
@@ -12,4 +10,5 @@ db.sqlite3-journal
 media
 venv
 .idea
+.idea/
 migrations

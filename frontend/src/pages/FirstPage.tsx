@@ -16,10 +16,8 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { loggedInState } from '../utils/Recoil';
 import PasswordModal from '../components/MainUnopenCapsule/PasswordModal'; // 비밀번호 입력 모달 컴포넌트 경로를 입력해주세요
-// import { AuthContext } from '../utils/AuthContext'; // AuthContext.tsx가 저장된 경로를 입력해주세요
 
 export const FirstPage: React.FC = () => {
-  // const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext)!;
   const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
 
   const navigate = useNavigate();
