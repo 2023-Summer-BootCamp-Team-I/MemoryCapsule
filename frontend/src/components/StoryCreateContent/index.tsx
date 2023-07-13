@@ -76,7 +76,12 @@ function StoryCreateContent() {
           <input placeholder="제목을 입력하세요" className="w-full" />
         </div>
         <div className="max-w-sm pt-2 break-words">
-          <textarea placeholder="내용을 입력하세요" className="w-full resize-none" rows={10} />
+          <textarea
+            placeholder="내용을 입력하세요"
+            className="w-full resize-none"
+            disabled
+            rows={10}
+          />
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 // import StoryModal from '../components/common/StoryModal';
-import FirstFloor from '../components/UnOpenedCapsule/FirstFloor';
+import SecondFloor from '../components/UnOpenedCapsule/SecondFloor';
 
 export default function UnOpenedCapsulePage() {
   return (
@@ -7,7 +7,7 @@ export default function UnOpenedCapsulePage() {
       {/* UnOpenedCapsulePage */}
       {/* <StoryModal title="Detail" content="detail" />
       <StoryModal title="Create" content="create" /> */}
-      <FirstFloor />
+      <SecondFloor />
     </div>
   );
 }

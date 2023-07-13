@@ -7,19 +7,21 @@ import StoryDetailContent from '../../StoryDetailContent';
 type StoryModalProps = {
   title: string;
   content: string;
+  onClose: () => void;
 };
 
-function StoryModal({ title, content }: StoryModalProps) {
+function StoryModal({ title, content, onClose }: StoryModalProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
+  onClose();
 
   return (
     <div>
-      <button className="px-4 py-2 font-bold text-white bg-blue-500 rounded" onClick={handleOpen}>
+      <div className="px-4 py-2 font-bold text-white bg-blue-500 rounded" onClick={handleOpen}>
         {title}
-      </button>
+      </div>
 
       {isOpen && (
         <div
