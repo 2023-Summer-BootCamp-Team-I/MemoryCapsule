@@ -75,12 +75,28 @@ services:
     command: sh -c "python wait_mysql.py &&
       celery -A django_back worker --loglevel=info"
 
+  prometheus: # 프로메테우스 서비스 추가
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus:/etc/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+
+  grafana: # 그라파나 서비스 추가
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
   # prometheus:
   #   image: prom/prometheus
   #   restart: always
   #   volumes:
   #     - ./backend/monitoring/prometheus:/etc/prometheus/
-  #     - prometheus_data:/prometheus
+  #     - monitoring:/prometheus
   #   command:
   #     - '--config.file=/etc/prometheus/prometheus.yml'
   #     - '--storage.tsdb.path=/prometheus'

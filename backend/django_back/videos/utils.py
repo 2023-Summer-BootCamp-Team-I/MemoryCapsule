@@ -8,6 +8,7 @@ import random
 from stories.models import Story
 from videos.models import Video
 
+
 def make_video(capsule_id, video_number, image_urls, music_url):
     s3_client = boto3.client('s3')
     s3_resource = boto3.resource('s3')
@@ -82,6 +83,7 @@ def make_video(capsule_id, video_number, image_urls, music_url):
         if os.path.exists(output_video_key):
             os.remove(output_video_key)
 
+
 def random_video_url_maker(capsule, stories):
     story_id_list = []
     for story in stories:
@@ -122,14 +124,14 @@ def default_video_maker(capsule, music):
     video_image_url_list_final = random_video_url_maker(capsule, stories)
     music_url = music.music_url
 
-    # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{user_id}_no{video_count})
+    # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{capsule_id}_no{video_count})
     video_count = Video.objects.filter(capsule=capsule.capsule_id).count() + 1
 
     # s3 업로드 용 함수
     return make_video(capsule.capsule_id, video_count, video_image_url_list_final, music_url)  # 회원 아이디, 회원 비디오 개수,
 
 
-def user_choice_video_url(capsule, music, user_choice_list):
+def user_choice_video_maker(capsule, music, user_choice_list):
     video_count = Video.objects.filter(capsule=capsule.capsule_id).count() + 1
     music_url = music.music_url
     return make_video(capsule.capsule_id, video_count, user_choice_list, music_url)
