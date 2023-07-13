@@ -20,7 +20,11 @@ import blueImg2 from '../../assets/images/stickers/blue2.png';
 //       />
 //     </form>
 
-function Login() {
+interface LoginProps {
+  onSignUp: () => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onSignUp }) => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
@@ -45,7 +49,12 @@ function Login() {
               type="password"
             />
           </form>
-          <p className="text-xs w-full flex justify-start pt-2 pl-6">회원가입</p>
+          <p
+            className="text-xs w-full flex justify-end pt-2 pr-4 cursor-pointer"
+            onClick={onSignUp}
+          >
+            회원가입
+          </p>
         </div>
         <div className="w-1/5 ml-4 flex justify-center items-center">
           <FontAwesomeIcon
@@ -58,6 +67,6 @@ function Login() {
       </div>
     </div>
   );
-}
+};
 
 export default Login;
