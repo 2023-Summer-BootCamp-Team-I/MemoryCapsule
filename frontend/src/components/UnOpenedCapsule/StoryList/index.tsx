@@ -1,22 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import plusbutton from '../../../assets/images/plusbutton.png';
 import titlemark from '../../../assets/images/titlemark.png';
 import subtitlemark from '../../../assets/images/subtitlemark.png';
 import letter from '../../../assets/images/letter.png';
-import dumy, { pictures } from '../../dumy';
 import note from '../../../assets/images/note/note1.png';
+
 import StoryCreateContent from '../../StoryCreateContent';
 import StoryDetailContent from '../../StoryDetailContent';
 
+import story_dummy from '../../../assets/data/story_dummy';
+import { StoryType } from '../../../utils/types';
+
 type StoryModalProps = {
-  img: string;
-  title: string;
-  content: string;
+  img?: string;
+  title?: string;
+  content?: string;
+  type: 'create' | 'detail';
   onClose: () => void;
 };
 
-function SecondFloor() {
-  console.log(dumy);
+function StoryList() {
+  // eslint-disable-next-line no-console
+  console.log(story_dummy);
 
   useEffect(() => {
     const scrollbarStyle = `
@@ -43,7 +48,7 @@ function SecondFloor() {
       }
       .custom-scroll-container {
         width: 1000px;
-        height: 400px;
+        height: 500px;
         overflow: auto;
       }
       
@@ -78,9 +83,6 @@ function SecondFloor() {
       .image-shadow {
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
       }
-      img {
-        margin-bottom: -30px;
-      }
     `;
 
     const styleElement = document.createElement('style');
@@ -94,69 +96,77 @@ function SecondFloor() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
-
-  // const StoryCreateContent = () => {
-  //   return <div>Story Create Content</div>;
-  // };
-
-  // // StoryDetailContent 컴포넌트
-  // const StoryDetailContent = () => {
-  //   return <div>Story Detail Content</div>;
-  // };
+  const [modalType, setModalType] = useState<'create' | 'detail' | null>(null);
 
   const handleImageClick = (index: number) => {
+    if (story_dummy[index].owner !== 'user1') {
+      alert('⛔️Access Denied⛔️ You are not the owner of this story');
+      return;
+    }
     setSelectedImageIndex(index);
+    setModalType('detail');
     setIsOpen(true); // 이미지 클릭 시 모달 창 열기
+  };
+
+  const handlePlusButtonClick = () => {
+    setModalType('create');
+    setIsOpen(true);
   };
 
   const handleCloseModal = () => {
     setSelectedImageIndex(null);
-    setIsOpen(false); // 모달 창 닫기
+    setModalType(null);
+    setIsOpen(false);
   };
 
-  const StoryModal = ({ img, title, content }: StoryModalProps) => {
+  const StoryModal = ({ img, title, type, content }: StoryModalProps) => {
     return (
       <div>
-        <div
-          className={`fixed inset-0 z-10 overflow-y-auto ${isOpen ? 'block' : 'hidden'}`}
-          aria-labelledby="modal-title"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div
-              className="fixed inset-0 transition-opacity bg-gray-700 bg-opacity-75"
-              aria-hidden="true"
-            ></div>
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
-              &#8203;
-            </span>
-            <div className="inline-block overflow-hidden text-left align-bottom transition-all transform rounded-lg sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="relative">
-                <img src={note} className="w-full h-full" alt="Note" />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="absolute cursor-pointer w-7 h-7 right-5 top-7"
-                  type="button"
-                  onClick={handleCloseModal}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                <div className="absolute top-16 left-20">
-                  {content === 'create' ? (
-                    <StoryCreateContent />
-                  ) : (
-                    <StoryDetailContent title={title} img={img} />
-                  )}
+        {isOpen && (
+          <div
+            className="fixed inset-0 z-10 overflow-y-auto"
+            aria-labelledby="modal-title"
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+              <div
+                className="fixed inset-0 transition-opacity bg-gray-700 bg-opacity-75"
+                aria-hidden="true"
+              ></div>
+              <span
+                className="hidden sm:inline-block sm:align-middle sm:h-screen"
+                aria-hidden="true"
+              >
+                &#8203;
+              </span>
+              <div className="inline-block overflow-hidden text-left align-bottom transition-all transform rounded-lg sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div className="relative">
+                  <img src={note} className="w-full h-full" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="absolute cursor-pointer w-7 h-7 right-5 top-7"
+                    type="button"
+                    onClick={handleCloseModal}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  <div className="absolute top-16 left-20">
+                    {type === 'create' ? (
+                      <StoryCreateContent />
+                    ) : (
+                      <StoryDetailContent title={title} img={img} content={content} />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     );
   };
@@ -169,24 +179,24 @@ function SecondFloor() {
       </div>
       <div className="custom-scroll-container">
         <div className="custom-scroll-content">
-          {dumy.map((picture: pictures, index: number) => (
+          {story_dummy.map((picture: StoryType, index: number) => (
             <div key={index} className="picture-container">
               <div style={{ position: 'relative' }}>
                 <img
                   src={subtitlemark}
                   alt="Title"
-                  className="w-40"
+                  className="w-36"
                   style={{
                     position: 'absolute',
                     marginTop: -25,
-                    left: 30,
+                    left: 33,
                     zIndex: 1,
                   }}
                 />
                 <p
                   style={{
                     position: 'absolute',
-                    marginTop: -10,
+                    marginTop: -13,
                     left: 0,
                     right: 0,
                     textAlign: 'center',
@@ -203,7 +213,9 @@ function SecondFloor() {
                   onClick={() => handleImageClick(index)}
                   alt={picture.owner}
                   width={220}
-                  className="image-shadow"
+                  className={`z-0 object-cover ${
+                    picture.owner === 'user1' ? 'h-52' : 'h-full'
+                  } w-52 image-shadow`}
                   style={{ zIndex: 0, marginTop: '20px', marginBottom: '10px', cursor: 'pointer' }}
                   title={picture.owner} // 이미지에 title 속성 추가
                 />
@@ -213,13 +225,20 @@ function SecondFloor() {
         </div>
       </div>
       <div>
-        <img src={plusbutton} alt="Plus Button" className="plus-button" />
+        <img
+          src={plusbutton}
+          alt="Plus Button"
+          className="h-16 transition-transform duration-200 cursor-pointer plus-button active:scale-90"
+          onClick={handlePlusButtonClick}
+        />
       </div>
-      {selectedImageIndex !== null && (
+      {isOpen && modalType === 'create' && <StoryModal type="create" onClose={handleCloseModal} />}
+      {isOpen && modalType === 'detail' && selectedImageIndex !== null && (
         <StoryModal
-          title={dumy[selectedImageIndex]?.title}
-          img={dumy[selectedImageIndex]?.img}
-          content="create"
+          title={story_dummy[selectedImageIndex]?.title}
+          img={story_dummy[selectedImageIndex]?.img}
+          type="detail"
+          content={story_dummy[selectedImageIndex]?.content}
           onClose={handleCloseModal}
         />
       )}
@@ -227,4 +246,4 @@ function SecondFloor() {
   );
 }
 
-export default SecondFloor;
+export default StoryList;
