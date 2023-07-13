@@ -71,7 +71,7 @@ function CapsuleMyGalleryPage() {
   }, [is_open]);
 
   return (
-    <div className="relative h-[42rem] w-[75rem] border">
+    <div className="relative h-[42rem] w-[75rem]">
       <div className="absolute top-0 -mt-[4.5rem]">
         {is_open !== undefined && (
           <GalleryTopBookmark

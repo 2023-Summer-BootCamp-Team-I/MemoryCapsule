@@ -195,24 +195,28 @@ function StoryList() {
         <img src={titlemark} alt="Title Mark" />
         <div className="flex title">
           제주도
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-8 h-8 mt-2 ml-3 cursor-pointer"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-            />
-          </svg>
+          {/* 캡슐 정보 모달 */}
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-8 h-8 mt-2 ml-3 cursor-pointer"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+              />
+            </svg>
+          </div>
         </div>
       </div>
 
       <div className="flex justify-end">
+        {/* 참여 유저 확인 모달 */}
         <div className="flex cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -230,6 +234,7 @@ function StoryList() {
           <span className="mt-1 ml-2 mr-5">3</span>
         </div>
 
+        {/* 내 스토리만 보기 체크박스 */}
         <Checkbox checked={checked} onChecked={handleCheckedChange} />
       </div>
 
