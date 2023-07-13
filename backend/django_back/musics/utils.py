@@ -5,10 +5,7 @@ import boto3
 def upload_music(mp3_file):
     bucket_name = 'author-picture'  # S3 버킷 이름
 
-    if Music.DoesNotExist:
-        music_count = 1
-    else:
-        music_count = Music.object.all().count + 1
+    music_count = Music.objects.count() + 1
 
     s3_key = f'music-no{music_count}.mp3'  # S3에 저장될 파일 경로
 

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import video
+from .views import video_work
 urlpatterns = [
-    path('video', video)
+    path('<int:capsule_id>', video_work)
 ]

@@ -16,8 +16,16 @@ def upload_mp3(request):
         mp3_file = request.FILES['filename']
         music_url = "music created"
 
-        # s3 업로드용 함수
-        # upload_music(mp3_file)
+
+        # music_count = Music.objects.count() + 1
+
+        # music_url = f"https://arthur-picture.s3.ap-northeast-2.amazonaws.com/music-no{music_count}.mp3"
+
+
+        # s3 업로드용 함수 S3 요금 방지를 위해 테스트 url로 대체
+        # 실전에선 music_url을 아래 함수로
+        music_url = upload_music(mp3_file)
+
 
         Music.objects.create(
             music_name=request.POST['name'],
@@ -27,4 +35,6 @@ def upload_mp3(request):
 
         return JsonResponse({'code': '201',
                              'message': 'music created',
-                             'time': datetime.datetime.now()})
+                             'time': datetime.datetime.now(),
+                             'mp3_url': music_url
+                             })

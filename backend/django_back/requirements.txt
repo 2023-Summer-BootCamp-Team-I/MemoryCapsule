@@ -36,3 +36,9 @@ tqdm==4.65.0
 typing_extensions==4.7.1
 uritemplate==4.1.1
 urllib3==1.26.16
+
+
+PyAMQP
+django_celery_beat
+django_celery_results
+celery

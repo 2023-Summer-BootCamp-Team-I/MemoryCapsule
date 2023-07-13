@@ -1,46 +1,75 @@
-from django.shortcuts import render
+import datetime
+import random
+import json
+from rest_framework.parsers import JSONParser
+from django.utils import timezone
 from rest_framework.decorators import api_view
-from .utils import make_video
+from .utils import user_choice_video_url
 from django.http import JsonResponse
 from videos.models import Video
+from capsules.models import Capsule
+from users.models import User
+from stories.models import Story, StoryVideo
+from musics.models import Music
+
 
 @api_view(['get', 'post'])
-def video(request):
+def video_work(request, capsule_id):
     if request.method == 'GET':
-        # videos = Video.get.filter(capsule_id=capsule_id)
+        videos = Video.objects.filter(capsule=capsule_id)
+        default_video = videos.first()
 
+        data = {
+            'default_video': {
+                "creator_id": default_video.creator_id,
+                "creator_nickname": User.objects.get(pk=default_video.creator_id).nickname,
+                "video_url": default_video.story_video_url,
+                "music_name": default_video.music.music_name,
+                "created_at": default_video.created_at
+            },
+            'added_video': []
+        }
 
-        return JsonResponse({'message': "영상 제작 성공입니다!!",
+        for video in videos:
+            if not default_video.video_id == video.video_id:
+                data['added_video'].append({
+                    "creator_id": default_video.creator_id,
+                    "creator_nickname": User.objects.get(pk=default_video.creator_id).nickname,
+                    "video_url": video.story_video_url,
+                    "music": default_video.music.music_name,
+                    "created_at": video.created_at
+                })
 
-                             })
+        return JsonResponse({'code': 200, 'data': data, 'time': timezone.now()})
     if request.method == 'POST':
-        image_urls = [
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/6fba73b7-164c-45f6-b224-6398c283fd06",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/6fba73b7-164c-45f6-b224-6398c283fd06",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/7815cd1a-2b8f-4cd9-9dac-8aba996995cd",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/7815cd1a-2b8f-4cd9-9dac-8aba996995cd",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/28573595-2508-426c-8b5b-6f4d060b8320",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/28573595-2508-426c-8b5b-6f4d060b8320",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/8c84b7c8-81fe-4bff-88fc-c44ab6eb9432",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/8c84b7c8-81fe-4bff-88fc-c44ab6eb9432",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/f806a4aa-baf4-4c1e-850b-29d1aa9ff588",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/f806a4aa-baf4-4c1e-850b-29d1aa9ff588",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/d38f09ff-d567-47a8-9015-6e9f248c6049",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/d38f09ff-d567-47a8-9015-6e9f248c6049",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/6b4703c0-2970-4dc1-8ccd-c0eaaae40c21",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/6b4703c0-2970-4dc1-8ccd-c0eaaae40c21",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/65ed3972-99c2-41ed-9c94-a9b14c047c5e",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/65ed3972-99c2-41ed-9c94-a9b14c047c5e",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/5ee6682a-7dd0-4887-ac4d-51b7c9f8858f",
-            # "https://author-picture.s3.ap-northeast-2.amazonaws.com/5ee6682a-7dd0-4887-ac4d-51b7c9f8858f"
-        ]
 
-        # music_url = "https://author-picture.s3.ap-northeast-2.amazonaws.com/music-no1.mp3"
+        capsule = Capsule.objects.get(pk=capsule_id)
+        creator = User.objects.get(user_id=request.data['creator_id'])
+        music = Music.objects.get(music_id=request.data['music_id'])
+        user_choice_list = request.data.get("user_choice_image", [])
 
-        data = []
+        user_choice_url_list = []
+        for story_id in user_choice_list:
+            story_image = Story.objects.get(pk=story_id).story_img_url
+            for i in range(2):
+                user_choice_url_list.append(story_image)
+        user_choice_url_list.sort()
+        print(user_choice_url_list)
 
-        video_url = "영상 제작 완료"
+        video_url = user_choice_video_url(capsule, music, user_choice_url_list)
 
-        # s3 업로드용 함수
-        # make_video(6, 5, image_urls, music_url)  # 회원 아이디, 회원 비디오 개수,
-        return JsonResponse({'message': video_url})
+        video = Video.objects.create(
+            creator=creator,
+            capsule=capsule,
+            music=music,
+            story_video_url=video_url
+        )
+
+        # story_video 테이블 생성용
+        for story_id in user_choice_list:
+            StoryVideo.objects.create(
+                story=Story.objects.get(pk=story_id),
+                video=video
+            )
+
+        return JsonResponse({'code': 200, 'message': '사용자 선택 영상 제작 완료', 'video_url': video_url, 'time': timezone.now()})
