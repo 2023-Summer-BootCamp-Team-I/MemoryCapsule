@@ -17,7 +17,7 @@ function TextInput({ label, placeholder, title, type }: TextInputProps) {
 
   useEffect(() => {
     if (title === 'login') {
-      setColorToShow('placeholder-[#9B8EF8]');
+      setColorToShow('placeholder-[#aaaaaa] opacity-60');
       setBorderToShow('border-b border-dotted border-black');
       setHeightToShow('h-10');
       setWidthToShow('w-40');
@@ -25,9 +25,9 @@ function TextInput({ label, placeholder, title, type }: TextInputProps) {
     } else if (title === 'join') {
       setColorToShow('placeholder-neutral-300');
       setBorderToShow('');
-      setHeightToShow('h-8');
+      setHeightToShow('h-10');
       setWidthToShow('w-30');
-      setLabelToShow('w-20');
+      setLabelToShow('w-20 font-bold');
     }
   }, [title]);
 

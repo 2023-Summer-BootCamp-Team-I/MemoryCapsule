@@ -49,12 +49,11 @@ const Login: React.FC<LoginProps> = ({ onSignUp }) => {
               type="password"
             />
           </form>
-          <p
-            className="text-xs w-full flex justify-end pt-2 pr-4 cursor-pointer"
-            onClick={onSignUp}
-          >
-            회원가입
-          </p>
+          <div className="text-xs  w-full flex justify-end pt-2 pr-4">
+            <p className=" cursor-pointer text-[#9B8EF8]" onClick={onSignUp}>
+              회원가입
+            </p>
+          </div>
         </div>
         <div className="w-1/5 ml-4 flex justify-center items-center">
           <FontAwesomeIcon

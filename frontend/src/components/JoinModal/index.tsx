@@ -13,8 +13,8 @@ const JoinModal: React.FC<ModalProps> = ({ onClose }) => {
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50 z-50 font-Omu">
       <div className="relative">
-        <img className="w-100 h-120" src={noteImg3} />
-        <div className="flex flex-col w-full h-full bg-red-200 top-0 right-0 absolute pr-20 pl-28 pt-20 pb-8">
+        <img className="w-[35rem] h-[40rem]" src={noteImg3} />
+        <div className="flex flex-col w-full h-full bg-red-200 top-0 right-0 absolute pr-20 pl-28 pt-28 pb-8">
           <span className="close flex justify-end" onClick={onClose}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -28,7 +28,7 @@ const JoinModal: React.FC<ModalProps> = ({ onClose }) => {
             </svg>
           </span>
           <div className="flex flex-col items-center">
-            <div className="pt-5">
+            <div className="py-5">
               <ImageUploadButton />
             </div>
             <div>
@@ -65,9 +65,12 @@ const JoinModal: React.FC<ModalProps> = ({ onClose }) => {
                 />
               </form>
             </div>
-            <div className="flex items-center justify-center text-white w-28 h-7 bg-[#B78A5B] mt-3 text-sm rounded-2xl">
+            <button
+              className="flex items-center justify-center text-white w-32 h-7 bg-[#B78A5B] p-5 mt-5 text-sm rounded-full"
+              onClick={onClose}
+            >
               회원가입 완료
-            </div>
+            </button>
           </div>
         </div>
       </div>
