@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import RightBookmark from '../RightBookmark';
-import GalleryTopBookmark from '../CapsuleGallery/GalleryTopBookmark';
+import Header from './Header';
+
+import { useRecoilValue } from 'recoil';
+import { loggedInState } from '../../utils/Recoil';
 
 type ChildrenProps = {
   children: React.ReactNode;
@@ -9,15 +12,16 @@ type ChildrenProps = {
 
 function Background({ children }: ChildrenProps) {
   const location = useLocation();
+  const loggedIn = useRecoilValue(loggedInState);
 
   const isMain =
     location.pathname === '/mainunopened' ||
     location.pathname === '/mainopened' ||
     location.pathname === '/create';
-  const isGallery = location.pathname === '/mygallery' || location.pathname === '/joingallery';
+  const isGallery =
+    location.pathname.startsWith('/mygallery') || location.pathname.startsWith('/joingallery');
 
   const [activeBookmark, setActiveBookmark] = useState('blue');
-  const [activeRightBookmark, setActiveRightBookmark] = useState('orange');
 
   return (
     <div className="relative z-0 flex items-center justify-center w-full h-screen overflow-hidden">
@@ -26,14 +30,18 @@ function Background({ children }: ChildrenProps) {
       {isMain && (
         <RightBookmark activeBookmark={activeBookmark} setActiveBookmark={setActiveBookmark} />
       )}
-      {isGallery && (
-        <GalleryTopBookmark
-          activeBookmark={activeRightBookmark}
-          setActiveBookmark={setActiveRightBookmark}
-        />
-      )}
 
       <div className="absolute left-1/2 transform -translate-x-1/2 h-[47rem] w-[80rem] bg-white rounded-[1.875rem] flex justify-center items-center z-30 shadow-lg" />
+
+      {location.pathname !== '/' && loggedIn === true && (
+        <div className="absolute top-[4rem] z-50 right-[9rem]">
+          <Header />
+        </div>
+      )}
+
+      <div className="absolute left-[8rem] z-40 top-[6rem]">
+        {(isMain || isGallery) && <div className="text-5xl font-bold font-Omu">Memory Capsule</div>}
+      </div>
 
       <div className="relative z-40">{children}</div>
     </div>
