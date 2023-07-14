@@ -1,7 +1,22 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+
+type typeProps = {
+  type: string;
+};
+
 // React 모듈과 useState, useRef 훅을 가져옴.
-function ImageUploadButton() {
+function ImageUploadButton({ type }: typeProps) {
   const [file, setFile] = useState<string | null>(null); //file, setfile 상태변수 선언. 초기값 null
+  const [shapeToShow, setShapeToShow] = useState('');
+
+  useEffect(() => {
+    if (type === 'circle') {
+      setShapeToShow('w-[7.5rem] h-[7.5rem] rounded-full ');
+    } else if (type === 'square') {
+      setShapeToShow('w-[8rem] h-[8rem] m-4');
+    }
+  }, [type]);
+
   // file과 setFile이라는 상태 변수를 선언하고 useState 훅을 사용하여 초기값을 null로 설정
   const fileInputRef = useRef<HTMLInputElement>(null); // 파일 입력시 함수
   // fileInputRef라는 변수를 선언하고 useRef 훅을 사용하여 초기값을 null로 설정. HTMLInputElement 타입으로 지정
@@ -51,10 +66,8 @@ function ImageUploadButton() {
       }}
     >
       <div
+        className={`${shapeToShow}`}
         style={{
-          width: '120px',
-          height: '120px',
-          borderRadius: '50%',
           backgroundColor: '#B6B2B4',
           display: 'flex',
           alignItems: 'center',

@@ -29,7 +29,7 @@ const JoinModal: React.FC<ModalProps> = ({ onClose }) => {
           </span>
           <div className="flex flex-col items-center">
             <div className="py-5">
-              <ImageUploadButton />
+              <ImageUploadButton type="circle" />
             </div>
             <div>
               <form method="post" action="서버의url" id="join-form">
