@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'storages',
     'django_celery_beat',
     'django_celery_results',
+    'django_prometheus',
 ]
 
 MIDDLEWARE = [
@@ -65,6 +66,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 ROOT_URLCONF = 'django_back.urls'
@@ -123,6 +126,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+GRAFANA = {
+    'URL': 'http://grafana:3000',  # Grafana URL을 설정합니다. Docker Compose에서 사용한 이름으로 접근합니다.
+    'API_KEY': env('GRAFANA_API_KEY'),  # Grafana API 키를 설정합니다. 본인의 API 키로 대체해야 합니다.
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

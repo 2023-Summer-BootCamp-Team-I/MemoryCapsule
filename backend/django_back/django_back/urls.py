@@ -16,8 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-
-from rest_framework import permissions
+from django_prometheus import urls as prometheus_urls
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework.permissions import AllowAny
@@ -38,6 +37,7 @@ schema_view = get_schema_view(
     permission_classes=(AllowAny,)
 )
 
+
 urlpatterns = [
     path('api/v1/admin/', admin.site.urls),
     path('api/v1/users/', include("users.urls")),
@@ -45,7 +45,8 @@ urlpatterns = [
     path('api/v1/images/', include('images.urls')),
     path('api/v1/musics/', include('musics.urls')),
     path('api/v1/videos/', include('videos.urls')),
-    path('api/v1/stories/', include('stories.urls'))
+    path('api/v1/stories/', include('stories.urls')),
+    path('prometheus/', include(prometheus_urls)),
 ]
 
 if settings.DEBUG:
