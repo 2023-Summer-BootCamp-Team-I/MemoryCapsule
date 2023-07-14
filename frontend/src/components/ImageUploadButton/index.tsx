@@ -33,10 +33,14 @@ function ImageUploadButton() {
   // event.target.files와 event.target.files[0]이 존재하는 경우, FileReader 객체를 생성
   // reader.onload 콜백 함수를 정의하여 FileReader의 결과를 처리
   // e.target.result가 존재하는 경우, 파일 상태 변수인 file을 해당 결과로 설정
-  const handleRemove = () => {
-    // 사진 삭제
-    setFile(null); // 널값으로 셋
-  };
+
+  // @@@@@@@@@@ 사진삭제 @@@@@@@@@@@@@
+  // const handleRemove = () => {
+  //   // 사진 삭제
+  //   setFile(null); // 널값으로 셋
+  // };
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
   // handleRemove라는 함수를 정의. 이미지 제거 버튼을 클릭 시 호출
   // file 상태 변수를 null로 설정하여 이미지를 제거
   return (
@@ -44,16 +48,14 @@ function ImageUploadButton() {
       style={{
         display: 'flex',
         justifyContent: 'center',
-        flexDirection: 'column',
-        alignItems: 'center',
       }}
     >
       <div
         style={{
-          width: '300px',
-          height: '300px',
+          width: '120px',
+          height: '120px',
           borderRadius: '50%',
-          backgroundColor: 'gray',
+          backgroundColor: '#B6B2B4',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -71,13 +73,22 @@ function ImageUploadButton() {
         ) : (
           <span
             style={{
-              color: 'white',
+              color: 'black',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
             }}
           >
-            Upload Image
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
           </span>
         )}
       </div>
@@ -88,10 +99,18 @@ function ImageUploadButton() {
         ref={fileInputRef}
         style={{ display: 'none' }}
       />
-      {file && <button onClick={handleRemove}>Remove Image</button>}
     </div>
   );
 }
+
+// @@@@@@@@@@@@@@사진 삭제 @@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//{file && (
+//   <button className="flex justify-start w-6 h-6 cursor-pointer" onClick={handleRemove}>
+//   &times;
+// </button>
+// )}
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 // ImageUploadButton이라는 컴포넌트를 정의
 // 화면에 이미지를 업로드할 수 있는 버튼을 나타냄
 export default ImageUploadButton;

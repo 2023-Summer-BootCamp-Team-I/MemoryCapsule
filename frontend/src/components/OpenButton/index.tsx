@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import openedCapsuleImg1 from '../../assets/images/openedCapsule_img1.png';
-import openedCapsuleImg2 from '../../assets/images/openedCapsule_img2.png';
+import openedCapsuleImg1 from '../../assets/images/openedCapsule/openedCapsule_img1.png';
+import openedCapsuleImg2 from '../../assets/images/openedCapsule/openedCapsule_img2.png';
 
 type OpenButtonProps = {
   imageName: string;
@@ -22,7 +22,7 @@ export default function OpenButton({ imageName }: OpenButtonProps) {
 
   return (
     <div
-      className={`flex shadow-ButtonShadow items-center justify-center w-56 h-56 ${colorToShow} rounded-3xl`}
+      className={`flex shadow-ButtonShadow items-center justify-center h-[18rem] w-[19rem] ${colorToShow} rounded-3xl cursor-pointer`}
     >
       {imageToShow && <img src={imageToShow} className="w-32 h-32" />}
     </div>
