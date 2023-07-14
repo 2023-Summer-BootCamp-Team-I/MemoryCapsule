@@ -4,7 +4,7 @@ import json
 from rest_framework.parsers import JSONParser
 from django.utils import timezone
 from rest_framework.decorators import api_view
-from .utils import user_choice_video_maker
+from .tasks import create_user_choice_video
 from django.http import JsonResponse
 from videos.models import Video
 from capsules.models import Capsule
@@ -42,7 +42,6 @@ def video_work(request, capsule_id):
 
         return JsonResponse({'code': 200, 'data': data, 'time': timezone.now()})
     if request.method == 'POST':
-
         capsule = Capsule.objects.get(pk=capsule_id)
         creator = User.objects.get(user_id=request.data['creator_id'])
         music = Music.objects.get(music_id=request.data['music_id'])
@@ -54,9 +53,8 @@ def video_work(request, capsule_id):
             for i in range(2):
                 user_choice_url_list.append(story_image)
         user_choice_url_list.sort()
-        print(user_choice_url_list)
 
-        video_url = user_choice_video_maker(capsule, music, user_choice_url_list)
+        video_url = create_user_choice_video.delay(capsule, music, user_choice_url_list)
 
         video = Video.objects.create(
             creator=creator,

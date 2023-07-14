@@ -2,9 +2,17 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: 'myapp'
+  - job_name: 'backend'
     static_configs:
-      - targets: ['localhost:8000']
-    metrics_path: '/custom-metrics'
-    params:
-      status: ['200', '500']
+      - targets: ['localhost:8080']
+#    metrics_path: '/custom-metrics'
+#    params:
+#      status: ['200', '500']
+
+  - job_name: 'prometheus'
+
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+
+    static_configs:
+      - targets: [ 'prometheus:9090' ]
