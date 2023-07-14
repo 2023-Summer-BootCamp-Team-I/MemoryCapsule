@@ -5,6 +5,7 @@ volumes:
 
   build_folder:
 
+
 services:
 
   mysqldb:
@@ -16,6 +17,8 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - "./init/:/docker-entrypoint-initdb.d/"
+
 
   backend:
     build:
@@ -31,14 +34,14 @@ services:
                python manage.py makemigrations musics &&
                python manage.py migrate &&
                python manage.py makemigrations themes &&
-               python manage.py migrate && 
+               python manage.py migrate &&
                python manage.py makemigrations capsules &&
                python manage.py migrate &&
                python manage.py makemigrations videos &&
                python manage.py migrate &&
                python manage.py makemigrations stories &&
-               python manage.py migrate && 
-               
+               python manage.py migrate &&
+
 
                python manage.py runserver 0.0.0.0:8080"
 
@@ -76,7 +79,7 @@ services:
       - TZ=Asia/Seoul
     command: sh -c "python wait_mysql.py &&
       celery -A django_back worker --loglevel=info"
-      
+
   celery_beat:
    container_name: celery_beat
    build: ./backend/django_back/
@@ -110,6 +113,23 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.0
+    container_name: cadvisor
+    privileged: true
+    ports:
+      - 9600:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /proc/cpuinfo:/host/proc/cpuinfo:ro
+      - /dev/disk:/dev/disk/:ro
+    devices:
+      - /dev/kmsg:/dev/kmsg
+
 
 
 
