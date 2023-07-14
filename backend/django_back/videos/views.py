@@ -5,7 +5,7 @@ from rest_framework.parsers import JSONParser
 from django.utils import timezone
 from rest_framework.decorators import api_view
 from .tasks import create_user_choice_video
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from videos.models import Video
 from capsules.models import Capsule
 from users.models import User
@@ -55,6 +55,7 @@ def video_work(request, capsule_id):
         user_choice_url_list.sort()
 
         video_url = create_user_choice_video.delay(capsule, music, user_choice_url_list)
+        # result = video_url.get()
 
         video = Video.objects.create(
             creator=creator,
@@ -70,4 +71,5 @@ def video_work(request, capsule_id):
                 video=video
             )
 
-        return JsonResponse({'code': 200, 'message': '사용자 선택 영상 제작 완료', 'video_url': video_url, 'time': timezone.now()})
+        # return JsonResponse({'code': 200, 'message': '사용자 선택 영상 제작 완료', 'video_url': result, 'time': timezone.now()})
+        return HttpResponse(video_url)
