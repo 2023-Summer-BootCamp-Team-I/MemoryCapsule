@@ -1,8 +1,7 @@
-import React from 'react';
 import CreateCapsuleNote from '../components/CreateCapsuleNote';
 import CreateTheme from '../components/CreateTheme/indext';
 
-export default function CreateCapsulePage() {
+function CreateCapsulePage() {
   // const handleValueChange = (value: string) => {
   //   // 전달받은 값을 처리하는 로직을 작성합니다.
   //   console.log('전달받은 값:', value);
@@ -22,3 +21,5 @@ export default function CreateCapsulePage() {
     </div>
   );
 }
+
+export default CreateCapsulePage;

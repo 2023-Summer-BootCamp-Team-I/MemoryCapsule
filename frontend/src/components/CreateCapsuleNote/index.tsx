@@ -1,4 +1,3 @@
-import React from 'react';
 import noteImg2 from '../../assets/images/note/note2.png';
 
 import SendLottie from '../SendLottie';
@@ -19,10 +18,10 @@ function CreateCapsuleNote() {
   return (
     <div className="relative mt-12">
       <img className="h-[30rem] w-[30rem]" src={noteImg2} />
-      <div className="flex flex-col  items-center top-10 left-10 absolute h-full w-full p-10 -ml-4">
+      <div className="absolute flex flex-col items-center w-full h-full p-10 -ml-4 top-10 left-10">
         <img src={capsule[0].img} className="h-[10rem] w-[10rem] object-cover bg-cover" />
         <form
-          className="flex flex-col justify-evenly w-68 h-32 text-lg "
+          className="flex flex-col h-32 text-lg justify-evenly w-68 "
           method="post"
           action="서버의url"
           id="login-form"

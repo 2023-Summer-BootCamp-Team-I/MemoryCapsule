@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
@@ -13,10 +13,10 @@ function ReactDatePicker() {
         selected={startDate}
         onChange={(date: Date) => setStartDate(date)}
         locale={ko}
-        className="w-40 text-center outline-none focus:outline-none bg-transparent cursor-pointer custom-datepicker"
+        className="w-40 text-center bg-transparent outline-none cursor-pointer focus:outline-none custom-datepicker"
         dateFormat="yyyy.MM.dd (eee)"
         showPopperArrow={false}
-        // minDate={new Date()} // 이전 날짜 선택 불가능
+        minDate={new Date()} // 이전 날짜 선택 불가능
         dayClassName={(d) =>
           getDate(d) === getDate(startDate) && getMonth(d) === getMonth(startDate)
             ? `${styles['normal-day']} ${styles['selected-day']} ${styles['sunday']}`
@@ -83,7 +83,7 @@ export default ReactDatePicker;
 //         selected={startDate}
 //         onChange={(date: Date) => setStartDate(date)}
 //         locale={ko}
-//         className="w-40 text-center outline-none focus:outline-none bg-transparent cursor-pointer custom-datepicker"
+//         className="w-40 text-center bg-transparent outline-none cursor-pointer focus:outline-none custom-datepicker"
 //         dateFormat="yyyy.MM.dd (eee)"
 //         showPopperArrow={false}
 //         dayClassName={(d) =>

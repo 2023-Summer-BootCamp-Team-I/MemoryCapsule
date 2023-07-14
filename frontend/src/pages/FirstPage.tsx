@@ -1,5 +1,3 @@
-// 로그인/ 회원가입
-
 import React, { useState } from 'react';
 
 import flowerImg1 from '../assets/images/login/flower1.png';
@@ -19,6 +17,7 @@ import PasswordModal from '../components/MainUnopenCapsule/PasswordModal'; // �
 
 const FirstPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [passwdOpen, setPasswdOpen] = useState<boolean>(false);
 
   const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
   const navigate = useNavigate();
@@ -36,7 +35,7 @@ const FirstPage: React.FC = () => {
     const storedCapsuleId = sessionStorage.getItem('capsule_id');
     if (storedCapsuleId) {
       setCapsuleId(storedCapsuleId);
-      setIsModalOpen(true);
+      setPasswdOpen(true);
       // eslint-disable-next-line no-console
       console.log('isLoggedIn: ', loggedIn);
     } else {
@@ -75,7 +74,7 @@ const FirstPage: React.FC = () => {
             <h1 className="mr-24 italic font-bold text-9xl">memory</h1>
             <h1 className="ml-24 italic font-bold text-9xl">capsule</h1>
           </div>
-          <Login onSignUp={onSignUp} />
+          <Login onSignUp={onSignUp} handleClick={handleClick} />
           {isModalOpen && <JoinModal onClose={closeModal} />}
         </div>
         <div className="flex flex-col items-center justify-around w-1/6 ">
@@ -83,9 +82,8 @@ const FirstPage: React.FC = () => {
           <img className="relative w-16 h-16 -ml-20" src={flowerImg4} />
         </div>
       </div>
-      <button onClick={handleClick}>로그인</button>
-      {isModalOpen && (
-        <PasswordModal capsuleId={capsuleId} closeModal={() => setIsModalOpen(false)} />
+      {passwdOpen && (
+        <PasswordModal capsuleId={capsuleId} closeModal={() => setPasswdOpen(false)} />
       )}
     </div>
   );
