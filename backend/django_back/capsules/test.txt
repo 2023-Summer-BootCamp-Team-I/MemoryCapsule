@@ -4,12 +4,19 @@ password: 20031105
 use memory_capsule;
 
 Insert into user (created_at, updated_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', 'testsql', 'test', 'testemail.com', 'test', 0, 'test.com');
+Insert into theme (created_at, updated_at, theme_id, theme_name, theme_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '1', 'test', 'testemail.com');
+Insert into capsule (created_at, updated_at, capsule_id, capsule_name, due_date, limit_count,capsule_img_url, capsule_password, creator_id, theme_id) values ('2023-07-09 00:00:00', '2023-07-09 00:00:00',1, 'test', '2023-07-09 00:00:00',30,'test.com', '1', 1,1);
+select * from music;
+
+
+Insert into story (created_at, updated_at,  capsule_id, creator_id, story_title, story_content, story_img_url) values('2023-07-09 00:00:00',  '2023-07-09 00:00:00', 1, 1, '1', '1', 'https://author-picture.s3.ap-northeast-2.amazonaws.com/b33f5da9-2335-44bf-b21d-7d21867570ac');
+Insert into music (created_at, updated_at,  music_name, music_context, music_url) values('2023-07-09 00:00:00',  '2023-07-09 00:00:00', 'test', 'test', 'https://author-picture.s3.ap-northeast-2.amazonaws.com/music-no2.mp3');
+Insert into user (created_at, updated_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', 'testsql', 'test', 'testemail.com', 'test', 0, 'test.com');
 Insert into user (created_at, updated_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '2', '2', '2', '2', 0, 'test.com');
 Insert into user (created_at, updated_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '3', '3', '3', '3', 0, 'test.com');
 Insert into user (created_at, updated_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '4', '4', '4', '4', 0, 'test.com');
 Insert into theme (created_at, updated_at, theme_id, theme_name, theme_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '1', 'test', 'testemail.com');
 Insert into theme (created_at, updated_at, theme_id, theme_name, theme_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '2', 'test', 'testemail.com');
-
 
 
 

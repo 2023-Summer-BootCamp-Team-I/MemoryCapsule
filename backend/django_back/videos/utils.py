@@ -129,28 +129,33 @@ def random_video_url_maker(capsule, stories):
 @shared_task
 def default_video_maker(capsule_id, music_id):
     stories = Story.objects.filter(capsule_id=capsule_id)
-    capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
 
-    video_image_url_list_final = random_video_url_maker(capsule, stories)
-    music_url = Music.objects.get(music_id=music_id, deleted_at__isnull=True).music_url
+    if stories.exists():
+        capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
 
-
-    # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{capsule_id}_no{video_count})
-    video_count = Video.objects.filter(capsule=capsule.capsule_id).count() + 1
-
-    # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{user_id}_no{video_count})
-    video_count = Video.objects.filter(capsule=capsule).count() + 1
-
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-
-    # 로그 남기기
-    logger.info(f'Video creation complete for capsule {capsule_id} at {timezone.now()}')
+        video_image_url_list_final = random_video_url_maker(capsule, stories)
+        music_url = Music.objects.get(music_id=music_id, deleted_at__isnull=True).music_url
 
 
-    # s3 업로드 용 함수
-    return make_video(capsule, video_count, video_image_url_list_final, music_url)  # 회원 아이디, 회원 비디오 개수,
+        # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{capsule_id}_no{video_count})
+        video_count = Video.objects.filter(capsule=capsule.capsule_id).count() + 1
+
+        # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{user_id}_no{video_count})
+        video_count = Video.objects.filter(capsule=capsule).count() + 1
+
+        logger = logging.getLogger(__name__)
+        logger.setLevel(logging.INFO)
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
+        # 로그 남기기
+        logger.info(f'Video creation complete for capsule {capsule_id} at {timezone.now()}')
+
+        video_url = make_video(capsule, video_count, video_image_url_list_final, music_url)  # 회원 아이디, 회원 비디오 개수,
+        # s3 업로드 용 함수
+        return video_url
+
+    else:
+        return "This Capsule has No Story"
 
 
 
