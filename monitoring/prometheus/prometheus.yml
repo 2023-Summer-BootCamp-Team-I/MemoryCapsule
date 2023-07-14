@@ -5,9 +5,9 @@ scrape_configs:
   - job_name: 'backend'
     static_configs:
       - targets: ['localhost:8080']
-#    metrics_path: '/custom-metrics'
-#    params:
-#      status: ['200', '500']
+    metrics_path: '/custom-metrics'
+    params:
+      status: ['200', '500']
 
   - job_name: 'prometheus'
 
