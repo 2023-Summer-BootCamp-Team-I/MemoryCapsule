@@ -95,8 +95,25 @@ services:
    command: sh -c "python wait_mysql.py &&
      celery -A django_back beat --loglevel=info"
 
-
-
+  redis_container:
+    # 사용할 이미지
+    image: redis:latest
+    # 컨테이너명
+    container_name: redis
+    # 접근 포트 설정(컨테이너 외부:컨테이너 내부)
+    ports:
+      - 6379:6379
+    # 스토리지 마운트(볼륨) 설정
+    volumes:
+      - ./redis/data:/data
+      - ./redis/conf/redis.conf:/usr/local/conf/redis.conf
+    # 컨테이너에 docker label을 이용해서 메타데이터 추가
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    # 컨테이너 종료시 재시작 여부 설정
+    restart: always
+    command: redis-server /usr/local/conf/redis.conf
 
   prometheus: # 프로메테우스 서비스 추가
     image: prom/prometheus
@@ -113,6 +130,8 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+      - cadvisor
+      - node-exporter
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.47.0
@@ -130,6 +149,10 @@ services:
     devices:
       - /dev/kmsg:/dev/kmsg
 
+  node-exporter:
+    image: prom/node-exporter:latest
+    ports:
+      - 9100:9100
 
 
 
