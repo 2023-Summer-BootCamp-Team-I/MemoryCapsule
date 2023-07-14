@@ -56,6 +56,7 @@ services:
     environment:
       - RABBITMQ_USER=guest
       - RABBITMQ_PASSWORD=guest
+      - TZ=Asia/Seoul
     ports:
       - "5672:5672" # Default Port
       - "15672:15672" # For UI
@@ -64,7 +65,7 @@ services:
 
   celery_worker:
     container_name: celery_worker
-    build: ./backend/django_back
+    build: ./backend/django_back/
     volumes:
       - ./backend/django_back:/backend
     ports: [ ]
@@ -72,15 +73,52 @@ services:
       - rabbitmq
     environment:
       - C_FORCE_ROOT=true
+      - TZ=Asia/Seoul
     command: sh -c "python wait_mysql.py &&
       celery -A django_back worker --loglevel=info"
+      
+  celery_beat:
+   container_name: celery_beat
+   build: ./backend/django_back/
+   volumes:
+     - ./backend/django_back:/backend
+   ports: [ ]
+   depends_on:
+     - rabbitmq
+     - celery_worker
+   environment:
+     - C_FORCE_ROOT=true
+     - TZ=Asia/Seoul
+   command: sh -c "python wait_mysql.py &&
+     celery -A django_back beat --loglevel=info"
+
+
+
+
+  prometheus: # 프로메테우스 서비스 추가
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus:/etc/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+
+  grafana: # 그라파나 서비스 추가
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+
 
   # prometheus:
   #   image: prom/prometheus
   #   restart: always
   #   volumes:
   #     - ./backend/monitoring/prometheus:/etc/prometheus/
-  #     - prometheus_data:/prometheus
+  #     - monitoring:/prometheus
   #   command:
   #     - '--config.file=/etc/prometheus/prometheus.yml'
   #     - '--storage.tsdb.path=/prometheus'

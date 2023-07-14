@@ -19,7 +19,7 @@ def story_capsule_func(request, capsule_id):
         try:
             capsule = Capsule.objects.get(capsule_id=capsule_id)
         except Capsule.DoesNotExist:
-            return JsonResponse({"code": "404", "message": "Capsule이 존재하지 않습니다."}, status=404)
+            return JsonResponse({"code": 404, "message": "캡슐이 존재하지 않습니다."}, status=404)
         user = User.objects.get(pk = capsule.creator_id)
 
         story_img_url = upload_image_for_api(request.FILES['filename'])
@@ -38,7 +38,7 @@ def story_capsule_func(request, capsule_id):
         story.created_at = story.created_at.strftime('%Y-%m-%d %H:%M:%S')
         story.updated_at = story.updated_at.strftime('%Y-%m-%d %H:%M:%S')
         return JsonResponse({
-            "code": "201",
+            "code": 201,
             "message": "스토리 생성이 완료되었습니다.",
             "capsule_id": capsule.capsule_id,
             "story_title": story.story_title,
@@ -48,21 +48,26 @@ def story_capsule_func(request, capsule_id):
             "updated_at": story.updated_at,
             "story_id": story.story_id
         })
-        return JsonResponse({"code": "400", "message": "스토리 생성에 실패하였습니다."}, status=400)
+        return JsonResponse({"code": 400, "message": "스토리 생성에 실패하였습니다."}, status=400)
 
     elif request.method =='GET':
         try:
             capsule = Capsule.objects.get(capsule_id=capsule_id)
         except Capsule.DoesNotExist:
-            return JsonResponse({"code": "404", "message": "Capsule가 존재하지 않습니다."}, status=404)
+            return JsonResponse({"code": 404, "message": "캡슐이 존재하지 않습니다."}, status=404)
         story_list = []
         stories = Story.objects.filter(capsule_id=capsule_id, deleted_at__isnull=True)
         for story in stories :
-            story_url = story.story_img_url
-            story_list.append(story_url)
+            story_info = {
+                "story_id" : story.story_id,
+                "story_title" : story.story_title,
+                "story_url" : story.story_img_url
+            }
+
+            story_list.append(story_info)
 
         return JsonResponse({
-            "code": "200",
+            "code": 200,
             "message": "스토리 이미지 URL 리스트 조회가 완료되었습니다.",
             "capsule_id": capsule.capsule_id,
             "story_list": story_list
@@ -77,10 +82,10 @@ def story_func(request, capsule_id, story_id) :
             story = Story.objects.get(story_id = story_id, deleted_at__isnull=True)
             capsule = Capsule.objects.get(capsule_id = capsule_id)
         except Story.DoesNotExist:
-            return JsonResponse({"code": "404", "message": "Story가 존재하지 않습니다."}, status=404)
+            return JsonResponse({"code": 404, "message": "스토리가 존재하지 않습니다."}, status=404)
 
         return JsonResponse({
-            "code": "200",
+            "code": 200,
             "message": "스토리 조회가 완료되었습니다.",
             "capsule_id" : capsule.capsule_id,
             "story_title": story.story_title,
@@ -95,7 +100,7 @@ def story_func(request, capsule_id, story_id) :
         try:
             story = Story.objects.get(story_id = story_id)
         except Story.DoesNotExist:
-            return JsonResponse({"code": "404", "message": "스토리가 존재하지 않습니다."}, status=404)
+            return JsonResponse({"code": 404, "message": "스토리가 존재하지 않습니다."}, status=404)
 
         #story_img_url =
         if request.method == 'PUT':
@@ -106,7 +111,7 @@ def story_func(request, capsule_id, story_id) :
             story.save()
 
             return JsonResponse({
-                "code": "200",
+                "code": 200,
                 "message": "스토리 수정이 완료되었습니다.",
                 "story_id": story.story_id,
                 "story_title": story.story_title,
@@ -115,7 +120,7 @@ def story_func(request, capsule_id, story_id) :
                 "updated_at": story.updated_at,
             })
 
-        return JsonResponse({"code": "400", "message": "스토리 수정에 실패하였습니다."}, status=400)
+        return JsonResponse({"code": 400, "message": "스토리 수정에 실패하였습니다."}, status=400)
 
     elif request.method == 'DELETE':
         try:
