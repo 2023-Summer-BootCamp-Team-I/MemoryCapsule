@@ -14,6 +14,7 @@ from datetime import datetime
 import pytz
 from django.utils import timezone
 import logging
+from api.kakao_api import send_kakao_message
 
 
 def make_video(capsule_id, video_number, image_urls, music_url):
@@ -128,20 +129,19 @@ def random_video_url_maker(capsule, stories):
 
 @shared_task
 def default_video_maker(capsule_id, music_id):
+    capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
     stories = Story.objects.filter(capsule_id=capsule_id)
+    send_kakao_message(capsule.capsule_img_url)
 
     if stories.exists():
-        capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
-
         video_image_url_list_final = random_video_url_maker(capsule, stories)
         music_url = Music.objects.get(music_id=music_id, deleted_at__isnull=True).music_url
 
-
         # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{capsule_id}_no{video_count})
-        video_count = Video.objects.filter(capsule=capsule.capsule_id).count() + 1
+        video_count = Video.objects.filter(capsule=capsule_id).count() + 1
 
         # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{user_id}_no{video_count})
-        video_count = Video.objects.filter(capsule=capsule).count() + 1
+        # video_count = Video.objects.filter(capsule=capsule).count() + 1
 
         logger = logging.getLogger(__name__)
         logger.setLevel(logging.INFO)
