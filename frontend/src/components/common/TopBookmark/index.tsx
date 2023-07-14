@@ -11,7 +11,7 @@ function TopBookmark({ title, color, activeState, setActiveState }: TopProps) {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center -mt-8">
       <div
         style={{ backgroundColor: color }}
         className={

@@ -1,4 +1,4 @@
-// import { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import blue_mark from '../../assets/images/bookmark/blue_mark.png';
 import green_mark from '../../assets/images/bookmark/green_mark.png';
@@ -33,10 +33,15 @@ export default function RightBookmark({ activeBookmark, setActiveBookmark }: Rig
     }
   };
 
-  // useEffect(() => {
-  //   const isMain = location.pathname === '/mainunopened' || location.pathname === '/mainopened' || location.pathname === '/create';
-  //   const isGallery = location.pathname === '/mygallery' || location.pathname === '/joingallery';
-  // })
+  useEffect(() => {
+    if (location.pathname === '/mainunopened') {
+      setActiveBookmark('blue');
+    } else if (location.pathname === '/mainopened') {
+      setActiveBookmark('green');
+    } else if (location.pathname === '/create') {
+      setActiveBookmark('pink');
+    }
+  }, [location.pathname]);
 
   return (
     <>
