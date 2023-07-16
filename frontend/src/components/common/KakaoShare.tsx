@@ -50,11 +50,16 @@ function KakaoShare({ capsule_id, state }: KakaoProps) {
   }
 
   return (
-    <div className="w-12 cursor-pointer" onClick={shareKakao}>
+    <div
+      className="absolute bottom-0 mb-24 flex p-2 bg-[#FAE101] cursor-pointer w-50 font-Omu rounded-lg shadow-md"
+      onClick={shareKakao}
+    >
       <img
         src="//dev.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png"
         alt="카카오톡 공유하기"
+        className="mr-1 w-7 h-7"
       />
+      share
     </div>
   );
 }

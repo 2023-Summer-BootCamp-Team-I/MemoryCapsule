@@ -2,7 +2,7 @@ import './App.css';
 import { useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 
-import { FirstPage } from './pages/FirstPage';
+import FirstPage from './pages/FirstPage';
 import MainOpenedPage from './pages/MainOpenedPage'; // 메인페이지 개봉 캡슐 리스트
 import MainUnOpenedPage from './pages/MainUnOpenedPage'; // 메인페이지 미개봉 캡슐 리스트
 import CreateCapsulePage from './pages/CreateCapsulePage'; // 캡슐 생성 페이지

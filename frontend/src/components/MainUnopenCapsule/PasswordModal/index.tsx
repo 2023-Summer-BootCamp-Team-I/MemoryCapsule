@@ -30,6 +30,7 @@ export default function PasswordModal({ capsuleId, closeModal }: PasswordModalPr
     } else {
       // 비밀번호가 틀렸을 경우 처리 (예: 에러 메시지 표시)
       alert('비밀번호가 틀렸습니다!');
+      setPassword('');
     }
   };
 
@@ -51,7 +52,7 @@ export default function PasswordModal({ capsuleId, closeModal }: PasswordModalPr
             확인
           </button>
         </form>
-        <button onClick={closeModal} className="px-4 py-2 mt-4 text-white bg-red-500 rounded-md">
+        <button onClick={closeModal} className="px-4 py-2 mt-4 text-black rounded-md">
           닫기
         </button>
       </div>

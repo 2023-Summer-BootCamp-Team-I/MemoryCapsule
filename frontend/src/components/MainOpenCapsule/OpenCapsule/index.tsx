@@ -1,4 +1,4 @@
-import capsuleLabel from '../../../assets/images/capsule_label.png';
+import capsuleLabel from '../../../assets/images/stickers/pink2.png';
 
 interface Capsule {
   id: string;
