@@ -17,7 +17,7 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - "./init/:/docker-entrypoint-initdb.d/"
+     # - "./init/:/docker-entrypoint-initdb.d/"
 
 
   backend:
@@ -153,6 +153,15 @@ services:
 #    image: prom/node-exporter:latest
 #    ports:
 #      - 9100:9100
+
+  rabbitmq-exporter:
+    depends_on:
+      - rabbitmq
+    image: kbudde/rabbitmq-exporter
+    container_name: rabbitmq-exporter
+    network_mode: service:rabbitmq
+
+
 
 
 
