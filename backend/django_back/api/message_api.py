@@ -1,18 +1,24 @@
 import json
 from api.lib import message
+import environ
+
+env = environ.Env()
+env.read_env()
 
 
 # 자세한 정보
 # https://github.dev/solapi/solapi-python/
 # 한번 요청으로 1만건의 메시지 발송이 가능합니다.
 
-def send_normal_message():
+def send_normal_message(client_phone_number_list, title, text):
     data = {
         'messages': [
             {
-                'to': '01032555442',
-                'from': '01032555442',
-                'text': '한글 45자, 영자 90자 이하 입력되면 자동으로 SMS타입의 메시지가 추가됩니다.'
+                'to': client_phone_number_list,
+                'from': env('HOST_PHONE_NUMBER'),
+                # 'imageId': env('CAPSULE_IMAGE_ID'),
+                # 'subject': title,
+                'text': text
             }
         ]
     }
