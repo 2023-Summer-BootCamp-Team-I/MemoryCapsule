@@ -15,4 +15,4 @@ RUN apt-get update && apt-get install -y ffmpeg
 COPY . .
 
 # 컨테이너 실행 명령 설정
-CMD python manage.py runserver 0.0.0.0:8000
+CMD gunicorn django_back.wsgi:application -b 0.0.0.0:8000
