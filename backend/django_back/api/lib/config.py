@@ -18,3 +18,4 @@ def get_url(path):
         url = url + prefix
     url = url + path
     return url
+
