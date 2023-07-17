@@ -154,6 +154,15 @@ services:
     ports:
       - 9100:9100
 
+  rabbitmq-exporter:
+    depends_on:
+      - rabbitmq
+    image: kbudde/rabbitmq-exporter
+    container_name: rabbitmq-exporter
+    network_mode: service:rabbitmq
+
+
+
 
 
   # prometheus:
