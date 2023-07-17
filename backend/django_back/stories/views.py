@@ -27,8 +27,8 @@ def story_capsule_func(request, capsule_id):
         #video = Video.objects.get(video_id = request.data['video_id'])
         #video = request.data['video_id']
         story = Story.objects.create(
-            creator_id=user,
-            capsule_id=capsule,
+            creator=user,
+            capsule=capsule,
             #video_id=video,
             story_title=request.data['story_title'],
             story_content=request.data['story_content'],

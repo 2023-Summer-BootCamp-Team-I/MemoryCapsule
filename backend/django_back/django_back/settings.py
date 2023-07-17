@@ -126,6 +126,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+
+
 GRAFANA = {
     'URL': 'http://grafana:3000',  # Grafana URL을 설정합니다. Docker Compose에서 사용한 이름으로 접근합니다.
     'API_KEY': env('GRAFANA_API_KEY'),  # Grafana API 키를 설정합니다. 본인의 API 키로 대체해야 합니다.
