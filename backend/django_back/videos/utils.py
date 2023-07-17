@@ -16,7 +16,7 @@ from django.utils import timezone
 import logging
 
 
-def make_video(capsule_id, video_number, image_urls, music_url):
+def make_video(capsule, video_number, image_urls, music_url):
   
     s3_client = boto3.client('s3')
     s3_resource = boto3.resource('s3')
@@ -96,7 +96,6 @@ def random_video_url_maker(capsule, stories):
     story_id_list = []
     for story in stories:
         story_id_list.append(story.story_id)
-        print(story.story_title)
     story_id_list.sort()
     story_count = len(story_id_list)
 
@@ -153,8 +152,7 @@ def default_video_maker(capsule_id, music_id):
     return make_video(capsule, video_count, video_image_url_list_final, music_url)  # 회원 아이디, 회원 비디오 개수,
 
 
-
 def user_choice_video_maker(capsule, music, user_choice_list):
     video_count = Video.objects.filter(capsule=capsule.capsule_id).count() + 1
     music_url = music.music_url
-    return make_video(capsule.capsule_id, video_count, user_choice_list, music_url)
+    return make_video(capsule, video_count, user_choice_list, music_url)
