@@ -54,8 +54,8 @@ def video_work(request, capsule_id):
                 user_choice_url_list.append(story_image)
         user_choice_url_list.sort()
 
-        video_url = create_user_choice_video.delay(capsule, music, user_choice_url_list)
-        # result = video_url.get()
+        async_video_url = create_user_choice_video.delay(capsule, music, user_choice_url_list)
+        video_url = async_video_url.wait()
 
         video = Video.objects.create(
             creator=creator,
@@ -71,5 +71,4 @@ def video_work(request, capsule_id):
                 video=video
             )
 
-        # return JsonResponse({'code': 200, 'message': '사용자 선택 영상 제작 완료', 'video_url': result, 'time': timezone.now()})
-        return HttpResponse(video_url)
+        return JsonResponse({'code': 200, 'message': '사용자 선택 영상 제작 완료', 'video_url': video_url, 'time': timezone.now()})
