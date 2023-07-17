@@ -1,47 +1,19 @@
-mysql -uroot -p
-password: 20031105
-
-use memory_capsule;
 
 Insert into user (created_at, updated_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', 'testsql', 'test', 'testemail.com', 'test', 0, 'test.com');
-Insert into user (created_at, updated_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '2', '2', '2', '2', 0, 'test.com');
-Insert into user (created_at, updated_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '3', '3', '3', '3', 0, 'test.com');
-Insert into user (created_at, updated_at, id, password, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '4', '4', '4', '4', 0, 'test.com');
+Insert into theme (created_at, updated_at, theme_id, theme_name, theme_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '1', 'test', 'testemail.com');
+Insert into capsule (created_at, updated_at, capsule_id, capsule_name, due_date, limit_count,capsule_img_url, capsule_password, creator_id, theme_id) values ('2023-07-09 00:00:00', '2023-07-09 00:00:00',1, 'test', '2023-07-09 00:00:00',30,'test.com', '1', 1,1);
+select * from music;
+
+
+Insert into story (created_at, updated_at,  capsule_id, creator_id, story_title, story_content, story_img_url) values('2023-07-09 00:00:00',  '2023-07-09 00:00:00', 1, 1, '1', '1', 'https://author-picture.s3.ap-northeast-2.amazonaws.com/907816aa-e0af-4edc-8679-07a67fcf1fbd');
+Insert into music (created_at, updated_at,  music_name, music_context, music_url) values('2023-07-09 00:00:00',  '2023-07-09 00:00:00', 'test', 'test', 'https://author-picture.s3.ap-northeast-2.amazonaws.com/music-no1.mp3');
+Insert into user (created_at, updated_at, id, password, phone_number, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '정재빈', '1', '01032555442', '1.com', 'test', 0, 'test.com');
+Insert into user (created_at, updated_at, id, password, phone_number, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '박경은', '2', '01025555420', '2.com', 'test', 0, 'test.com');
+Insert into user (created_at, updated_at, id, password, phone_number, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '이민기', '3', '01042200980', '3.com', 'test', 0, 'test.com');
+Insert into user (created_at, updated_at, id, password, phone_number, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '김윤아', '4', '01089576720', '4.com', 'test', 0, 'test.com');
+Insert into user (created_at, updated_at, id, password, phone_number, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '김성훈', '5', '01020833472', '5.com', 'test', 0, 'test.com');
+Insert into user (created_at, updated_at, id, password, phone_number, email, nickname, status, user_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '유재윤', '6', '01086240981', '6.com', 'test', 0, 'test.com');
 Insert into theme (created_at, updated_at, theme_id, theme_name, theme_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '1', 'test', 'testemail.com');
 Insert into theme (created_at, updated_at, theme_id, theme_name, theme_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '2', 'test', 'testemail.com');
 
-
-
-
-# 캡슐 입력
-[POST]  http://0.0.0.0:8080/api/v1/capsules/
-creator_id:1
-theme_id:1
-capsule_name:1
-due_date:2025-07-09 16:50:43
-limit_count:30
-file_name: 파일 선택              # 파일로 선택지 바꾸고 실행할 것
-
-# 캡슐 전체 조회
-[GET]  http://0.0.0.0:8080/api/v1/capsules/
-count:-1        # -1일때 전체 조회
-is_open:true
-user_id:1
-
-# 캡슐 수정
-[PUT]  http://0.0.0.0:8080/api/v1/capsules/<capsule_id>/
-creator_id:1
-theme_id:1
-capsule_name:4                  # creator와 theme은 외래키가 걸려있으므로, capsule_name만 수정해서 체크할 것
-due_date:2025-07-09 16:50:43
-limit_count:30
-file_name: 파일 선택              # 파일로 선택지 바꾸고 실행할 것
-
-=> 캡슐의 creator와 POST로 받은 creator가 다르면, 캡슐 수정 불가능!
-
-# 캡슐 삭제
-[DELETE]  http://0.0.0.0:8080/api/v1/capsules/<capsule_id>/
-
-
-# 단일 캡슐 조회
-[GET]  http://0.0.0.0:8080/api/v1/capsules/<capsule_id>/
+select * from user;
