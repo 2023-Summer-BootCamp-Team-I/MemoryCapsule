@@ -1,11 +1,9 @@
 import logging
-from celery import shared_task
 from videos.utils import default_video_maker
 import pytz
 from datetime import datetime
 
 
-@shared_task
 def schedule_video_creation(capsule_id, due_date):
     target_datetime = due_date  # due_date 값을 사용하여 원하는 날짜 및 시간 설정
 

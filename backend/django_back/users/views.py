@@ -15,6 +15,7 @@ def sign_up(request):
             user = create_user(
                 request.POST["id"],
                 request.POST["password"],
+                request.POST["phone_number"],
                 request.POST["email"],
                 request.POST["nickname"],
                 request.POST["image"]

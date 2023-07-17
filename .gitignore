@@ -12,3 +12,4 @@ venv
 .idea
 .idea/
 migrations
+*.ini

@@ -7,13 +7,14 @@ import os
 import random
 from stories.models import Story
 from videos.models import Video
-from capsules.models import Capsule
+from capsules.models import *
 from musics.models import Music
 from celery import shared_task
 from datetime import datetime
 import pytz
 from django.utils import timezone
 import logging
+from api.message_api import send_normal_message
 
 
 def make_video(capsule, video_number, image_urls, music_url):
@@ -22,7 +23,7 @@ def make_video(capsule, video_number, image_urls, music_url):
     s3_resource = boto3.resource('s3')
     bucket_name = 'author-picture'
 
-    output_video_key = f'video-of-capsule{capsule.capsule_id}-no{video_number}.mp4'
+    output_video_key = f'video-of-capsule{capsule_id}-no{video_number}.mp4'
 
     # Download and process images
     images = []
@@ -62,7 +63,7 @@ def make_video(capsule, video_number, image_urls, music_url):
         video_clip = video_clip.set_audio(audio_clip)
 
         # Generate final video with music
-        final_output = f'video-of-capsule{capsule.capsule_id}-no{video_number}.mp4'
+        final_output = f'video-of-capsule{capsule_id}-no{video_number}.mp4'
         video_duration = len(images)  # Duration of the video in seconds
         video_clip = video_clip.subclip(0, video_duration)  # Truncate the video to match the duration of the images
         final_clip = mp.concatenate_videoclips([video_clip])
@@ -125,31 +126,41 @@ def random_video_url_maker(capsule, stories):
     return video_image_url_list
 
 
+
+
 @shared_task
 def default_video_maker(capsule_id, music_id):
-    stories = Story.objects.filter(capsule_id=capsule_id)
     capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
-
-    video_image_url_list_final = random_video_url_maker(capsule, stories)
-    music_url = Music.objects.get(music_id=music_id, deleted_at__isnull=True).music_url
-
-
-    # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{capsule_id}_no{video_count})
-    video_count = Video.objects.filter(capsule=capsule.capsule_id).count() + 1
-
-    # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{user_id}_no{video_count})
-    video_count = Video.objects.filter(capsule=capsule).count() + 1
+    stories = Story.objects.filter(capsule_id=capsule_id, deleted_at__isnull=True)
 
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 
-    # 로그 남기기
-    logger.info(f'Video creation complete for capsule {capsule_id} at {timezone.now()}')
+    video_url = '캡슐에 스토리가 없어 비디오가 생성되지 않았어요!'
+    if stories.exists():
+        video_image_url_list_final = random_video_url_maker(capsule, stories)
+        music_url = Music.objects.get(music_id=music_id, deleted_at__isnull=True).music_url
 
+        # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{capsule_id}_no{video_count})
+        video_count = Video.objects.filter(capsule=capsule_id).count() + 1
 
-    # s3 업로드 용 함수
-    return make_video(capsule, video_count, video_image_url_list_final, music_url)  # 회원 아이디, 회원 비디오 개수,
+        # 로그 남기기
+        logger.info(f'Video creation complete for capsule {capsule_id} at {timezone.now()}')
+
+        video_url = make_video(capsule_id, video_count, video_image_url_list_final, music_url)  # 회원 아이디, 회원 비디오 개수,
+        # s3 업로드 용 함수
+
+    # 일반 메세지 전송
+    user_capsules = UserCapsule.objects.filter(capsule_id=capsule_id, deleted_at__isnull=True)
+    user_phone_number_list = [user_capsule.user.phone_number for user_capsule in user_capsules]
+    title = f'드디어 {capsule.capsule_name}이 열렸어요!!'
+    text = f'드디어 {capsule.capsule_name}이 열렸어요!! 어서 확인하러 가봐요!! 확인하러 가기: 사이트 주소'
+    send_normal_message(user_phone_number_list, title, text)
+    logger.info(f'메세지 전송 완료! {capsule_id} at {timezone.now()}')
+
+    return video_url
+
 
 
 def user_choice_video_maker(capsule, music, user_choice_list):
