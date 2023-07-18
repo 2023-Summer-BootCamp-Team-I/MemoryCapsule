@@ -18,7 +18,10 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
      # - "./init/:/docker-entrypoint-initdb.d/"
-
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "mysqldb" ]
+      timeout: 20s
+      retries: 10
 
   backend:
     build:
@@ -50,8 +53,8 @@ services:
     volumes:
       - ./backend/django_back:/app
     depends_on:
-      - mysqldb
-      - celery_worker
+      mysqldb :
+        condition: service_healthy
 
   rabbitmq:
     container_name: rabbitmq
@@ -65,6 +68,8 @@ services:
       - "15672:15672" # For UI
     expose:
       - "15672"
+    volumes:
+      - "./rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins"
 
   celery_worker:
     container_name: celery_worker
@@ -102,7 +107,7 @@ services:
     container_name: redis
     # 접근 포트 설정(컨테이너 외부:컨테이너 내부)
     ports:
-      - 6379:6379
+      - "6379:6379"
     # 스토리지 마운트(볼륨) 설정
     volumes:
       - ./redis/data:/data
@@ -118,30 +123,30 @@ services:
     restart: always
     command: redis-server /usr/local/conf/redis.conf
     
-  prometheus: # 프로메테우스 서비스 추가
-    image: prom/prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./monitoring/prometheus:/etc/prometheus
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-
-  grafana: # 그라파나 서비스 추가
-    image: grafana/grafana
-    ports:
-      - "3000:3000"
-    depends_on:
-      - prometheus
-      - cadvisor
-      - node-exporter
+#  prometheus: # 프로메테우스 서비스 추가
+#    image: prom/prometheus
+#    ports:
+#      - "9090:9090"
+#    volumes:
+#      - ./monitoring/prometheus:/etc/prometheus
+#    command:
+#      - "--config.file=/etc/prometheus/prometheus.yml"
+#
+#  grafana: # 그라파나 서비스 추가
+#    image: grafana/grafana
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - prometheus
+#      - cadvisor
+#      - node-exporter
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.47.0
     container_name: cadvisor
     privileged: true
     ports:
-      - 9600:8080
+      - "9600:8080"
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
@@ -155,7 +160,7 @@ services:
   node-exporter:
     image: prom/node-exporter:latest
     ports:
-      - 9100:9100
+      - "9100:9100"
 
   gunicorn:
     build:
