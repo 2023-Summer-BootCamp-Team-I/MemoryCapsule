@@ -21,7 +21,7 @@ def make_video(capsule, video_number, image_urls, music_url):
   
     s3_client = boto3.client('s3')
     s3_resource = boto3.resource('s3')
-    bucket_name = 'author-picture'
+    bucket_name = 'memory-capsule'
 
     output_video_key = f'video-of-capsule{capsule_id}-no{video_number}.mp4'
 
