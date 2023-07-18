@@ -107,6 +107,9 @@ services:
     volumes:
       - ./redis/data:/data
       - ./redis/conf/redis.conf:/usr/local/conf/redis.conf
+    depends_on:
+      - celery_worker
+      - backend
     # 컨테이너에 docker label을 이용해서 메타데이터 추가
     labels:
       - "name=redis"
