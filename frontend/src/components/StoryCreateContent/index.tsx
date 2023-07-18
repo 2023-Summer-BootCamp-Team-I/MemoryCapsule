@@ -5,7 +5,7 @@ import StoryInput from '../common/StoryInput';
 function StoryCreateContent() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [previousImage, setPreviousImage] = useState<string | null>(null);
-  const [title, setTitle] = useState<string>('');
+  const [title] = useState<string>('');
   const [content, setContent] = useState<string>('');
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +84,6 @@ function StoryCreateContent() {
       />
 
       <div className="max-w-sm p-4 mt-5 bg-white rounded-lg shadow-lg h-80 font-Omu">
-
         {/* <div className="pb-2 text-2xl break-words border-b border-gray-200">
           <input placeholder="제목을 입력하세요" className="w-full" maxLength={10} />
         </div> */}

@@ -1,10 +1,10 @@
 import React from 'react';
-import ProfileButton from '../components/ProfileButton';
+import CapsuleInfo from '../components/CapsuleInfo';
 
 export default function OpenedVideoPage() {
   return (
     <div>
-      <ProfileButton />
+      <CapsuleInfo />
     </div>
   );
 }
