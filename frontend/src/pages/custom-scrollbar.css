@@ -1,0 +1,13 @@
+.custom-scroll-container::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* 원하는 트랙 색상으로 변경하세요 */
+}
+
+/* 스크롤 바 핸들 색상 변경 (thumb) */
+.custom-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #888; /* 원하는 핸들 색상으로 변경하세요 */
+}
+
+/* 스크롤 바 너비 변경 */
+.custom-scroll-container::-webkit-scrollbar {
+  width: 12px; /* 원하는 스크롤 바 너비로 변경하세요 */
+}
