@@ -28,7 +28,9 @@ function PhotoCard5({ data }: PhotoCardProps) {
     isClicked ? 'hidden' : ''
   }`;
 
-  const textStyles = `absolute top-5 left-5 ${isClicked ? 'visible' : 'invisible'}`;
+  const textStyles = `w-full p-10 flex flex-col  absolute top-0 left-0 ${
+    isClicked ? 'visible' : 'invisible'
+  }`;
 
   return (
     <div className="flex flex-col justify-start w-full h-full">
@@ -49,7 +51,10 @@ function PhotoCard5({ data }: PhotoCardProps) {
         >
           <div className={circleStyles}></div>
           <div className={imageStyles} style={{ backgroundImage: `url(${data.img})` }}></div>
-          <div className={textStyles}>{data.title}</div>
+          <div className={textStyles}>
+            <div className="border-b pb-4">{data.title}</div>
+            <div className=" pt-4">{data.content}</div>
+          </div>
         </div>
       </div>
     </div>

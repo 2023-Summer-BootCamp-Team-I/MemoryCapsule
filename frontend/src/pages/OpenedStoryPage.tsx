@@ -99,8 +99,8 @@ import cloud2 from '../assets/images/PhotoTheme/cloud2.png';
 export default function OpenedStoryPage() {
   return (
     <div>
-      <div className="flex items-center h-[42rem] w-[75rem] bg-[#C6DBDE] relative">
-        <div className="z-10 flex items-center h-[42rem] w-[75rem] overflow-x-auto p-10">
+      <div className="flex items-center h-[42rem] w-[75rem] bg-[#C6DBDE] relative font-Omu">
+        <div className="z-10 flex items-center h-[42rem] w-[75rem] overflow-x-auto p-10 pl-20 ">
           {storyDummy.map((data, index) => {
             if (index % 6 === 0) {
               return <PhotoCard1 key={index} data={data} />;
@@ -124,7 +124,7 @@ export default function OpenedStoryPage() {
         <img src={cloud} alt="Leaf" className="fixed h-[24em] w-[44rem]" />
       </div>
       <div className="absolute bottom-0 right-0 flex flex-col justify-start items-start fixed h-[42rem] w-[75rem] opacity-80">
-        <img src={cloud2} alt="Leaf" className="fixed h-[24em] w-[44rem]" />
+        <img src={cloud2} alt="Leaf" className="fixed h-[16em] w-[32rem]" />
       </div>
     </div>
   );
