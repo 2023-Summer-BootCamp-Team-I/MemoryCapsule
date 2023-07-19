@@ -19,10 +19,10 @@ function PhotoCard4({ data }: PhotoCardProps) {
   };
 
   const cardStyles =
-    'z-10 relative flex justify-center items-center h-[22rem] w-[17rem] bg-white cursor-pointer';
+    'z-10 relative flex justify-center items-center h-[22rem] w-[17rem] bg-white cursor-pointer  border border-MyBlue';
 
   const circleStyles =
-    'absolute top-1 right-1/2 transform translate-x-1/2 -translate-y-1/2 h-[3rem] w-[3rem] bg-[#efece3] rounded-full shadow-ButtonShadow ';
+    'absolute top-1 right-1/2 transform translate-x-1/2 -translate-y-1/2 h-[2.5rem] w-[2.5rem] bg-[#F0F1F3] rounded-full shadow-ButtonShadow ';
 
   const imageStyles = `h-[20.5rem] w-[15.5rem] bg-gray-300 bg-center bg-no-repeat bg-cover cursor-pointer ${
     isClicked ? 'hidden' : ''
@@ -45,8 +45,8 @@ function PhotoCard4({ data }: PhotoCardProps) {
           <div className={circleStyles}></div>
           <div className={imageStyles} style={{ backgroundImage: `url(${data.img})` }}></div>
           <div className={textStyles}>
-            <div className="border-b pb-4">{data.title}</div>
-            <div className=" pt-4">{data.content}</div>
+            <div className="border-b pb-4 text-xl">{data.title}</div>
+            <div className=" pt-4 text-lg">{data.content}</div>
           </div>
         </div>
       </div>

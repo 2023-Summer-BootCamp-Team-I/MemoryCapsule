@@ -11,6 +11,7 @@ export default {
       colors: {
         MyYellow: '#FEEFCF',
         red: '#FF0000',
+        MyBlue: '#afc7f7',
       },
       fontFamily: {
         Yeongdeok: ['Yeongdeok', 'Yeongdeok'],
