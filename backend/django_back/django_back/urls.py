@@ -21,7 +21,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework.permissions import AllowAny
 from django.conf import settings
-
+from .views import *
 
 
 schema_view = get_schema_view(
@@ -31,7 +31,7 @@ schema_view = get_schema_view(
         description="Memory capsule",   # 설명
         terms_of_service="https://google.com",
         contact=openapi.Contact(email="jaeyoon321@naver.com")
-),
+    ),
     validators=['flex'],
     public=True,
     permission_classes=(AllowAny,)
@@ -46,6 +46,7 @@ urlpatterns = [
     path('api/v1/musics/', include('musics.urls')),
     path('api/v1/videos/', include('videos.urls')),
     path('api/v1/stories/', include('stories.urls')),
+    path('api/v1/test-data/', insert_test_data),
     path('prometheus/', include(prometheus_urls)),
 ]
 
@@ -58,6 +59,6 @@ if settings.DEBUG:
 else:
     urlpatterns += [
         re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name="schema-json"),
-        re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0, url=settings.STATIC_URL + 'swagger.yaml'), name='schema-swagger-ui'),
+        re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
         re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     ]
