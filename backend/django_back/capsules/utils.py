@@ -102,6 +102,13 @@ def capsule_POST(request) -> (json, int):
     if 'img_file' not in request.FILES:
         return {'code': 400, 'message': '파일이 제공되지 않았습니다.'}, 400
 
+    due_date_str = request.POST.get('due_date')
+    due_date = datetime.strptime(due_date_str, '%Y-%m-%d %H:%M:%S')
+
+    # Compare the due_date with the current date
+    if timezone.now().date() >= due_date.date():
+        return {'code': 400, 'message': '개봉 날짜가 현재 날짜와 같거나 빠릅니다.'}, 400
+
     val: json
     status_code: int
 
