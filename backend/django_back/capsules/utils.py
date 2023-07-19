@@ -18,7 +18,7 @@ from bcrypt import checkpw
 import bcrypt
 
 from .serializers import CapsuleSerializer
-from celery import current_app
+from django_back.celery import revoke_task
 
 from django_back.tasks import schedule_video_creation
 
@@ -106,9 +106,8 @@ def capsule_POST(request) -> (json, int):
     due_date_str = request.POST.get('due_date')
     due_date = datetime.strptime(due_date_str, '%Y-%m-%d %H:%M:%S')
 
-    # Compare the due_date with the current date
-    if timezone.now().date() >= due_date.date():
-        return {'code': 400, 'message': '개봉 날짜가 현재 날짜와 같거나 빠릅니다.'}, 400
+    # if timezone.now().date() >= due_date.date():
+    #     return {'code': 400, 'message': '개봉 날짜가 현재 날짜와 같거나 빠릅니다.'}, 400
 
     val: json
     status_code: int
@@ -273,7 +272,7 @@ def capsule_url_parm_DELETE(request, capsule_id) -> (json, int):
         capsule.deleted_at = timezone.now()
         capsule.save()
 
-        current_app.control.revoke(task_id=capsule.task_id, terminate=True)
+        revoke_task(capsule.task_id)
 
         return {'code': 200, 'message': '캡슐 삭제 완료', 'deleted_at': capsule.deleted_at,
                 'time': timezone.now().strftime('%Y-%m-%d %H:%M:%S')}, 200
