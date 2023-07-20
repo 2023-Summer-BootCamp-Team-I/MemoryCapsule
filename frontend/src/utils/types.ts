@@ -5,7 +5,13 @@ export type UnopenCapsuleType = {
   num: string;
   day: string;
 };
-  
+
+export type OpenCapsuleType = {
+  id: string;
+  img: string;
+  name: string;
+};
+
 export type StoryType = {
   img: string;
   owner: string;

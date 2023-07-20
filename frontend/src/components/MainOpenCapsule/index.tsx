@@ -1,4 +1,3 @@
-import React from 'react';
 import capsuleLabel from '../../assets/images/stickers/pink2.png';
 
 function MainOpenCapsule() {
@@ -12,7 +11,7 @@ function MainOpenCapsule() {
   return (
     <div className="flex flex-col items-center w-36">
       <div
-        className=" flex items-center justify-center w-20 h-24 rounded-full bg-no-repeat bg-center"
+        className="flex items-center justify-center w-20 h-24 bg-center bg-no-repeat rounded-full "
         style={{
           backgroundImage: `url(${capsules[0].img})`,
           backgroundSize: 'cover',
@@ -22,9 +21,9 @@ function MainOpenCapsule() {
           borderRadius: '50% / 50%',
         }}
       ></div>
-      <div className="relative  w-28 -mt-4">
+      <div className="relative -mt-4 w-28">
         <img src={capsuleLabel} />
-        <div className="absolute  top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-sm font-semibold">
+        <div className="absolute text-sm font-semibold text-white transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
           {capsules[0].name}
         </div>
       </div>

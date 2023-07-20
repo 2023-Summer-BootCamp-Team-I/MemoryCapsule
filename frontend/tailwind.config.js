@@ -16,6 +16,8 @@ export default {
         Yeongdeok: ['Yeongdeok', 'Yeongdeok'],
         cachildren_kkum: ['cachildren_kkum', 'cachildren_kkum'],
         Omu: ['Omu', 'Omu'],
+        neodgm: ['neodgm', 'neodgm'],
+        neo_pro: ['neo_pro', 'neo_pro'],
       },
     },
   },
