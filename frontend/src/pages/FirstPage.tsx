@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 import flowerImg1 from '../assets/images/login/flower1.png';
 import flowerImg2 from '../assets/images/login/flower2.png';
@@ -10,41 +11,61 @@ import Login from '../components/Login';
 import JoinModal from '../components/JoinModal';
 import TreeLottie from '../components/TreeLottie';
 
-import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
-import { loggedInState } from '../utils/Recoil';
+// import { useNavigate } from 'react-router-dom';
+// import { useRecoilState } from 'recoil';
+// import { loggedInState } from '../utils/Recoil';
 import PasswordModal from '../components/MainUnopenCapsule/PasswordModal'; // 비밀
 
 const FirstPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [passwdOpen, setPasswdOpen] = useState<boolean>(false);
 
-  const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
-  const navigate = useNavigate();
+  // const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
+  // const navigate = useNavigate();
   const [capsuleId, setCapsuleId] = useState<string>('');
 
   const onSignUp = () => {
     setIsModalOpen(true);
+    setCapsuleId('');
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
-  const handleClick = () => {
-    const storedCapsuleId = sessionStorage.getItem('capsule_id');
-    if (storedCapsuleId) {
-      setCapsuleId(storedCapsuleId);
-      setPasswdOpen(true);
+  const postAPI = async () => {
+    try {
+      await axios
+        .post('/api/v1/capsules/users', {
+          user_id: 1,
+          capsule_id: 2,
+          capsule_password: '1',
+        })
+        .then((response) => {
+          // eslint-disable-next-line no-console
+          console.log(response);
+          alert('post 완료');
+        });
+    } catch {
       // eslint-disable-next-line no-console
-      console.log('isLoggedIn: ', loggedIn);
-    } else {
-      setLoggedIn(true);
-      // eslint-disable-next-line no-console
-      console.log('isLoggedIn: ', loggedIn);
-      navigate('/mainunopened');
+      console.log('api 불러오기 실패');
     }
   };
+
+  // const handleClick = () => {
+  //   const storedCapsuleId = sessionStorage.getItem('capsule_id');
+  //   if (storedCapsuleId) {
+  //     setCapsuleId(storedCapsuleId);
+  //     setPasswdOpen(true);
+  //     // eslint-disable-next-line no-console
+  //     console.log('isLoggedIn: ', loggedIn);
+  //   } else {
+  //     setLoggedIn(true);
+  //     // eslint-disable-next-line no-console
+  //     console.log('isLoggedIn: ', loggedIn);
+  //     navigate('/mainunopened');
+  //   }
+  // };
   return (
     <div className="h-[42rem] w-[75rem]">
       <div className="flex h-1/4">
@@ -74,7 +95,7 @@ const FirstPage: React.FC = () => {
             <h1 className="mr-24 italic font-bold text-9xl">memory</h1>
             <h1 className="ml-24 italic font-bold text-9xl">capsule</h1>
           </div>
-          <Login onSignUp={onSignUp} handleClick={handleClick} />
+          <Login onSignUp={onSignUp} handleClick={postAPI} />
           {isModalOpen && <JoinModal onClose={closeModal} />}
         </div>
         <div className="flex flex-col items-center justify-around w-1/6 ">
