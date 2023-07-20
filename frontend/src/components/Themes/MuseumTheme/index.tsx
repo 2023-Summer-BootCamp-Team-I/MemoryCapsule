@@ -9,6 +9,7 @@ function MuseumTheme() {
         width: 1000px;
         height: 530px;
         overflow: auto;
+        transform: translate(10%, -60%);
     }
     
     .custom-scroll-content {
@@ -49,50 +50,54 @@ function MuseumTheme() {
   document.head.appendChild(styleElement);
 
   return (
-    <div className="custom-scroll-container" ref={customScrollRef} onWheel={handleScroll}>
-      <div className="custom-scroll-content">
-        <div style={{ display: 'flex', flexWrap: 'nowrap' }}>
-          {story_dummy.map((story, index) => (
-            <div
-              key={index}
-              style={{
-                width: '270px',
-                marginLeft: '30px',
-                marginRight: '30px',
-                overflow: 'hidden',
-                position: 'relative',
-              }}
-            >
-              <img src={story.img} style={{ width: '100%', height: '270px', objectFit: 'cover' }} />
-              <img
-                src={MuseumAlbum}
-                alt="Museum Album"
+    <div>
+      <img
+        src={MuseumBg}
+        alt="Museum Background"
+        style={{
+          width: '1200px',
+          height: '650px',
+          transform: 'translate(0%, 40%)',
+          zIndex: -1,
+          borderRadius: 20,
+        }}
+      />
+
+      <div className="custom-scroll-container" ref={customScrollRef} onWheel={handleScroll}>
+        <div className="custom-scroll-content">
+          <div style={{ display: 'flex', flexWrap: 'nowrap' }}>
+            {story_dummy.map((story, index) => (
+              <div
+                key={index}
                 style={{
                   width: '270px',
-                  height: '270px',
-                  position: 'absolute',
-                  top: 0,
-                  left: '50%',
-                  transform: 'translateX(-50%)',
+                  marginLeft: '30px',
+                  marginRight: '30px',
+                  overflow: 'hidden',
+                  position: 'relative',
                 }}
-              />
-              <h3 className="font-Yeongdeok text-3xl mt-3 mb-2">{story.title}</h3>
-              <p className="font-Yeongdeok text-xl">{story.content}</p>
-            </div>
-          ))}
-          <img
-            src={MuseumBg}
-            alt="Museum Background"
-            style={{
-              width: '1200px',
-              height: '650px',
-              position: 'fixed',
-              left: '19%',
-              top: '14%',
-              zIndex: -1,
-              borderRadius: 20,
-            }}
-          />
+              >
+                <img
+                  src={story.img}
+                  style={{ width: '100%', height: '270px', objectFit: 'cover' }}
+                />
+                <img
+                  src={MuseumAlbum}
+                  alt="Museum Album"
+                  style={{
+                    width: '270px',
+                    height: '270px',
+                    position: 'absolute',
+                    top: 0,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                  }}
+                />
+                <h3 className="font-Yeongdeok text-3xl mt-3 mb-2">{story.title}</h3>
+                <p className="font-Yeongdeok text-xl">{story.content}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

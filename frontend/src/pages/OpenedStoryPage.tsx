@@ -4,7 +4,6 @@ import MuseumTheme from '../components/Themes/MuseumTheme';
 export default function OpenedStoryPage() {
   return (
     <div>
-      OpenedStoryPage
       <MuseumTheme />
     </div>
   );
