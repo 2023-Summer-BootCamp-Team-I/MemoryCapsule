@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'django_celery_results',
     'django_prometheus',
+    'flower',
 ]
 
 MIDDLEWARE = [
@@ -126,7 +127,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 
 
 GRAFANA = {
@@ -176,12 +176,19 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CELERY_BROKER_URL = 'amqp://rabbitmq:5672'
-CELERY_ACCEPT_CONTENT = ['pickle', 'json']
-CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672/'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Seoul'
+# Celery task를 종료 가능하게 해주는 세팅 (굉장히 중요)
+CELERY_TASK_REVOKE = True
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+
 DATA_UPLOAD_MAX_MEMORY_SIZE = int(1e10)
+
+CELERY_FLOWER_USER = 'root'  # Flower 웹 인터페이스 사용자 이름
+CELERY_FLOWER_PASSWORD = 'root'  # Flower 웹 인터페이스 비밀번호
 
 CACHES = {
     'default': {
