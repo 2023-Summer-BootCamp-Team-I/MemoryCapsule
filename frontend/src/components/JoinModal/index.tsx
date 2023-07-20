@@ -58,6 +58,12 @@ const JoinModal: React.FC<ModalProps> = ({ onClose }) => {
                   type="email"
                 />
                 <TextInput
+                  label="Tell"
+                  placeholder="전화번호를 입력해주세요"
+                  title="join"
+                  type="number"
+                />
+                <TextInput
                   label="Nickname"
                   placeholder="닉네임을 입력해주세요"
                   title="join"

@@ -66,7 +66,7 @@ const OpenedStoryPage: React.FC = () => {
     }
     
     .custom-scroll-container::-webkit-scrollbar {
-        height: 30px;
+        height: 20px;
     }
     .custom-scroll-container::-webkit-scrollbar-thumb {
         background-color:#afc7f7;
