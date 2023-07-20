@@ -1,11 +1,11 @@
 import React from 'react';
-import ImageUploadButton from '../components/ImageUploadButton';
+import MuseumTheme from '../components/MuseumTheme';
 
 export default function OpenedStoryPage() {
   return (
     <div>
       OpenedStoryPage
-      <ImageUploadButton />
+      <MuseumTheme />
     </div>
   );
 }
