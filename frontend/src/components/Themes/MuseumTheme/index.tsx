@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import MuseumBg from '../../assets/images/MuseumBg.png';
 import MuseumAlbum from '../../assets/images/MuseumAlbum.png';
-import story_dummy from '../../assets/data/story_dummy';
+import story_dummy from '../../../assets/data/story_dummy';
 
 function MuseumTheme() {
   const scrollbarStyle = `

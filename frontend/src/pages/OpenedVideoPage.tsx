@@ -1,5 +1,5 @@
 import React from 'react';
-import MuseumTheme from '../components/MuseumTheme';
+import MuseumTheme from '../components/Themes/MuseumTheme';
 
 export default function OpenedVideoPage() {
   return (
