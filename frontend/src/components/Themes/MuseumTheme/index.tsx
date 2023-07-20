@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-import MuseumBg from '../../assets/images/MuseumBg.png';
-import MuseumAlbum from '../../assets/images/MuseumAlbum.png';
+import MuseumBg from '../../../assets/images/MuseumBg.png';
+import MuseumAlbum from '../../../assets/images/MuseumAlbum.png';
 import story_dummy from '../../../assets/data/story_dummy';
 
 function MuseumTheme() {
@@ -35,11 +35,13 @@ function MuseumTheme() {
     }
   `;
 
-  const customScrollRef = useRef(null);
+  const customScrollRef = useRef<HTMLDivElement>(null); // Ref 생성
 
-  const handleScroll = (event) => {
-    const container = customScrollRef.current;
-    container.scrollLeft += event.deltaY;
+  const handleScroll = (event: React.WheelEvent<HTMLDivElement>) => {
+    if (customScrollRef.current) {
+      const container = customScrollRef.current;
+      container.scrollLeft += event.deltaY;
+    }
   };
 
   const styleElement = document.createElement('style');
