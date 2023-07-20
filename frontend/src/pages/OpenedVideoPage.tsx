@@ -1,10 +1,10 @@
 import React from 'react';
-import ProfileButton from '../components/ProfileButton';
+import MuseumTheme from '../components/Themes/MuseumTheme';
 
 export default function OpenedVideoPage() {
   return (
     <div>
-      <ProfileButton />
+      <MuseumTheme />
     </div>
   );
 }

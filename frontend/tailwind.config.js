@@ -17,6 +17,7 @@ export default {
         Yeongdeok: ['Yeongdeok', 'Yeongdeok'],
         cachildren_kkum: ['cachildren_kkum', 'cachildren_kkum'],
         Omu: ['Omu', 'Omu'],
+        Museum: ['Museum', 'Museum'],
       },
     },
   },
