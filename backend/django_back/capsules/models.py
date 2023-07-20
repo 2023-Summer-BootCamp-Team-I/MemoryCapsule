@@ -18,6 +18,7 @@ class Capsule(BaseModel):
     due_date = models.DateTimeField()
     limit_count = models.IntegerField(null=True, validators=[MinValueValidator(1), MaxValueValidator(30)])
     capsule_img_url = models.CharField(max_length=255)
+    task_id = models.CharField(max_length=36)
 
     class Meta:
         db_table = 'capsule'

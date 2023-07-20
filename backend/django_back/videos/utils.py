@@ -17,11 +17,11 @@ import logging
 from api.message_api import send_normal_message
 
 
-def make_video(capsule, video_number, image_urls, music_url):
+def make_video(capsule_id, video_number, image_urls, music_url):
   
     s3_client = boto3.client('s3')
     s3_resource = boto3.resource('s3')
-    bucket_name = 'author-picture'
+    bucket_name = 'memory-capsule'
 
     output_video_key = f'video-of-capsule{capsule_id}-no{video_number}.mp4'
 
@@ -126,8 +126,6 @@ def random_video_url_maker(capsule, stories):
     return video_image_url_list
 
 
-
-
 @shared_task
 def default_video_maker(capsule_id, music_id):
     capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
@@ -154,6 +152,7 @@ def default_video_maker(capsule_id, music_id):
     # 일반 메세지 전송
     user_capsules = UserCapsule.objects.filter(capsule_id=capsule_id, deleted_at__isnull=True)
     user_phone_number_list = [user_capsule.user.phone_number for user_capsule in user_capsules]
+    logger.info(f'{user_phone_number_list}')
     title = f'드디어 {capsule.capsule_name}이 열렸어요!!'
     text = f'드디어 {capsule.capsule_name}이 열렸어요!! 어서 확인하러 가봐요!! 확인하러 가기: 사이트 주소'
     send_normal_message(user_phone_number_list, title, text)
@@ -166,4 +165,4 @@ def default_video_maker(capsule_id, music_id):
 def user_choice_video_maker(capsule, music, user_choice_list):
     video_count = Video.objects.filter(capsule=capsule.capsule_id).count() + 1
     music_url = music.music_url
-    return make_video(capsule, video_count, user_choice_list, music_url)
+    return make_video(capsule.capsule_id, video_count, user_choice_list, music_url)
