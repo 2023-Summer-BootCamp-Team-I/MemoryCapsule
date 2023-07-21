@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-import open_my_capsule from '../../../../assets/data/open_my_capsule';
 import { OpenCapsuleType } from '../../../../utils/types';
 
 const outsideDivStyle = {
@@ -24,17 +22,12 @@ const listDivStyle = {
 };
 
 type StoryListProps = {
+  dummy_data: OpenCapsuleType[];
   // eslint-disable-next-line @typescript-eslint/ban-types
   handleClickStory: Function;
 };
 
-function WindowStoryList({ handleClickStory }: StoryListProps) {
-  const [dummy_data, setDummyData] = useState<OpenCapsuleType[]>([]);
-
-  useEffect(() => {
-    setDummyData(open_my_capsule());
-  }, []);
-
+function WindowStoryList({ dummy_data, handleClickStory }: StoryListProps) {
   return (
     <div className="h-[56%] w-[57%] m-5 justify-center items-center fixed" style={outsideDivStyle}>
       <div
@@ -53,7 +46,7 @@ function WindowStoryList({ handleClickStory }: StoryListProps) {
               >
                 <div
                   className="w-20 h-20 mx-[0.33rem] my-[0.35rem] cursor-pointer"
-                  onClick={() => handleClickStory(data.id)}
+                  onClick={() => handleClickStory(index)}
                 >
                   <img src={data.img} className="object-cover w-full h-full" alt="" />
                 </div>

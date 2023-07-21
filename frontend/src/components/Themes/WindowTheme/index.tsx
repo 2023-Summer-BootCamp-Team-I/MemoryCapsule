@@ -1,5 +1,4 @@
-import { useState } from 'react';
-// import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import start_logo from '../../../assets/images/window_theme/start_logo.png';
 import four_menu from '../../../assets/images/window_theme/four_menu.png';
@@ -7,7 +6,11 @@ import document from '../../../assets/images/window_theme/document.png';
 import WindowStoryList from './WindowStoryList';
 import WindowStoryDetail from './WindowStoryDetail';
 
+import open_my_capsule from '../../../assets/data/open_my_capsule';
+import { OpenCapsuleType } from '../../../utils/types';
+
 function WindowTheme() {
+  const [dummy_data, setDummyData] = useState<OpenCapsuleType[]>([]);
   // const [pressedName, setPressedName] = useState<string>('');
 
   const [isButtonClicked, setButtonClicked] = useState(false);
@@ -20,9 +23,9 @@ function WindowTheme() {
   const closeStoryModal = () => {
     setIsStoryModalOpen(false);
   };
-  const [storyId, setStoryId] = useState<string>('');
+  const [storyId, setStoryId] = useState<number>();
 
-  function handleClickStory(data: string) {
+  function handleClickStory(data: number) {
     setStoryId(data);
     setIsStoryModalOpen(true);
   }
@@ -53,12 +56,12 @@ function WindowTheme() {
     borderBottom: isModalButtonClicked ? '2px solid black' : '2px solid white',
     borderRight: isModalButtonClicked ? '2px solid black' : '2px solid white',
   };
-  // const unpressedButtonStyle = {
-  //     borderTop: '2px solid white',
-  //     borderLeft: '2px solid white',
-  //     borderBottom: '2px solid black',
-  //     borderRight: '2px solid black',
-  // };
+  const unpressedButtonStyle = {
+    borderTop: '2px solid white',
+    borderLeft: '2px solid white',
+    borderBottom: '2px solid black',
+    borderRight: '2px solid black',
+  };
   // const pressedButtonStyle = {
   //     borderTop: '2px solid black',
   //     borderLeft: '2px solid black',
@@ -79,6 +82,10 @@ function WindowTheme() {
   // useEffect(() => {
   //     bottomButton(pressedName);
   // }, [pressedName])
+
+  useEffect(() => {
+    setDummyData(open_my_capsule());
+  }, []);
 
   return (
     <div className="relative h-[42rem] w-[75rem] border bg-[#008080]">
@@ -196,7 +203,7 @@ function WindowTheme() {
                 </button>
               </div>
             </div>
-            <WindowStoryList handleClickStory={handleClickStory} />
+            <WindowStoryList dummy_data={dummy_data} handleClickStory={handleClickStory} />
           </div>
         </div>
       )}
@@ -207,7 +214,11 @@ function WindowTheme() {
             <div className="bg-gradient-to-r from-[#16188F] via-[#11017B] to-[#297ECD] h-8 flex items-center justify-between">
               <span className="ml-2 font-bold text-white">Gallery</span>
               <div className="flex">
-                <button className="text-white bg-[#C1C1C1] px-3 mr-2" style={buttonStyle}>
+                <button
+                  className="text-gray-300 bg-[#C1C1C1] px-3 mr-2"
+                  style={unpressedButtonStyle}
+                  disabled
+                >
                   _
                 </button>
                 <button
