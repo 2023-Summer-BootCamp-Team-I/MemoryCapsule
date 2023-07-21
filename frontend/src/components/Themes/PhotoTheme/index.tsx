@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import PhotoCard1 from '../../PhotoCard/PhotoCard1';
 import PhotoCard2 from '../../PhotoCard/PhotoCard2';
 import PhotoCard3 from '../../PhotoCard/PhotoCard3';
@@ -11,10 +11,11 @@ import storyDummy from '../../../assets/data/story_dummy'; // story_dummy 데이
 import cloud from '../../../assets/images/PhotoTheme/cloud.png';
 import cloud2 from '../../../assets/images/PhotoTheme/cloud2.png';
 
-const OpenedStoryPage: React.FC = () => {
+function PhotoTheme() {
   const scrollbarStyle = `
     .custom-scroll-container {
         overflow: auto;
+        overflow-y: hidden;
         width: 100%;
         height: 100%;
     }
@@ -35,7 +36,7 @@ const OpenedStoryPage: React.FC = () => {
     }
   `;
 
-  React.useEffect(() => {
+  useEffect(() => {
     const styleElement = document.createElement('style');
     styleElement.textContent = scrollbarStyle;
     document.head.appendChild(styleElement);
@@ -64,14 +65,14 @@ const OpenedStoryPage: React.FC = () => {
           })}
         </div>
       </div>
-      <div className="absolute bottom-0 right-0 flex flex-col justify-end items-end fixed h-[42rem] w-[75rem] opacity-80">
-        <img src={cloud} alt="Leaf" className="fixed h-[24em] w-[44rem]" />
+      <div className="absolute bottom-0 right-0 flex flex-col justify-end items-end h-[42rem] w-[75rem] opacity-80">
+        <img src={cloud} alt="Leaf" className="h-[24em] w-[44rem]" />
       </div>
-      <div className="absolute bottom-0 right-0 flex flex-col justify-start items-start fixed h-[42rem] w-[75rem] opacity-80">
-        <img src={cloud2} alt="Leaf" className="fixed h-[16em] w-[32rem]" />
+      <div className="absolute bottom-0 right-0 flex flex-col justify-start items-start h-[42rem] w-[75rem] opacity-80">
+        <img src={cloud2} alt="Leaf" className="h-[16em] w-[32rem]" />
       </div>
     </div>
   );
-};
+}
 
-export default OpenedStoryPage;
+export default PhotoTheme;

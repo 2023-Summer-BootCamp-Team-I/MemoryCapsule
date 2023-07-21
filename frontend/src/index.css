@@ -28,6 +28,8 @@
   font-family: 'neo_pro';
   src: url('./assets/fonts/neo/NeoDunggeunmoPro-Regular.ttf') format('truetype');
 }
+
+@font-face {
   font-family: 'Museum';
   src: url('./assets/fonts/Museum.ttf') format('truetype');
   font-weight: 400;
