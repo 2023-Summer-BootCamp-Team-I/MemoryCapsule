@@ -6,4 +6,3 @@ const OpenedStoryPage = () => {
 };
 
 export default OpenedStoryPage;
-
