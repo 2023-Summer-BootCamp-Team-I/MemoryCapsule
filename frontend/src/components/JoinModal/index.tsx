@@ -29,7 +29,7 @@ const JoinModal: React.FC<ModalProps> = ({ onClose }) => {
           </span>
           <div className="flex flex-col items-center">
             <div className="py-5">
-              <ImageUploadButton />
+              <ImageUploadButton type="circle" />
             </div>
             <div>
               <form method="post" action="서버의url" id="join-form">
@@ -56,6 +56,12 @@ const JoinModal: React.FC<ModalProps> = ({ onClose }) => {
                   placeholder="이메일을 입력해주세요"
                   title="join"
                   type="email"
+                />
+                <TextInput
+                  label="Tell"
+                  placeholder="전화번호를 입력해주세요"
+                  title="join"
+                  type="number"
                 />
                 <TextInput
                   label="Nickname"

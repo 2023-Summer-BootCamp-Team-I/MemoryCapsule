@@ -11,11 +11,13 @@ export default {
       colors: {
         MyYellow: '#FEEFCF',
         red: '#FF0000',
+        MyBlue: '#afc7f7',
       },
       fontFamily: {
         Yeongdeok: ['Yeongdeok', 'Yeongdeok'],
         cachildren_kkum: ['cachildren_kkum', 'cachildren_kkum'],
         Omu: ['Omu', 'Omu'],
+        Museum: ['Museum', 'Museum'],
       },
     },
   },

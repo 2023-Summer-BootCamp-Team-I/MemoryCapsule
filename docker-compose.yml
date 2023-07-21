@@ -44,8 +44,6 @@ services:
                python manage.py migrate &&
                python manage.py makemigrations stories &&
                python manage.py migrate &&
-
-
                python manage.py runserver 0.0.0.0:8080"
 
     ports:
@@ -70,6 +68,11 @@ services:
       - "15672"
     volumes:
       - "./backend/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins"
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   celery_worker:
     container_name: celery_worker
@@ -78,12 +81,18 @@ services:
       - ./backend/django_back:/backend
     ports: [ ]
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     environment:
       - C_FORCE_ROOT=true
       - TZ=Asia/Seoul
     command: sh -c "python wait_mysql.py &&
       celery -A django_back worker --loglevel=info"
+    healthcheck:
+      test: [ "CMD", "celery", "inspect", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   celery_beat:
    container_name: celery_beat
@@ -92,8 +101,8 @@ services:
      - ./backend/django_back:/backend
    ports: [ ]
    depends_on:
-     - rabbitmq
-     - celery_worker
+     rabbitmq:
+       condition: service_healthy
    environment:
      - C_FORCE_ROOT=true
      - TZ=Asia/Seoul
@@ -101,14 +110,12 @@ services:
      celery -A django_back beat --loglevel=info"
 
   redis_container:
-    # 사용할 이미지
     image: redis:latest
-    # 컨테이너명
     container_name: redis
-    # 접근 포트 설정(컨테이너 외부:컨테이너 내부)
+    environment:
+      - TZ=Asia/Seoul
     ports:
       - "6379:6379"
-    # 스토리지 마운트(볼륨) 설정
     volumes:
       - ./backend/redis/data:/data
       - ./backend/redis/conf/redis.conf:/usr/local/conf/redis.conf
@@ -119,7 +126,6 @@ services:
     labels:
       - "name=redis"
       - "mode=standalone"
-    # 컨테이너 종료시 재시작 여부 설정
     restart: always
     command: redis-server /usr/local/conf/redis.conf
     
@@ -131,8 +137,25 @@ services:
 #      - ./backend/monitoring/prometheus:/etc/prometheus
 #    command:
 #      - "--config.file=/etc/prometheus/prometheus.yml"
-#
-#  grafana: # 그라파나 서비스 추가
+
+  flower:
+    image: mher/flower
+    container_name: flower
+    environment:
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672/
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - TZ=Asia/Seoul
+    ports:
+      - '5555:5555'
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      celery_worker:
+        condition: service_started
+
+
+
+  #  grafana: # 그라파나 서비스 추가
 #    image: grafana/grafana
 #    ports:
 #      - "3000:3000"

@@ -28,6 +28,7 @@ def insert_test_data(request) -> json:
     music_url = 'https://author-picture.s3.ap-northeast-2.amazonaws.com/music-no1.mp3'
     music_data = [
         {
+            'music_id': 1,
             'music_name': 'test',
             'music_context': 'test',
             'music_url': music_url
@@ -40,6 +41,7 @@ def insert_test_data(request) -> json:
     # User 데이터 리스트 생성
     users_data = [
         {
+            'user_id': 1,
             'id': '정재빈',
             'password': '1',
             'phone_number': '01032555442',
@@ -49,6 +51,7 @@ def insert_test_data(request) -> json:
             'user_img_url': 'test.com',
         },
         {
+            'user_id': 2,
             'id': '박경은',
             'password': '2',
             'phone_number': '01025555420',
@@ -58,6 +61,7 @@ def insert_test_data(request) -> json:
             'user_img_url': 'test.com',
         },
         {
+            'user_id': 3,
             'id': '이민기',
             'password': '3',
             'phone_number': '01042200980',
@@ -67,6 +71,7 @@ def insert_test_data(request) -> json:
             'user_img_url': 'test.com',
         },
         {
+            'user_id': 4,
             'id': '김윤아',
             'password': '4',
             'phone_number': '01089576720',
@@ -76,6 +81,7 @@ def insert_test_data(request) -> json:
             'user_img_url': 'test.com',
         },
         {
+            'user_id': 5,
             'id': '김성훈',
             'password': '5',
             'phone_number': '01020833472',
@@ -85,6 +91,7 @@ def insert_test_data(request) -> json:
             'user_img_url': 'test.com',
         },
         {
+            'user_id': 6,
             'id': '유재윤',
             'password': '6',
             'phone_number': '01086240981',
@@ -161,6 +168,7 @@ def insert_test_data(request) -> json:
 
     stories_data = [
         {
+            'story_id': 1,
             'creator': user,
             'capsule': capsule,
             'story_title': 'Story Title 1',
@@ -168,6 +176,7 @@ def insert_test_data(request) -> json:
             'story_img_url': story_img_url,
         },
         {
+            'story_id': 2,
             'creator': user,
             'capsule': capsule,
             'story_title': 'Story Title 2',

@@ -18,4 +18,6 @@ def schedule_video_creation(capsule_id, due_date):
     utc_datetime = due_date.astimezone(pytz.utc)
 
     # 작업 실행
-    default_video_maker.apply_async(args=[capsule_id, 1], eta=utc_datetime)
+    task = default_video_maker.apply_async(args=[capsule_id, 1], eta=utc_datetime)
+
+    return task.id
