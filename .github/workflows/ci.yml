@@ -1,60 +1,52 @@
-on: # Event
+name: Docker Compose CI
+
+on:
   push:
-    branches:
-      - main
-      - develop
+    branches: [ "develop" ]
   pull_request:
-    branches:
-      - main
-      - develop
-jobs: # Job
-  ci: # Job 이름
-    runs-on: ubuntu-latest # Runner
+    branches: [ "develop" ]
 
-    services: # 컨테이너, docker-compose 설정과 거의 유사
-      db:
-        image: mysql:latest
-        env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }} # github에 등록한 환경변수
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
 
-    steps: # Step
-    # 레포지토리의 소스 코드를 체크아웃하여 작업 디렉토리로 가져오는 action
-    - name: Checkout
-      uses: actions/checkout@v2
+    steps:
+    - uses: actions/checkout@v3
 
-    # mysql 컨테이너 연결 확인
-    - name: Verify MySQL connection
-      run: | 
-        mysql --version 
-        mysql --host 127.0.0.1 --port 3306 -u ${{ secrets.MYSQL_USERNAME }} -p${{ secrets.MYSQL_ROOT_PASSWORD }}
-
-    # 파이썬 3.11.0 버전 설치
-    - name: Set up Python 3.9
+    # Set up Python
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: ${{ matrix.python-version }}
 
-    # 의존성 설치
-    - name: Install Dependencies
-      run: | 
-        python -m pip install --upgrade pip 
-        cd backend 
-        pip install -r requirements.txt 
+    - name: 'Create db env file'
+      run: |
+        echo "${{ secrets.DB_ENV_FILE }}" > ./backend/db/.env
 
-    # mysql 컨테이너에 migration, 테이블 생성
-    - name: Run migrations
-      run: | 
-        cd backend 
-        python manage.py makemigrations --settings=config.settings.actions 
-        python manage.py migrate --settings=config.settings.actions 
+    - name: 'Create django env file'
+      run: |
+        echo "${{ secrets.DJANGO_ENV_FILE }}" > ./backend/django_back/django_back/.env
 
-    # 테스트 진행
-    - name: Run Tests
-      run: | 
-        cd backend 
-        mysql --host 127.0.0.1 --port 3306 -u ${{ secrets.MYSQL_USERNAME }} -p${{ secrets.MYSQL_ROOT_PASSWORD }}
-        python manage.py test --settings=config.settings.actions
+    - name: 'Create api env file'
+      run: |
+        echo "${{ secrets.API_ENV_FILE }}" > ./backend/django_back/api/.env
+
+    - name: 'Create api config file'
+      run: |
+        echo "${{ secrets.API_CONFIG_INI_FILE }}" > ./backend/django_back/api/lib/config.ini
+    
+
+    # Install Docker Compose
+    - name: Install Docker Compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
+
+    # Docker Compose 실행
+    - name: Start containers
+      run: docker-compose up -d
+
+    # ... (컨테이너 실행 후 테스트 또는 빌드 등 다른 작업을 진행)
