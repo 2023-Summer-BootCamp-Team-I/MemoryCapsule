@@ -1,12 +1,8 @@
-// import ImageUploadButton from '../components/ImageUploadButton';
-import WindowTheme from '../components/Themes/WindowTheme';
+import React from 'react';
 
-export default function OpenedStoryPage() {
-  return (
-    <div>
-      {/* OpenedStoryPage */}
-      {/* <ImageUploadButton /> */}
-      <WindowTheme />
-    </div>
-  );
-}
+
+const OpenedStoryPage = () => {
+  return <div></div>;
+};
+
+export default OpenedStoryPage;

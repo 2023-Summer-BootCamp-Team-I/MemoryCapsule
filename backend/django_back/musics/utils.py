@@ -3,7 +3,7 @@ import boto3
 
 
 def upload_music(mp3_file):
-    bucket_name = 'author-picture'  # S3 버킷 이름
+    bucket_name = 'memory-capsule'  # S3 버킷 이름
 
     music_count = Music.objects.count() + 1
 

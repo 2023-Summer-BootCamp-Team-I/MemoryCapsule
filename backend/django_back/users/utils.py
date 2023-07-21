@@ -3,10 +3,11 @@ from bcrypt import checkpw
 import bcrypt
 
 
-def create_user(id, password, email, nickname, user_img_url):
+def create_user(id, password, phone_number, email, nickname, user_img_url):
     return User.objects.create(
         id=id,
         password=bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
+        phone_number=phone_number,
         email=email,
         nickname=nickname,
         user_img_url=user_img_url

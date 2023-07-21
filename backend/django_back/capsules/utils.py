@@ -18,6 +18,7 @@ from bcrypt import checkpw
 import bcrypt
 
 from .serializers import CapsuleSerializer
+from django_back.celery import revoke_task
 
 from django_back.tasks import schedule_video_creation
 
@@ -102,6 +103,12 @@ def capsule_POST(request) -> (json, int):
     if 'img_file' not in request.FILES:
         return {'code': 400, 'message': '파일이 제공되지 않았습니다.'}, 400
 
+    due_date_str = request.POST.get('due_date')
+    due_date = datetime.strptime(due_date_str, '%Y-%m-%d %H:%M:%S')
+
+    if timezone.now().date() >= due_date.date():
+        return {'code': 400, 'message': '개봉 날짜가 현재 날짜와 같거나 빠릅니다.'}, 400
+
     val: json
     status_code: int
 
@@ -118,7 +125,8 @@ def capsule_POST(request) -> (json, int):
             return {'code': 400, 'message': ' 다시 확인해 주세요.'}, 400
 
         # schedule_video_creation task 예약
-        schedule_video_creation.delay(instance.capsule_id, instance.due_date)
+        task_id = schedule_video_creation(instance.capsule_id, instance.due_date)
+        serializer.save(task_id=task_id)
 
         status_code = 201
         result = {
@@ -263,6 +271,9 @@ def capsule_url_parm_DELETE(request, capsule_id) -> (json, int):
         capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
         capsule.deleted_at = timezone.now()
         capsule.save()
+
+        revoke_task(capsule.task_id)
+
         return {'code': 200, 'message': '캡슐 삭제 완료', 'deleted_at': capsule.deleted_at,
                 'time': timezone.now().strftime('%Y-%m-%d %H:%M:%S')}, 200
     except Capsule.DoesNotExist:

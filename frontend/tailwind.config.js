@@ -11,6 +11,7 @@ export default {
       colors: {
         MyYellow: '#FEEFCF',
         red: '#FF0000',
+        MyBlue: '#afc7f7',
       },
       fontFamily: {
         Yeongdeok: ['Yeongdeok', 'Yeongdeok'],
@@ -18,6 +19,7 @@ export default {
         Omu: ['Omu', 'Omu'],
         neodgm: ['neodgm', 'neodgm'],
         neo_pro: ['neo_pro', 'neo_pro'],
+        Museum: ['Museum', 'Museum'],
       },
     },
   },
