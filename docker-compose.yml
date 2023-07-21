@@ -86,13 +86,10 @@ services:
     environment:
       - C_FORCE_ROOT=true
       - TZ=Asia/Seoul
+      - broker_connection_retry_on_startup=true
     command: sh -c "python wait_mysql.py &&
-      celery -A django_back worker --loglevel=info"
-    healthcheck:
-      test: [ "CMD", "celery", "inspect", "ping" ]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      celery -A django_back worker --loglevel=debug"
+
 
   celery_beat:
    container_name: celery_beat
@@ -186,6 +183,7 @@ services:
       - "9100:9100"
 
   gunicorn:
+    image: gunicorn:latest
     build:
       context: ./backend/django_back/
       dockerfile: Dockerfile

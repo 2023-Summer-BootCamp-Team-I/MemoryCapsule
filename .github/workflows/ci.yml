@@ -49,4 +49,7 @@ jobs:
     - name: Start containers
       run: docker-compose up -d
 
+    - name: process 로그 출력
+      run: echo docker ps -a
+
     # ... (컨테이너 실행 후 테스트 또는 빌드 등 다른 작업을 진행)
