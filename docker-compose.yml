@@ -67,7 +67,7 @@ services:
     expose:
       - "15672"
     volumes:
-      - "./rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins"
+      - "./backend/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins"
     healthcheck:
       test: [ "CMD", "rabbitmqctl", "status" ]
       interval: 10s
@@ -86,13 +86,10 @@ services:
     environment:
       - C_FORCE_ROOT=true
       - TZ=Asia/Seoul
+      - broker_connection_retry_on_startup=true
     command: sh -c "python wait_mysql.py &&
-      celery -A django_back worker --loglevel=info"
-    healthcheck:
-      test: [ "CMD", "celery", "inspect", "ping" ]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      celery -A django_back worker --loglevel=debug"
+
 
   celery_beat:
    container_name: celery_beat
@@ -117,8 +114,8 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - ./redis/data:/data
-      - ./redis/conf/redis.conf:/usr/local/conf/redis.conf
+      - ./backend/redis/data:/data
+      - ./backend/redis/conf/redis.conf:/usr/local/conf/redis.conf
     depends_on:
       - celery_worker
       - backend
@@ -134,7 +131,7 @@ services:
 #    ports:
 #      - "9090:9090"
 #    volumes:
-#      - ./monitoring/prometheus:/etc/prometheus
+#      - ./backend/monitoring/prometheus:/etc/prometheus
 #    command:
 #      - "--config.file=/etc/prometheus/prometheus.yml"
 
@@ -186,6 +183,7 @@ services:
       - "9100:9100"
 
   gunicorn:
+    image: gunicorn:latest
     build:
       context: ./backend/django_back/
       dockerfile: Dockerfile
@@ -205,8 +203,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./backend/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./backend/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - backend
-

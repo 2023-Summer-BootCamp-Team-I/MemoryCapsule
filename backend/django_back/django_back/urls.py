@@ -27,7 +27,7 @@ from .views import *
 schema_view = get_schema_view(
     openapi.Info(
         title="Memory capsule",  # 타이틀
-        default_version='v1',   # 버전
+        default_version='v1 test',   # 버전
         description="Memory capsule",   # 설명
         terms_of_service="https://google.com",
         contact=openapi.Contact(email="jaeyoon321@naver.com")
