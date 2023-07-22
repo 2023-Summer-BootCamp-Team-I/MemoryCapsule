@@ -66,6 +66,3 @@ jobs:
     - name: Stop containers
       run: docker-compose down
 
-    # Docker Compose 중지
-    - name: Stop containers
-      run: docker-compose down

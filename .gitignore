@@ -14,3 +14,4 @@ venv
 .idea/
 migrations
 *.ini
+.DS_Store
