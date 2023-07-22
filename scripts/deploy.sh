@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 REPOSITORY=/home/ec2-user/memory_capsule
-ZIP_FILE=/home/ec2-user/memory_capsule.zip
+#ZIP_FILE=/home/ec2-user/memory_capsule.zip
 COMPOSE_FILE=$REPOSITORY/docker-compose.yml
 APP_NAME=memory_capsule
 
 # Decompress the zip file to the repository directory
-unzip -o $ZIP_FILE -d $REPOSITORY
+#unzip -o $ZIP_FILE -d $REPOSITORY
 
 # Change to the repository directory
 cd $REPOSITORY
