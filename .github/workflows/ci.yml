@@ -48,8 +48,24 @@ jobs:
     # Docker Compose 실행
     - name: Start containers
       run: docker-compose up -d
+        
+    # 테스트 수행
+    - name: Run unit tests
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt
+        python manage.py test
+
 
     - name: process 로그 출력
       run: docker ps -a
 
     # ... (컨테이너 실행 후 테스트 또는 빌드 등 다른 작업을 진행)
+
+    # Docker Compose 중지
+    - name: Stop containers
+      run: docker-compose down
+
+    # Docker Compose 중지
+    - name: Stop containers
+      run: docker-compose down
