@@ -9,7 +9,7 @@ on:
     branches: [ "develop" ]
 
 env:
-  PROJECT_NAME: memory_capsule
+  PROJECT_NAME: MemoryCapsule
   BUCKET_NAME: memory-capsule-deploy
   CODE_DEPLOY_APP_NAME: memory-capsule-application
   DEPLOYMENT_GROUP_NAME: memory-capsule-deploy-group

@@ -5,7 +5,7 @@ files:
   - source: /
     destination: /home/ec2-user/MemoryCapsule
 permissions:
-  - object: /home/ec2-user/cicdproject/
+  - object: /home/ec2-user/MemoryCapsule
     owner: ec2-user
     group: ec2-user
 hooks:
