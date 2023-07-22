@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-REPOSITORY=/path/to/your/repository
-ZIP_FILE=/path/to/your/zipfile.zip
-COMPOSE_FILE=/path/to/docker-compose.yml
-APP_NAME=cicdproject
+REPOSITORY=/home/ec2-user/memory_capsule
+ZIP_FILE=/home/ec2-user/memory_capsule.zip
+COMPOSE_FILE=$REPOSITORY/docker-compose.yml
+APP_NAME=memory_capsule
 
 # Decompress the zip file to the repository directory
 unzip -o $ZIP_FILE -d $REPOSITORY
