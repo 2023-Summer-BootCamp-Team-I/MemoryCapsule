@@ -3,7 +3,7 @@ os: linux
 
 files:
   - source: /
-    destination: /home/ec2-user/cicdprogitject
+    destination: /home/ec2-user/MemoryCapsule
 permissions:
   - object: /home/ec2-user/cicdproject/
     owner: ec2-user
