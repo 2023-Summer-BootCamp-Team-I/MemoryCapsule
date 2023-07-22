@@ -1,10 +1,25 @@
 import { useState } from 'react';
 import CreateCapsuleNote from '../components/CreateCapsuleNote';
 import CreateTheme from '../components/CreateTheme/indext';
+
 import SendLodingLottie from '../components/SendLodindLottie';
 
 function CreateCapsulePage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [themeName, setThemeName] = useState<string>('심심하다옹');
+  const [themeId, setThemeId] = useState<number>(0);
+
+  const handleGetName = (data: string) => {
+    setThemeName(data);
+    // eslint-disable-next-line no-console
+    console.log('handleGetName: ', data);
+    console.log(themeId);
+  };
+  const handleGetId = (data: number) => {
+    setThemeId(data);
+    // eslint-disable-next-line no-console
+    console.log('handleGetId: ', data);
+  };
 
   const handleButtonClick = () => {
     setIsLoading(true);
@@ -18,10 +33,10 @@ function CreateCapsulePage() {
       <div className="flex items-center justify-between w-full p-16">
         <div className="flex flex-col">
           <div className="text-5xl">ㅌ ㅔ ㅁ ㅏ</div>
-          <CreateTheme />
+          <CreateTheme sendName={handleGetName} sendId={handleGetId} />
         </div>
         <div>
-          <CreateCapsuleNote onButtonClick={handleButtonClick} />
+          <CreateCapsuleNote onButtonClick={handleButtonClick} themeName={themeName} />
         </div>
       </div>
       {isLoading && (
