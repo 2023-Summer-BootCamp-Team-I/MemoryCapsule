@@ -36,22 +36,22 @@ def get_encrypted_password(password):
 def capsule_GET(request) -> (json, int):
     is_open: bool = json.loads((request.GET.get('is_open', 'False').lower()))
     count: int = int(request.GET.get('count', 5))
-    user_id: int = int(request.GET.get('user_id', 1))
+    user_uuid_obj = get_user_uuid_obj_from_jwt(request.GET.get('jwt_token', None))
 
     # due_date 가 현재 날짜보다 큰 경우는 open 되어 있는 캡슐이므로, __gt를 통해 open 되어 있는 캡슐을 가져왔다
     # 열려 있는 캡슐의 경우 due_date가 가까운 순으로 정렬하였다
     if is_open:
-        my_capsules = Capsule.objects.filter(creator_id=user_id, due_date__gt=timezone.now(),
+        my_capsules = Capsule.objects.filter(creator_id=user_uuid_obj, due_date__gt=timezone.now(),
                                              deleted_at__isnull=True).order_by('due_date')
         # my_capsules = Capsule.objects.all()
-        capsules = Capsule.objects.exclude(creator_id=user_id).filter(due_date__gt=timezone.now(),
+        capsules = Capsule.objects.exclude(creator_id=user_uuid_obj).filter(due_date__gt=timezone.now(),
                                                                       deleted_at__isnull=True).order_by('due_date')
     # due_date 가 현재 날짜보다 작거나 같은 경우는 close 되어 있는 캡슐이므로, __lte를 통해 closed 되어 있는 캡슐을 가져온다
     # 닫혀 있는 캡슐의 경우 닫힌 날짜(due_date) 가 최신순이 되도록 입력하였다
     else:
-        my_capsules = Capsule.objects.filter(creator_id=user_id, due_date__lte=timezone.now(),
+        my_capsules = Capsule.objects.filter(creator_id=user_uuid_obj, due_date__lte=timezone.now(),
                                              deleted_at__isnull=True).order_by('-due_date')
-        capsules = Capsule.objects.exclude(creator_id=user_id).filter(due_date__lte=timezone.now(),
+        capsules = Capsule.objects.exclude(creator_id=user_uuid_obj).filter(due_date__lte=timezone.now(),
                                                                       deleted_at__isnull=True).order_by('-due_date')
 
     if count != -1:
@@ -193,7 +193,7 @@ def capsule_url_parm_POST(request, capsule_id) -> (json, int):
     except json.JSONDecodeError:
         return {'code': 400, 'message': '올바른 JSON 형식이 아닙니다.'}, 400
 
-    user_id = json_data.get('user_id')
+    user_uuid_obj = get_user_uuid_obj_from_jwt(json_data.get('jwt_token'))
     capsule_password = json_data.get('capsule_password')
 
     try:
@@ -202,7 +202,7 @@ def capsule_url_parm_POST(request, capsule_id) -> (json, int):
         return {'code': 404, 'message': '캡슐을 찾을 수 없습니다.'}, 404
 
     try:
-        UserCapsule.objects.get(capsule_id=capsule_id, user_id=user_id, deleted_at__isnull=True)
+        UserCapsule.objects.get(capsule_id=capsule_id, user_id=user_uuid_obj, deleted_at__isnull=True)
     except UserCapsule.DoesNotExist:
         return {'code': 404, 'message': '캡슐에 포함된 유저가 아닙니다.'}, 404
 
@@ -219,6 +219,8 @@ def capsule_url_parm_POST(request, capsule_id) -> (json, int):
 
 # 캡슐 정보 수정
 def capsule_url_parm_PUT(request, capsule_id) -> (json, int):
+    user_uuid_obj = get_user_uuid_obj_from_jwt(request.POST['jwt_token'])
+
     if 'img_file' not in request.FILES:
         return {'code': 400, 'message': '파일이 제공되지 않았습니다.'}, 400
 
@@ -230,7 +232,7 @@ def capsule_url_parm_PUT(request, capsule_id) -> (json, int):
     serializer = CapsuleSerializer(capsule, data=request.POST)
 
     if serializer.is_valid():
-        if capsule.creator_id != int(request.POST['creator_id']):
+        if capsule.creator_id != user_uuid_obj:
             return {'code': 404, 'message': '캡슐 수정 권한이 없습니다'}, 404
 
         capsule_img_url = upload_image_for_api(request.FILES['img_file'])
@@ -285,8 +287,8 @@ def capsule_url_parm_DELETE(request, capsule_id) -> (json, int):
 
 # 개별 캡슐 정보 반환
 def user_capsule_GET(request) -> (json, int):
-    capsule_id: int = int(request.GET.get('capsule_id', 1))
-    user_id: int = int(request.GET.get('user_id', 1))
+    capsule_id: int = int(request.GET.get('capsule_id', None))
+    user_uuid_obj = get_user_uuid_obj_from_jwt(request.GET['jwt_token'])
 
     try:
         capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
@@ -295,7 +297,7 @@ def user_capsule_GET(request) -> (json, int):
 
     # 현재 캡슐에 포함된 유저가 맞는지 체크
     try:
-        UserCapsule.objects.get(user_id=user_id, capsule_id=capsule_id, deleted_at__isnull=True)
+        UserCapsule.objects.get(user_id=user_uuid_obj, capsule_id=capsule_id, deleted_at__isnull=True)
     except UserCapsule.DoesNotExist:
         return {'code': 404, 'message': '캡슐에 포함되지 않은 유저입니다'}, 404
 
@@ -339,8 +341,9 @@ def user_capsule_POST(request) -> (json, int):
         json_data = json.loads(request.body)
     except json.JSONDecodeError:
         return {'code': 400, 'message': '올바른 JSON 형식이 아닙니다.'}, 400
+
+    user_uuid_obj = get_user_uuid_obj_from_jwt(json_data.get('jwt_token'))
     capsule_id = json_data.get('capsule_id')
-    user_id = json_data.get('user_id')
     capsule_password = json_data.get('capsule_password')
 
     try:
@@ -349,18 +352,18 @@ def user_capsule_POST(request) -> (json, int):
         return {'code': 404, 'message': '캡슐을 찾을 수 없습니다.'}, 404
 
     try:
-        user = User.objects.get(user_id=user_id, deleted_at__isnull=True)
+        user = User.objects.get(user_id=user_uuid_obj, deleted_at__isnull=True)
     except User.DoesNotExist:
         return {'code': 404, 'message': '유저를 찾을 수 없습니다.'}, 404
 
-    if UserCapsule.objects.filter(capsule_id=capsule_id, user_id=user_id, deleted_at__isnull=True):
+    if UserCapsule.objects.filter(capsule_id=capsule_id, user_id=user_uuid_obj, deleted_at__isnull=True):
         return {'code': 400, 'message': '이미 캡슐에 포함된 유저입니다.'}, 400
 
     if not check_encrypted_password(capsule_password, capsule.capsule_password):
         return {'code': 404, 'message': '캡슐 비밀번호가 잘못 되었습니다.'}, 404
 
     try:
-        user_capsule = UserCapsule.objects.create(capsule_id=capsule_id, user_id=user_id)
+        user_capsule = UserCapsule.objects.create(capsule_id=capsule_id, user_id=user_uuid_obj)
     except (ValidationError, IntegrityError) as e:
         return {'code': 400, 'message': '입력값에 오류가 있습니다. 다시 확인해 주세요.'}, 400
 
@@ -381,7 +384,8 @@ def user_capsule_POST(request) -> (json, int):
 # 캡슐 나가기
 def user_capsule_DELETE(request) -> (json, int):
     capsule_id: int = int(request.GET.get('capsule_id', 1))
-    user_id: int = int(request.GET.get('user_id', 1))
+    user_uuid_obj = get_user_uuid_obj_from_jwt(request.GET.get('jwt_token', 1))
+
 
     try:
         capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
@@ -389,12 +393,12 @@ def user_capsule_DELETE(request) -> (json, int):
         return {'code': 404, 'message': '캡슐을 찾을 수 없습니다.'}, 404
 
     try:
-        user = User.objects.get(user_id=user_id, deleted_at__isnull=True)
+        user = User.objects.get(user_id=user_uuid_obj, deleted_at__isnull=True)
     except User.DoesNotExist:
         return {'code': 404, 'message': '유저를 찾을 수 없습니다.'}, 404
 
     try:
-        user_capsule = UserCapsule.objects.get(capsule_id=capsule_id, user_id=user_id, deleted_at__isnull=True)
+        user_capsule = UserCapsule.objects.get(capsule_id=capsule_id, user_id=user_uuid_obj, deleted_at__isnull=True)
         user_capsule.deleted_at = timezone.now()
         user_capsule.save()
     except UserCapsule.DoesNotExist:
