@@ -47,6 +47,12 @@ def sign_up(request):
             if user_email_confirm > 0:
                 return JsonResponse({'code': '400', 'message': '이미 존재하는 이메일 입니다'}, status=400)
 
+            user_phone_number_confirm = User.objects.filter(phone_number__icontains=request.POST["phone_number"]).count()
+            if user_phone_number_confirm > 0:
+                return JsonResponse({'code': '400', 'message': '이미 존재하는 전화번호 입니다'}, status=400)
+
+            return JsonResponse({'code': '400', 'message': 'Unexpected error occurred'}, status=400)
+
 
 @api_view(['post'])
 def sign_in(request):
