@@ -2,18 +2,30 @@ import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
-import { getMonth, getDate } from 'date-fns';
+import { getMonth, getDate, format } from 'date-fns';
 import styles from './style.module.css';
 
-function ReactDatePicker() {
+interface DateProps {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  handleGetDate: Function;
+}
+
+function ReactDatePicker({ handleGetDate }: DateProps) {
   const [startDate, setStartDate] = useState(new Date());
+
+  const handleChangeData = (date: Date) => {
+    setStartDate(date);
+    const formattedDate = format(date, 'yyyy-MM-dd HH:mm:ss');
+    handleGetDate(formattedDate);
+  };
+
   return (
     <div className="flex">
       <DatePicker
         locale={ko}
-        dateFormat="yyyy.MM.dd (eee)"
+        dateFormat="yyyy-MM-dd 00:00:00"
         selected={startDate}
-        onChange={(date: Date) => setStartDate(date)}
+        onChange={(date: Date) => handleChangeData(date)}
         selectsStart
         minDate={new Date()}
         startDate={startDate}

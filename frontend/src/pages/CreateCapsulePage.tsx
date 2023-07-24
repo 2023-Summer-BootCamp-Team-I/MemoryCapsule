@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CreateCapsuleNote from '../components/CreateCapsuleNote';
 import CreateTheme from '../components/CreateTheme/indext';
 
@@ -13,13 +13,16 @@ function CreateCapsulePage() {
     setThemeName(data);
     // eslint-disable-next-line no-console
     console.log('handleGetName: ', data);
-    console.log(themeId);
   };
   const handleGetId = (data: number) => {
     setThemeId(data);
     // eslint-disable-next-line no-console
     console.log('handleGetId: ', data);
   };
+
+  useEffect(() => {
+    console.log('Current themeId:', themeId);
+  }, [themeId]);
 
   const handleButtonClick = () => {
     setIsLoading(true);
@@ -36,7 +39,11 @@ function CreateCapsulePage() {
           <CreateTheme sendName={handleGetName} sendId={handleGetId} />
         </div>
         <div>
-          <CreateCapsuleNote onButtonClick={handleButtonClick} themeName={themeName} />
+          <CreateCapsuleNote
+            onButtonClick={handleButtonClick}
+            themeName={themeName}
+            themeId={themeId}
+          />
         </div>
       </div>
       {isLoading && (
