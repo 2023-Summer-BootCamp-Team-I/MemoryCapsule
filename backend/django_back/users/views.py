@@ -59,7 +59,7 @@ def sign_in(request):
             # 유저 입력 password와 db에 저장된 암호화 된 password 비교
             password_check_result = check_encrypted_password(login_password_input, user)
 
-            user_data = {'user_id': user.id, 'user_nickname': user.nickname,
+            user_data = {'user_id': user.user_id, 'user_nickname': user.nickname, 'user_image':user.user_img_url,
                          "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)}
 
             if password_check_result:
