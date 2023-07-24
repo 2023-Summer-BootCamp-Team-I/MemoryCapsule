@@ -182,10 +182,6 @@ def capsule_url_parm_GET(request, capsule_id) -> (json, int):
     if not capsule:
         return {'code': 404, 'message': '캡슐을 찾을 수 없습니다.'}, 404
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     user_capsules = UserCapsule.objects.filter(
         Q(user=user_uuid_obj) &
         Q(deleted_at__isnull=True)

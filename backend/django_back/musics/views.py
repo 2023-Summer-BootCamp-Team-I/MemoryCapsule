@@ -7,8 +7,41 @@ import boto3
 from django.http import JsonResponse
 from .utils import upload_music
 
+from rest_framework.decorators import api_view, parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
+@swagger_auto_schema(
+    methods=['POST'],
+    tags=["음악 파일 전송"],
+    consumes=['multipart/form-data'],
+    manual_parameters=[
+    openapi.Parameter(
+            name="name",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="음악 이름",
+    ),
+    openapi.Parameter(
+            name="context",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="음악 내용",
+    ),
+    openapi.Parameter(
+            name="filename",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_FILE,
+            description="음악 이름",
+    )
+
+
+
+    ]
+)
 @api_view(['post'])
+@parser_classes([MultiPartParser, FormParser])
 def upload_mp3(request):
     if request.method == 'POST':
 

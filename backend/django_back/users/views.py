@@ -9,9 +9,63 @@ from images.views import upload_image_for_api
 from .exceptions import CustomException, email_syntax_check
 
 import datetime
+from rest_framework.decorators import api_view, parser_classes
+
+from rest_framework.parsers import MultiPartParser, FormParser
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+from rest_framework.parsers import JSONParser
 
 
+@swagger_auto_schema(
+    methods=['POST'],
+    tags=["User 생성"],
+    consumes=['multipart/form-data'],
+    manual_parameters=[
+        openapi.Parameter(
+            name="id",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="id 입력",
+        ),
+        openapi.Parameter(
+            name="password",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="패스워드 입력",
+        ),
+
+        openapi.Parameter(
+            name="phone_number",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="전화번호 입력",
+        ),
+        openapi.Parameter(
+            name="email",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="이메일 입력",
+        ),
+
+        openapi.Parameter(
+            name="nickname",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="닉네임 입력",
+        ),
+
+        openapi.Parameter(
+            name="img_file",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_FILE,
+            description="유저 사진 추가",
+        ),
+
+    ]
+)
 @api_view(['post'])
+@parser_classes([MultiPartParser, FormParser])
 def sign_up(request):
     if request.method == 'POST':
         try:
@@ -54,7 +108,40 @@ def sign_up(request):
             return JsonResponse({'code': '400', 'message': 'Unexpected error occurred'}, status=400)
 
 
+# @swagger_auto_schema(
+#     methods=['POST'],
+#     tags=["User 로그인"],
+#     consumes=['multipart/form-data'],
+#     manual_parameters=[
+#         openapi.Parameter(
+#             name="id",
+#             in_=openapi.IN_FORM,
+#             type=openapi.TYPE_STRING,
+#             description="id 입력",
+#         ),
+#
+#     openapi.Parameter(
+#             name="password",
+#             in_=openapi.IN_FORM,
+#             type=openapi.TYPE_STRING,
+#             description="패스워드 입력",
+#         )]
+#
+# )
+
+@swagger_auto_schema(
+    method='post',
+    tags=["User 로그인"],
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'id': openapi.Schema(type=openapi.TYPE_STRING, description='아이디 입력'),
+            'password': openapi.Schema(type=openapi.TYPE_STRING, description='비밀번호 입력'),
+        }
+    )
+)
 @api_view(['post'])
+@parser_classes([MultiPartParser, JSONParser])
 def sign_in(request):
     if request.method == 'POST':
         try:

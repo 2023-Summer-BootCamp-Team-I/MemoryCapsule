@@ -114,16 +114,7 @@ def capsule_func(request) -> json:
 @swagger_auto_schema(
     methods=['POST'],
     tags=["캡슐 비밀번호 확인 (아마 사용 안 할 예정)"],
-<<<<<<< Updated upstream
-    request_body=openapi.Schema(
-        type=openapi.TYPE_OBJECT,
-        properties={
-            'jwt_token': openapi.Schema(type=openapi.TYPE_STRING, description='jwt_token'),
-            'capsule_password': openapi.Schema(type=openapi.TYPE_STRING, description='Capsule Password'),
-        },
-        required=['jwt_token', 'capsule_password']
-    )
-=======
+
     manual_parameters=[
         openapi.Parameter(
             name="jwt_token",
@@ -138,7 +129,6 @@ def capsule_func(request) -> json:
             description="캡슐 패스워드 입력",
         ),
     ]
->>>>>>> Stashed changes
 )
 
 @swagger_auto_schema(
@@ -212,7 +202,7 @@ def capsule_func(request) -> json:
     ]
 )
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
-@parser_classes([MultiPartParser, FormParser, JSONParser])
+@parser_classes([MultiPartParser, FormParser])
 def capsule_url_parm_func(request, capsule_id):
     result: json
     status_code: int

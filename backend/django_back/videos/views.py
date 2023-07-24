@@ -13,7 +13,6 @@ from stories.models import Story, StoryVideo
 from musics.models import Music
 from core.uuid_decode import *
 
-from core.uuid_decode import *
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view
