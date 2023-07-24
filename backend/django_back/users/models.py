@@ -5,12 +5,13 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 from django.db import models
-
 from baseapp.models import BaseModel
+import uuid
 
 
 class User(BaseModel):
     user_id = models.AutoField(primary_key=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     id = models.CharField(unique=True, max_length=60)
     password = models.CharField(max_length=80)
     phone_number = models.CharField(unique=True, max_length=13)
