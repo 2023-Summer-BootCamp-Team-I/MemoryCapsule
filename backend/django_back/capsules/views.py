@@ -66,7 +66,7 @@ from drf_yasg import openapi
             name="limit_count",
             in_=openapi.IN_FORM,
             type=openapi.TYPE_INTEGER,
-            description="영상에 사용할 이미지 개수 제한",
+            description="영상에 사용할 이미지 개수 제한 1 ~ 30",
         ),
         openapi.Parameter(
             name="capsule_password",
@@ -114,6 +114,7 @@ def capsule_func(request) -> json:
 @swagger_auto_schema(
     methods=['POST'],
     tags=["캡슐 비밀번호 확인 (아마 사용 안 할 예정)"],
+<<<<<<< Updated upstream
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
@@ -122,6 +123,22 @@ def capsule_func(request) -> json:
         },
         required=['jwt_token', 'capsule_password']
     )
+=======
+    manual_parameters=[
+        openapi.Parameter(
+            name="jwt_token",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="jwt token 입력",
+        ),
+        openapi.Parameter(
+            name="capsule_password",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="캡슐 패스워드 입력",
+        ),
+    ]
+>>>>>>> Stashed changes
 )
 
 @swagger_auto_schema(
@@ -159,7 +176,7 @@ def capsule_func(request) -> json:
             name="limit_count",
             in_=openapi.IN_FORM,
             type=openapi.TYPE_INTEGER,
-            description="영상에 사용할 이미지 개수 제한",
+            description="영상에 사용할 이미지 개수 제한 1 ~ 30",
         ),
         openapi.Parameter(
             name="current_capsule_password",

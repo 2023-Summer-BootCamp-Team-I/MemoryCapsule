@@ -136,7 +136,8 @@ def capsule_POST(request) -> (json, int):
     capsule_password = get_encrypted_password(request.POST['capsule_password'])
 
     if serializer.is_valid():
-        instance = serializer.save(creator_id=user_uuid_obj, capsule_img_url=capsule_img_url, capsule_password=capsule_password)
+        instance = serializer.save(creator_id=user_uuid_obj, capsule_img_url=capsule_img_url,
+                                   capsule_password=capsule_password)
 
         try:
             user_capsule = UserCapsule.objects.create(capsule_id=instance.capsule_id, user_id=instance.creator_id)
@@ -181,7 +182,10 @@ def capsule_url_parm_GET(request, capsule_id) -> (json, int):
     if not capsule:
         return {'code': 404, 'message': '캡슐을 찾을 수 없습니다.'}, 404
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     user_capsules = UserCapsule.objects.filter(
         Q(user=user_uuid_obj) &
         Q(deleted_at__isnull=True)
@@ -214,13 +218,8 @@ def capsule_url_parm_GET(request, capsule_id) -> (json, int):
 
 # 캡슐 password 확인
 def capsule_url_parm_POST(request, capsule_id) -> (json, int):
-    try:
-        json_data = json.loads(request.body)
-    except json.JSONDecodeError:
-        return {'code': 400, 'message': '올바른 JSON 형식이 아닙니다.'}, 400
-
-    user_uuid_obj = get_user_uuid_obj_from_jwt(json_data.get('jwt_token'))
-    capsule_password = json_data.get('capsule_password')
+    user_uuid_obj = get_user_uuid_obj_from_jwt(request.POST['jwt_token'])
+    capsule_password = request.POST['capsule_password']
 
     try:
         capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
@@ -242,6 +241,7 @@ def capsule_url_parm_POST(request, capsule_id) -> (json, int):
     }
 
     return result, 200
+
 
 # 캡슐 정보 수정
 def capsule_url_parm_PUT(request, capsule_id) -> (json, int):
@@ -266,12 +266,16 @@ def capsule_url_parm_PUT(request, capsule_id) -> (json, int):
             return {'code': 404, 'message': '캡슐 비밀번호가 잘못 되었습니다.'}, 404
 
         # new_capsule_password가 넘어 왔다면, 비밀번호를 변경한다
-        if request.POST['new_capsule_password'] != '':
-            capsule_password = get_encrypted_password(request.POST['new_capsule_password'])
-
         # 그렇지 않다면, 기존 password를 그대로 사용한다
-        else:
+        try:
+            if request.POST['new_capsule_password'] != '':
+                capsule_password = get_encrypted_password(request.POST['new_capsule_password'])
+            else:
+                capsule_password = capsule.capsule_password
+        except:
             capsule_password = capsule.capsule_password
+
+
 
         instance = serializer.save(capsule_img_url=capsule_img_url, capsule_password=capsule_password)
         updated_capsule = Capsule.objects.get(capsule_id=capsule_id)
@@ -398,7 +402,6 @@ def user_capsule_POST(request) -> (json, int):
     except (ValidationError, IntegrityError) as e:
         return {'code': 400, 'message': '입력값에 오류가 있습니다. 다시 확인해 주세요.'}, 400
 
-
     result = {
         'code': 201,
         'message': '유저가 캡슐에 입장하였습니다',
@@ -416,7 +419,6 @@ def user_capsule_POST(request) -> (json, int):
 def user_capsule_DELETE(request) -> (json, int):
     capsule_id: int = int(request.GET.get('capsule_id', 1))
     user_uuid_obj = get_user_uuid_obj_from_jwt(request.GET.get('jwt_token', 1))
-
 
     try:
         capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
