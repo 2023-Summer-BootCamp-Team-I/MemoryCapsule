@@ -59,12 +59,14 @@ def sign_in(request):
             # 유저 입력 password와 db에 저장된 암호화 된 password 비교
             password_check_result = check_encrypted_password(login_password_input, user)
 
-            user_data = {'user_id': user.user_id, 'user_nickname': user.nickname, 'user_image':user.user_img_url,
-                         "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)}
-
             if password_check_result:
-                user_jwt_token = jwt.encode(user_data, JWT_SECRET_KEY, ALGORITHM)
-                return JsonResponse({'message': '로그인이 완료되었습니다', 'jwt': user_jwt_token.decode('utf-8')}, status=200)
+                user_token_data = {"user_id": str(user.user_id), "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)}
+                user_jwt_token = jwt.encode(user_token_data, JWT_SECRET_KEY, ALGORITHM)
+                data = {
+                    'nickname': user.nickname,
+                    'user_img_url': user.user_img_url
+                }
+                return JsonResponse({'message': '로그인이 완료되었습니다', 'jwt_token': user_jwt_token.decode('utf-8'), 'data': data}, status=200)
             else:
                 return JsonResponse({'code': 401, 'message': '옳지 않은 비밀번호 입니다.'}, status=401)
         except User.DoesNotExist:

@@ -21,6 +21,7 @@ from .serializers import CapsuleSerializer
 from django_back.celery import revoke_task
 
 from django_back.tasks import schedule_video_creation
+from core.uuid_decode import *
 
 
 def check_encrypted_password(input_password, current_password):
@@ -100,6 +101,8 @@ def capsule_GET(request) -> (json, int):
 
 # Capsule 생성
 def capsule_POST(request) -> (json, int):
+    user_uuid_obj = get_user_uuid_obj_from_jwt(request.POST['jwt_token'])
+
     if 'img_file' not in request.FILES:
         return {'code': 400, 'message': '파일이 제공되지 않았습니다.'}, 400
 
@@ -117,7 +120,7 @@ def capsule_POST(request) -> (json, int):
     capsule_password = get_encrypted_password(request.POST['capsule_password'])
 
     if serializer.is_valid():
-        instance = serializer.save(capsule_img_url=capsule_img_url, capsule_password=capsule_password)
+        instance = serializer.save(creator_id=user_uuid_obj, capsule_img_url=capsule_img_url, capsule_password=capsule_password)
 
         try:
             user_capsule = UserCapsule.objects.create(capsule_id=instance.capsule_id, user_id=instance.creator_id)
