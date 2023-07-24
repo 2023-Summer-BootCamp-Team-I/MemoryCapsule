@@ -32,7 +32,7 @@ def get_encrypted_password(password):
     return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
 
-# Capsule 전 조회
+# Capsule 전체 조회
 def capsule_GET(request) -> (json, int):
     is_open: bool = json.loads((request.GET.get('is_open', 'False').lower()))
     count: int = int(request.GET.get('count', 5))
@@ -272,17 +272,22 @@ def capsule_url_parm_PUT(request, capsule_id) -> (json, int):
 
 # 캡슐 정보 삭제
 def capsule_url_parm_DELETE(request, capsule_id) -> (json, int):
+    user_uuid_obj = get_user_uuid_obj_from_jwt(request.GET.get('jwt_token', None))
     try:
         capsule = Capsule.objects.get(capsule_id=capsule_id, deleted_at__isnull=True)
-        capsule.deleted_at = timezone.now()
-        capsule.save()
-
-        revoke_task(capsule.task_id)
-
-        return {'code': 200, 'message': '캡슐 삭제 완료', 'deleted_at': capsule.deleted_at,
-                'time': timezone.now().strftime('%Y-%m-%d %H:%M:%S')}, 200
     except Capsule.DoesNotExist:
         return {'code': 404, 'message': '캡슐을 찾을 수 없습니다.'}, 404
+
+    if capsule.creator_id != user_uuid_obj:
+        return {'code': 404, 'message': '캡슐 삭제 권한이 없습니다'}, 404
+
+    capsule.deleted_at = timezone.now()
+    capsule.save()
+
+    revoke_task(capsule.task_id)
+
+    return {'code': 200, 'message': '캡슐 삭제 완료', 'deleted_at': capsule.deleted_at,
+            'time': timezone.now().strftime('%Y-%m-%d %H:%M:%S')}, 200
 
 
 # 개별 캡슐 정보 반환
