@@ -15,14 +15,14 @@ import datetime
 def sign_up(request):
     if request.method == 'POST':
         try:
-            email_syntax_check(request.POST["email"])
+            email_syntax_check(request.data["email"])
 
             user = create_user(
-                id=request.POST["id"],
-                password=request.POST["password"],
-                phone_number=request.POST["phone_number"],
-                email=request.POST["email"],
-                nickname=request.POST["nickname"],
+                id=request.data["id"],
+                password=request.data["password"],
+                phone_number=request.data["phone_number"],
+                email=request.data["email"],
+                nickname=request.data["nickname"],
                 user_img_url=None
             )
 
@@ -39,21 +39,27 @@ def sign_up(request):
             }
             return JsonResponse(error_response, status=400)
         except IntegrityError:
-            user_id_confirm = User.objects.filter(id__icontains=request.POST["id"]).count()
+            user_id_confirm = User.objects.filter(id__icontains=request.data["id"]).count()
             if user_id_confirm > 0:
                 return JsonResponse({'code': '400', 'message': '이미 존재하는 아이디 입니다'}, status=400)
 
-            user_email_confirm = User.objects.filter(email__icontains=request.POST["email"]).count()
+            user_email_confirm = User.objects.filter(email__icontains=request.data["email"]).count()
             if user_email_confirm > 0:
                 return JsonResponse({'code': '400', 'message': '이미 존재하는 이메일 입니다'}, status=400)
+
+            user_phone_number_confirm = User.objects.filter(phone_number__icontains=request.POST["phone_number"]).count()
+            if user_phone_number_confirm > 0:
+                return JsonResponse({'code': '400', 'message': '이미 존재하는 전화번호 입니다'}, status=400)
+
+            return JsonResponse({'code': '400', 'message': 'Unexpected error occurred'}, status=400)
 
 
 @api_view(['post'])
 def sign_in(request):
     if request.method == 'POST':
         try:
-            login_id_input = request.POST['id']
-            login_password_input = request.POST['password']
+            login_id_input = request.data['id']
+            login_password_input = request.data['password']
 
             user = user_find_by_id(login_id_input)
             # 유저 입력 password와 db에 저장된 암호화 된 password 비교
