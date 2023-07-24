@@ -12,12 +12,33 @@ from users.models import User
 from stories.models import Story, StoryVideo
 from musics.models import Music
 
+from core.uuid_decode import *
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import api_view
+from drf_yasg.openapi import Schema, TYPE_INTEGER, TYPE_ARRAY
 
+
+@swagger_auto_schema(
+    method='get',
+    tags=["video API"],
+)
+@swagger_auto_schema(
+    method='post',
+    tags=["video API"],
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'creator_id': openapi.Schema(type=openapi.TYPE_INTEGER, description='비디오 생성자 아이디'),
+            'music_id': openapi.Schema(type=openapi.TYPE_INTEGER, description='음악 아이디'),
+            'user_choice_image': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_INTEGER), description='비디오 리스트'),
+        }
+    )
+)
 @api_view(['get', 'post'])
 def video_work(request, capsule_id):
     if request.method == 'GET':
         try:
-
             videos = Video.objects.filter(capsule=capsule_id)
             default_video = videos.first()
 
