@@ -125,8 +125,8 @@ def capsule_POST(request) -> (json, int):
     due_date_str = request.POST.get('due_date')
     due_date = datetime.strptime(due_date_str, '%Y-%m-%d %H:%M:%S')
 
-    # if timezone.now().date() >= due_date.date():
-    #     return {'code': 400, 'message': '개봉 날짜가 현재 날짜와 같거나 빠릅니다.'}, 400
+    if timezone.now().date() >= due_date.date():
+        return {'code': 400, 'message': '개봉 날짜가 현재 날짜와 같거나 빠릅니다.'}, 400
 
     val: json
     status_code: int
@@ -181,14 +181,13 @@ def capsule_url_parm_GET(request, capsule_id) -> (json, int):
     if not capsule:
         return {'code': 404, 'message': '캡슐을 찾을 수 없습니다.'}, 404
 
-    try:
-        user_capsules = UserCapsule.objects.get(
-            Q(user=user_uuid_obj) &
-            Q(deleted_at__isnull=True) &
-            Q(capsule__deleted_at__isnull=True)
-        )
-    except UserCapsule.DoesNotExist:
-        return {'code': 404, 'message': '캡슐 조회 권한이 없습니다'}, 404
+
+    user_capsules = UserCapsule.objects.filter(
+        Q(user=user_uuid_obj) &
+        Q(deleted_at__isnull=True)
+    )
+    if not user_capsules.exists():
+        return {'code': 404, 'message': '캡슐에 포함되지 않은 유저입니다.'}, 404
 
     capsule_data = {
         'capsule_id': capsule.capsule_id,

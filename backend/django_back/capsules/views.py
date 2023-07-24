@@ -2,7 +2,7 @@ import json
 from django.http import JsonResponse
 from .utils import *
 from rest_framework.decorators import api_view, parser_classes
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
@@ -114,11 +114,14 @@ def capsule_func(request) -> json:
 @swagger_auto_schema(
     methods=['POST'],
     tags=["캡슐 비밀번호 확인 (아마 사용 안 할 예정)"],
-    type=openapi.TYPE_OBJECT,
-    properties={
-        'jwt_token': openapi.Schema(type=openapi.TYPE_STRING, description='jwt_token'),
-        'capsule_password': openapi.Schema(type=openapi.TYPE_STRING, description='Capsule Password'),
-    }
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'jwt_token': openapi.Schema(type=openapi.TYPE_STRING, description='jwt_token'),
+            'capsule_password': openapi.Schema(type=openapi.TYPE_STRING, description='Capsule Password'),
+        },
+        required=['jwt_token', 'capsule_password']
+    )
 )
 
 @swagger_auto_schema(
@@ -192,7 +195,7 @@ def capsule_func(request) -> json:
     ]
 )
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
-@parser_classes([MultiPartParser, FormParser])
+@parser_classes([MultiPartParser, FormParser, JSONParser])
 def capsule_url_parm_func(request, capsule_id):
     result: json
     status_code: int
@@ -236,12 +239,15 @@ def capsule_url_parm_func(request, capsule_id):
 @swagger_auto_schema(
     methods=['POST'],
     tags=["캡슐에 유저 참여"],
-    type=openapi.TYPE_OBJECT,
-    properties={
-        'jwt_token': openapi.Schema(type=openapi.TYPE_STRING, description='jwt_token'),
-        'capsule_id': openapi.Schema(type=openapi.TYPE_INTEGER, description='Capsule ID'),
-        'capsule_password': openapi.Schema(type=openapi.TYPE_STRING, description='Capsule Password'),
-    }
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'jwt_token': openapi.Schema(type=openapi.TYPE_STRING, description='jwt_token'),
+            'capsule_id': openapi.Schema(type=openapi.TYPE_INTEGER, description='Capsule ID'),
+            'capsule_password': openapi.Schema(type=openapi.TYPE_STRING, description='Capsule Password'),
+        },
+        required=['jwt_token', 'capsule_id', 'capsule_password']
+    )
 )
 
 @swagger_auto_schema(
@@ -263,7 +269,7 @@ def capsule_url_parm_func(request, capsule_id):
     ]
 )
 @api_view(['GET', 'POST', 'DELETE'])
-@parser_classes([MultiPartParser, FormParser])
+@parser_classes([MultiPartParser, FormParser, JSONParser])
 def user_capsule_func(request):
     result: json
     status_code: int
