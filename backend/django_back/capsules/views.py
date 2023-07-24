@@ -21,7 +21,7 @@ from drf_yasg import openapi
             name="is_open",
             in_=openapi.IN_QUERY,
             type=openapi.TYPE_STRING,
-            description="캡슐이 열렸는지 체크",
+            description="캡슐이 열렸는지 체크 (true or false) 로 값 설정",
         ),
         openapi.Parameter(
             name="count",
@@ -59,7 +59,8 @@ from drf_yasg import openapi
             in_=openapi.IN_FORM,
             type=openapi.TYPE_STRING,
             format=openapi.FORMAT_DATETIME,
-            description="캡슐 개봉일 Due Date",
+            description="캡슐 개봉일 Due Date '2021-07-10 16:50:43' format 으로 넣어주세요. "
+                        "날짜만 받았다면, 뒤에 00:00:00 추가해주셔야 합니다",
         ),
         openapi.Parameter(
             name="limit_count",
@@ -98,8 +99,100 @@ def capsule_func(request) -> json:
 
     return JsonResponse(result, safe=False, status=status_code)
 
+@swagger_auto_schema(
+    methods=['GET'],
+    tags=["Capsule 단일 정보 조회"],
+    manual_parameters=[
+        openapi.Parameter(
+            name="jwt_token",
+            in_=openapi.IN_QUERY,
+            type=openapi.TYPE_STRING,
+            description="jwt token 입력",
+        ),
+    ]
+)
+@swagger_auto_schema(
+    methods=['POST'],
+    tags=["캡슐 비밀번호 확인 (아마 사용 안 할 예정)"],
+    type=openapi.TYPE_OBJECT,
+    properties={
+        'jwt_token': openapi.Schema(type=openapi.TYPE_STRING, description='jwt_token'),
+        'capsule_password': openapi.Schema(type=openapi.TYPE_STRING, description='Capsule Password'),
+    }
+)
 
+@swagger_auto_schema(
+    methods=['PUT'],
+    tags=["Capsule 수정"],
+    consumes=['multipart/form-data'],
+    manual_parameters=[
+        openapi.Parameter(
+            name="jwt_token",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="jwt token 입력",
+        ),
+        openapi.Parameter(
+            name="theme_id",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_INTEGER,
+            description="테마 아이디",
+        ),
+        openapi.Parameter(
+            name="capsule_name",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="캡슐 이름",
+        ),
+        openapi.Parameter(
+            name="due_date",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            format=openapi.FORMAT_DATETIME,
+            description="캡슐 개봉일 Due Date '2021-07-10 16:50:43' format 으로 넣어주세요. "
+                        "날짜만 받았다면, 뒤에 00:00:00 추가해주셔야 합니다",
+        ),
+        openapi.Parameter(
+            name="limit_count",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_INTEGER,
+            description="영상에 사용할 이미지 개수 제한",
+        ),
+        openapi.Parameter(
+            name="current_capsule_password",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="현재 캡슐 비밀번호",
+        ),
+        openapi.Parameter(
+            name="new_capsule_password",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="새 캡슐 비밀번호. 미입력시 비밀번호 변경 안함",
+        ),
+        openapi.Parameter(
+            name="img_file",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_FILE,
+            description="캡슐 이미지 파일",
+        ),
+
+    ]
+)
+@swagger_auto_schema(
+    methods=['DELETE'],
+    tags=["Capsule 삭제"],
+    manual_parameters=[
+        openapi.Parameter(
+            name="jwt_token",
+            in_=openapi.IN_QUERY,
+            type=openapi.TYPE_STRING,
+            description="jwt token 입력",
+        ),
+    ]
+)
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@parser_classes([MultiPartParser, FormParser])
 def capsule_url_parm_func(request, capsule_id):
     result: json
     status_code: int
@@ -122,7 +215,55 @@ def capsule_url_parm_func(request, capsule_id):
 
     return JsonResponse(result, safe=False, status=status_code)
 
+@swagger_auto_schema(
+    methods=['GET'],
+    tags=["Capsule에 포함된 모든 유저 출력 (host user 는 분리되어 출력됨)"],
+    manual_parameters=[
+        openapi.Parameter(
+            name="jwt_token",
+            in_=openapi.IN_QUERY,
+            type=openapi.TYPE_STRING,
+            description="jwt token 입력",
+        ),
+        openapi.Parameter(
+            name="capsule_id",
+            in_=openapi.IN_QUERY,
+            type=openapi.TYPE_STRING,
+            description="캡슐 아이디",
+        ),
+    ]
+)
+@swagger_auto_schema(
+    methods=['POST'],
+    tags=["캡슐에 유저 참여"],
+    type=openapi.TYPE_OBJECT,
+    properties={
+        'jwt_token': openapi.Schema(type=openapi.TYPE_STRING, description='jwt_token'),
+        'capsule_id': openapi.Schema(type=openapi.TYPE_INTEGER, description='Capsule ID'),
+        'capsule_password': openapi.Schema(type=openapi.TYPE_STRING, description='Capsule Password'),
+    }
+)
+
+@swagger_auto_schema(
+    methods=['DELETE'],
+    tags=["캡슐에서 유저 나가기"],
+    manual_parameters=[
+        openapi.Parameter(
+            name="jwt_token",
+            in_=openapi.IN_QUERY,
+            type=openapi.TYPE_STRING,
+            description="jwt token 입력",
+        ),
+        openapi.Parameter(
+            name="capsule_id",
+            in_=openapi.IN_QUERY,
+            type=openapi.TYPE_INTEGER,
+            description="Capsule ID",
+        ),
+    ]
+)
 @api_view(['GET', 'POST', 'DELETE'])
+@parser_classes([MultiPartParser, FormParser])
 def user_capsule_func(request):
     result: json
     status_code: int
