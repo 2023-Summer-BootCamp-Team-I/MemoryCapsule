@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 import pytz
 from django.db import IntegrityError
+from django.db.models import Q
 from django.utils import timezone
 
 from django.shortcuts import render
@@ -44,19 +45,32 @@ def capsule_GET(request) -> (json, int):
         my_capsules = Capsule.objects.filter(creator_id=user_uuid_obj, due_date__gt=timezone.now(),
                                              deleted_at__isnull=True).order_by('due_date')
         # my_capsules = Capsule.objects.all()
-        capsules = Capsule.objects.exclude(creator_id=user_uuid_obj).filter(due_date__gt=timezone.now(),
-                                                                      deleted_at__isnull=True).order_by('due_date')
+        user_capsules = UserCapsule.objects.filter(
+            Q(user=user_uuid_obj) &
+            Q(capsule__due_date__gt=timezone.now()) &
+            ~Q(capsule__creator_id=user_uuid_obj) &
+            Q(capsule__deleted_at__isnull=True)
+        ).order_by('capsule__due_date')
+
     # due_date 가 현재 날짜보다 작거나 같은 경우는 close 되어 있는 캡슐이므로, __lte를 통해 closed 되어 있는 캡슐을 가져온다
     # 닫혀 있는 캡슐의 경우 닫힌 날짜(due_date) 가 최신순이 되도록 입력하였다
     else:
         my_capsules = Capsule.objects.filter(creator_id=user_uuid_obj, due_date__lte=timezone.now(),
                                              deleted_at__isnull=True).order_by('-due_date')
-        capsules = Capsule.objects.exclude(creator_id=user_uuid_obj).filter(due_date__lte=timezone.now(),
-                                                                      deleted_at__isnull=True).order_by('-due_date')
+        # capsules = Capsule.objects.exclude(creator_id=user_uuid_obj).filter(due_date__lte=timezone.now(),
+        #                                                               deleted_at__isnull=True).order_by('-due_date')
+        user_capsules = UserCapsule.objects.filter(
+            Q(user=user_uuid_obj) &
+            Q(capsule__due_date__lte=timezone.now()) &
+            ~Q(capsule__creator_id=user_uuid_obj) &
+            Q(capsule__deleted_at__isnull=True)
+        ).order_by('-capsule__due_date')
+
+    capsules = [user_capsule.capsule for user_capsule in user_capsules]
 
     if count != -1:
         my_capsules = my_capsules[:count]
-        capsules = my_capsules[:count]
+        capsules = capsules[:count]
 
     my_capsules_list = []
     capsules_list = []
@@ -109,8 +123,8 @@ def capsule_POST(request) -> (json, int):
     due_date_str = request.POST.get('due_date')
     due_date = datetime.strptime(due_date_str, '%Y-%m-%d %H:%M:%S')
 
-    if timezone.now().date() >= due_date.date():
-        return {'code': 400, 'message': '개봉 날짜가 현재 날짜와 같거나 빠릅니다.'}, 400
+    # if timezone.now().date() >= due_date.date():
+    #     return {'code': 400, 'message': '개봉 날짜가 현재 날짜와 같거나 빠릅니다.'}, 400
 
     val: json
     status_code: int
