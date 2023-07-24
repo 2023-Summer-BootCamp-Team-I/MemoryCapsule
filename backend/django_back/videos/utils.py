@@ -72,8 +72,6 @@ def make_video(capsule_id, video_number, image_urls, music_url):
         # Upload the final video to S3
         s3_client.upload_file(final_output, bucket_name, final_output)
 
-        print('video uploaded to S3:', final_output)
-
         # Delete temporary files
         if os.path.exists(output_video_key):
             os.remove(output_video_key)
@@ -160,9 +158,9 @@ def default_video_maker(capsule_id, music_id):
 
     return video_url
 
-
-
-def user_choice_video_maker(capsule, music, user_choice_list):
-    video_count = Video.objects.filter(capsule=capsule.capsule_id).count() + 1
+def user_choice_video_maker(capsule_id, music_id, user_choice_list):
+    video_count = Video.objects.filter(capsule=capsule_id).count() + 1
+    music = Music.objects.get(pk=music_id)
     music_url = music.music_url
-    return make_video(capsule.capsule_id, video_count, user_choice_list, music_url)
+    return make_video(capsule_id, video_count, user_choice_list, music_url)
+

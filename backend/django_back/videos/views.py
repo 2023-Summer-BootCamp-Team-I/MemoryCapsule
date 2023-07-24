@@ -11,6 +11,7 @@ from capsules.models import Capsule
 from users.models import User
 from stories.models import Story, StoryVideo
 from musics.models import Music
+from core.uuid_decode import *
 
 from core.uuid_decode import *
 from drf_yasg import openapi
@@ -70,8 +71,8 @@ def video_work(request, capsule_id):
 
     if request.method == 'POST':
         try:
+            user_uuid_obj = get_user_uuid_obj_from_jwt(request.POST['jwt_token'])
             capsule = Capsule.objects.get(pk=capsule_id)
-            creator = User.objects.get(user_id=request.data['creator_id'])
             music = Music.objects.get(music_id=request.data['music_id'])
             user_choice_list = request.data.get("user_choice_image", [])
 
@@ -82,11 +83,11 @@ def video_work(request, capsule_id):
                     user_choice_url_list.append(story_image)
             user_choice_url_list.sort()
 
-            async_video_url = create_user_choice_video.delay(capsule, music, user_choice_url_list)
+            async_video_url = create_user_choice_video.delay(capsule.capsule_id, music.music_id, user_choice_url_list)
             video_url = async_video_url.wait()
 
             video = Video.objects.create(
-                creator=creator,
+                creator=user_uuid_obj,
                 capsule=capsule,
                 music=music,
                 story_video_url=video_url

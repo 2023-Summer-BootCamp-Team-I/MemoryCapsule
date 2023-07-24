@@ -135,7 +135,7 @@ services:
       - TZ=Asia/Seoul
       - broker_connection_retry_on_startup=true
     command: sh -c "python wait_mysql.py &&
-      celery -A django_back worker --loglevel=debug"
+      celery -A django_back worker --loglevel=info"
 
 
 #  celery_beat:
