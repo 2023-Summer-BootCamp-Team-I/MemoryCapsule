@@ -6,7 +6,7 @@ from users.models import User
 from images.views import upload_image_for_api
 from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
-
+from core.uuid_decode import *
 
 
 # Create your views here.
@@ -20,8 +20,15 @@ def story_capsule_func(request, capsule_id):
             capsule = Capsule.objects.get(capsule_id=capsule_id)
         except Capsule.DoesNotExist:
             return JsonResponse({"code": 404, "message": "캡슐이 존재하지 않습니다."}, status=404)
-        user = User.objects.get(pk = capsule.creator_id)
 
+        user_uuid_obj = get_user_uuid_obj_from_jwt(request.POST['jwt_token'])
+        user = User.objects.get(pk=user_uuid_obj)
+
+        if 'filename' not in request.FILES:
+            return JsonResponse({
+                "code": 400,
+                "message": "파일이 제공되지 않았습니다."
+            }, status=400)
         story_img_url = upload_image_for_api(request.FILES['filename'])
         #user = capsule.creator_id
         #video = Video.objects.get(video_id = request.data['video_id'])
@@ -34,6 +41,7 @@ def story_capsule_func(request, capsule_id):
             story_content=request.data['story_content'],
             story_img_url= story_img_url,
         )
+        #user_data = serializers.serialize('python', [user])[0]['fields']
         #story.video_id.set([video])
         story.created_at = story.created_at.strftime('%Y-%m-%d %H:%M:%S')
         story.updated_at = story.updated_at.strftime('%Y-%m-%d %H:%M:%S')
@@ -46,7 +54,8 @@ def story_capsule_func(request, capsule_id):
             "story_img_url": story.story_img_url,
             "created_at": story.created_at,
             "updated_at": story.updated_at,
-            "story_id": story.story_id
+            "story_id": story.story_id,
+            "creator_id": story.creator_id
         })
         return JsonResponse({"code": 400, "message": "스토리 생성에 실패하였습니다."}, status=400)
 
@@ -77,6 +86,7 @@ def story_capsule_func(request, capsule_id):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def story_func(request, capsule_id, story_id) :
+
     if request.method == 'GET' :
         try:
             story = Story.objects.get(story_id = story_id, deleted_at__isnull=True)
@@ -102,23 +112,23 @@ def story_func(request, capsule_id, story_id) :
         except Story.DoesNotExist:
             return JsonResponse({"code": 404, "message": "스토리가 존재하지 않습니다."}, status=404)
 
-        #story_img_url =
-        if request.method == 'PUT':
-            story.story_title = request.data.get('story_title')
-            story.story_content = request.data.get('story_content')
-            story.story_img_url = upload_image_for_api(request.FILES['filename'])
-            story.updated_at = request.data.get('updated_at')
-            story.save()
 
-            return JsonResponse({
-                "code": 200,
-                "message": "스토리 수정이 완료되었습니다.",
-                "story_id": story.story_id,
-                "story_title": story.story_title,
-                "story_content": story.story_content,
-                "story_img_url": story.story_img_url,
-                "updated_at": story.updated_at,
-            })
+        story.story_title = request.data.get('story_title')
+        story.story_content = request.data.get('story_content')
+        story.story_img_url = upload_image_for_api(request.FILES['filename'])
+        story.updated_at = request.data.get('updated_at')
+        story.save()
+
+        return JsonResponse({
+            "code": 200,
+            "message": "스토리 수정이 완료되었습니다.",
+            "creator": story.creator_id,
+            "story_id": story.story_id,
+            "story_title": story.story_title,
+            "story_content": story.story_content,
+            "story_img_url": story.story_img_url,
+            "updated_at": story.updated_at,
+        })
 
         return JsonResponse({"code": 400, "message": "스토리 수정에 실패하였습니다."}, status=400)
 
