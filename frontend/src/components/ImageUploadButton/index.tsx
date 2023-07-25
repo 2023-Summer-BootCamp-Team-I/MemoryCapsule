@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 
 type typeProps = {
   type: string;
-  name: string;
   // eslint-disable-next-line @typescript-eslint/ban-types
   handlePostFile: Function;
 };
@@ -49,6 +48,9 @@ function ImageUploadButton({ type, handlePostFile }: typeProps) {
       const newFile = event.target.files instanceof FileList ? event.target.files[0] : null;
       handlePostFile(newFile);
     }
+
+    const newFile = event.target.files instanceof FileList ? event.target.files[0] : null;
+    handlePostFile(newFile);
   };
   // handleUpload라는 함수를 정의. 파일 업로드 시 호출.
   // event.target.files와 event.target.files[0]이 존재하는 경우, FileReader 객체를 생성

@@ -9,8 +9,59 @@ from django.utils import timezone
 from core.uuid_decode import *
 # Create your views here.
 
+from rest_framework.decorators import api_view, parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
+
+@swagger_auto_schema(
+    methods=['GET'],
+    tags=["Story 전체 조회"],
+    manual_parameters=[
+        openapi.Parameter(
+            name="jwt_token",
+            in_=openapi.IN_QUERY,
+            type=openapi.TYPE_STRING,
+            description="jwt token 입력",
+        )
+    ]
+)
+@swagger_auto_schema(
+    methods=['POST'],
+    tags=["Story 생성"],
+    consumes=['multipart/form-data'],
+    manual_parameters=[
+        openapi.Parameter(
+            name="jwt_token",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="jwt token 입력",
+        ),
+        openapi.Parameter(
+            name="story_title",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="스토리 이름",
+        ),
+
+        openapi.Parameter(
+            name="story_content",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="스토리 내용",
+        ),
+        openapi.Parameter(
+            name="filename",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_FILE,
+            description="스토리 이미지 파일",
+        ),
+
+    ]
+)
 @api_view(['POST', 'GET'])
+@parser_classes([MultiPartParser, FormParser])
 def story_capsule_func(request, capsule_id):
 
     if request.method == 'POST':
@@ -88,7 +139,65 @@ def story_capsule_func(request, capsule_id):
 
 
 
+
+@swagger_auto_schema(
+    methods=['GET'],
+    tags=["Story 조회"],
+    manual_parameters=[
+        openapi.Parameter(
+            name="jwt_token",
+            in_=openapi.IN_QUERY,
+            type=openapi.TYPE_STRING,
+            description="jwt token 입력",
+        )
+    ]
+)
+@swagger_auto_schema(
+    methods=['PUT'],
+    tags=["Story 수정"],
+    consumes=['multipart/form-data'],
+    manual_parameters=[
+        openapi.Parameter(
+            name="jwt_token",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="jwt token 입력",
+        ),
+        openapi.Parameter(
+            name="story_title",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="스토리 이름",
+        ),
+        openapi.Parameter(
+            name="story_content",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="스토리 내용",
+        ),
+        openapi.Parameter(
+            name="filename",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_FILE,
+            description="스토리 이미지 파일",
+        ),
+    ]
+)
+@swagger_auto_schema(
+    methods=['DELETE'],
+    tags=["Story 삭제"],
+    manual_parameters=[
+        openapi.Parameter(
+            name="jwt_token",
+            in_=openapi.IN_FORM,
+            type=openapi.TYPE_STRING,
+            description="jwt token 입력",
+        )
+    ]
+)
+
 @api_view(['GET', 'PUT', 'DELETE'])
+@parser_classes([MultiPartParser, FormParser])
 def story_func(request, capsule_id, story_id) :
 
     if request.method == 'GET' :
@@ -180,5 +289,3 @@ def story_func(request, capsule_id, story_id) :
             })
         except Story.DoesNotExist:
             return JsonResponse({'code': 404, 'message': '스토리를 찾을 수 없습니다.'})
-
-
