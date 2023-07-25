@@ -21,15 +21,17 @@ from drf_yasg.openapi import Schema, TYPE_INTEGER, TYPE_ARRAY
 
 @swagger_auto_schema(
     method='get',
-    tags=["video API"],
+    tags=["영상 조회"],
+    description="""default_video는 캡슐 기간이 종료 되었을 때 자동 생성되는 비디오고,
+                added_video는 자동 생성 이후 유저가 선택한 스토리들을 기준으로 캡슐 기간 종류 이후 생성할 수 있는 비디오 입니다."""
 )
 @swagger_auto_schema(
     method='post',
-    tags=["video API"],
+    tags=["유저 선택 스토리 영상 제작"],
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
-            'creator_id': openapi.Schema(type=openapi.TYPE_INTEGER, description='비디오 생성자 아이디'),
+            'jwt_token': openapi.Schema(type=openapi.TYPE_STRING, description="jwt token 입력",),
             'music_id': openapi.Schema(type=openapi.TYPE_INTEGER, description='음악 아이디'),
             'user_choice_image': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_INTEGER), description='비디오 리스트'),
         }
@@ -70,7 +72,9 @@ def video_work(request, capsule_id):
 
     if request.method == 'POST':
         try:
-            user_uuid_obj = get_user_uuid_obj_from_jwt(request.POST['jwt_token'])
+            user_uuid_obj = get_user_uuid_obj_from_jwt(request.data['jwt_token'])
+            user = User.objects.get(pk=user_uuid_obj)
+
             capsule = Capsule.objects.get(pk=capsule_id)
             music = Music.objects.get(music_id=request.data['music_id'])
             user_choice_list = request.data.get("user_choice_image", [])
@@ -85,8 +89,10 @@ def video_work(request, capsule_id):
             async_video_url = create_user_choice_video.delay(capsule.capsule_id, music.music_id, user_choice_url_list)
             video_url = async_video_url.wait()
 
+
+
             video = Video.objects.create(
-                creator=user_uuid_obj,
+                creator=user,
                 capsule=capsule,
                 music=music,
                 story_video_url=video_url
