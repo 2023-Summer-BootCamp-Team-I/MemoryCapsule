@@ -8,7 +8,7 @@ import axios from 'axios';
 interface CreateCapsuleNoteProps {
   onButtonClick: () => void;
   themeName: string;
-  themeId: string;
+  themeId: number;
 }
 
 function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleNoteProps) {
@@ -25,13 +25,15 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   };
 
+  const [title, setTitle] = useState('');
+  const [passward, setPassward] = useState('');
   const [file, setFile] = useState('');
   const [date, setDate] = useState(getCurrentDateTime());
 
   const handleClick = () => {
     onButtonClick();
     CapsuleUploadAPI(); // 괄호를 추가하여 함수 호출
-    console.log(themeId);
+    console.log('테마 아이디', themeId);
     // console.log(responseCapsule);
   };
 
@@ -40,23 +42,35 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
     setFile(data);
     console.log('[StoryCreateContent] file: ', data);
   };
+
   const handleGetDate = (date: string) => {
     setDate(date);
     console.log('date: ', date);
   };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // 비밀번호 입력값이 변경될 때마다 passward 상태를 업데이트
+    setPassward(e.target.value);
+  };
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // 비밀번호 입력값이 변경될 때마다 passward 상태를 업데이트
+    setTitle(e.target.value);
+  };
+
   //api
   const CapsuleUploadAPI = async () => {
     // e.preventDefault(); // 새로고침 없앰
 
     //form data 생성
     const formData = new FormData();
-    formData.append('user_id', '1');
-    formData.append('capsule_name', '1');
-    formData.append('creator_id', '1');
+    formData.append('user_id', '1'); //보류
+    formData.append('capsule_name', title);
+    formData.append('creator_id', '1'); // 보류
     formData.append('due_date', date);
-    formData.append('limit_count', '15');
-    formData.append('theme_id', '1');
-    formData.append('capsule_password', '1');
+    formData.append('limit_count', '2');
+    formData.append('theme_id', String(themeId));
+    formData.append('capsule_password', passward);
     formData.append('img_file', file);
 
     // api 요청 보내기
@@ -86,22 +100,36 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
           id="login-form"
         >
           <div className="flex">
-            <label className="w-16 text-left">제목</label>
-            <input
-              className="w-40 text-center bg-transparent outline-none focus:outline-none"
-              type="text"
-              id="user"
-              placeholder="제목을 입력하세요"
-            ></input>
-          </div>
-
-          <div className="flex">
             <label className="w-16 text-left">테마</label>
             <span className="w-40 text-center text-gray-400">{themeName}</span>
           </div>
 
           <div className="flex">
-            <label className="w-16 text-left">날짜</label>
+            <label className="w-16 text-left">제목</label>
+            <input
+              className="w-40 text-center bg-transparent outline-none focus:outline-none"
+              type="text"
+              id="user"
+              value={title}
+              placeholder="제목을 입력하세요"
+              onChange={handleTitleChange}
+            ></input>
+          </div>
+
+          <div className="flex">
+            <label className="w-16 text-left">비밀번호</label>
+            <input
+              className="w-40 text-center bg-transparent outline-none focus:outline-none"
+              type="text"
+              id="passward"
+              value={passward}
+              placeholder="비밀번호를 입력하세요"
+              onChange={handlePasswordChange}
+            ></input>
+          </div>
+
+          <div className="flex">
+            <label className="w-16 text-left">개봉 날짜</label>
             <ReactDatePicker handleGetDate={handleGetDate} />
           </div>
         </form>

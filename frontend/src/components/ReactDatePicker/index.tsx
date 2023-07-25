@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
-import { getMonth, getDate, format } from 'date-fns';
+import { getMonth, getDate, format, addDays } from 'date-fns';
 import styles from './style.module.css';
 
 interface DateProps {
@@ -11,31 +11,45 @@ interface DateProps {
 }
 
 function ReactDatePicker({ handleGetDate }: DateProps) {
-  const [startDate, setStartDate] = useState(new Date());
+  const minDate = new Date();
+  minDate.setDate(minDate.getDate() + 1); // 오늘 이후의 날짜를 선택할 수 있도록 설정
 
-  const handleChangeData = (date: Date) => {
-    setStartDate(date);
-    const formattedDate = format(date, 'yyyy-MM-dd HH:mm:ss');
-    handleGetDate(formattedDate);
+  // 처음 선택 창에 표시되는 디폴트 날짜를 오늘보다 하루 뒤로 설정
+  const defaultDate = addDays(new Date(), 1);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  const handleChangeData = (date: Date | null) => {
+    setSelectedDate(date);
   };
+
+  useEffect(() => {
+    if (selectedDate) {
+      const formatted = format(selectedDate, 'yyyy-MM-dd HH:mm:ss');
+      handleGetDate(formatted);
+    } else {
+      handleGetDate(null); // Send null when no date is selected
+    }
+  }, [selectedDate, handleGetDate]);
 
   return (
     <div className="flex">
       <DatePicker
         locale={ko}
-        dateFormat="yyyy-MM-dd 00:00:00"
-        selected={startDate}
-        onChange={(date: Date) => handleChangeData(date)}
+        dateFormat="yyyy-MM-dd"
+        selected={selectedDate}
+        onChange={(date: Date | null) => handleChangeData(date)}
         selectsStart
-        minDate={new Date()}
-        startDate={startDate}
+        minDate={minDate}
+        startDate={selectedDate || defaultDate}
         className="w-40 text-center bg-transparent outline-none cursor-pointer focus:outline-none custom-datepicker"
         showPopperArrow={false}
         dayClassName={(d) =>
-          getDate(d) === getDate(startDate) && getMonth(d) === getMonth(startDate)
+          getDate(d) === getDate(selectedDate || defaultDate) &&
+          getMonth(d) === getMonth(selectedDate || defaultDate)
             ? ` ${styles['selected-day']}`
             : styles['normal-day']
         }
+        placeholderText="날짜를 선택해주세요"
       />
       <svg
         xmlns="http://www.w3.org/2000/svg"

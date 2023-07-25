@@ -12,19 +12,19 @@ function CreateTheme({ sendName, sendId }: ThemeProps) {
 
   const themes = [
     {
-      theme_id: 0,
+      theme_id: 1,
       theme_img:
         'https://img.freepik.com/free-photo/close-up-portrait-on-beautiful-cat_23-2149214373.jpg',
       theme_name: '심심하다옹',
     },
     {
-      theme_id: 1,
+      theme_id: 2,
       theme_img:
         'https://photo.coolenjoy.co.kr/data/editor/1608/thumb-Bimg_20160830182658_rnuhpunc.jpg',
       theme_name: '졸리다옹',
     },
     {
-      theme_id: 2,
+      theme_id: 3,
       theme_img:
         'https://png.pngtree.com/background/20230516/original/pngtree-tabby-cat-on-the-ground-with-green-eyes-picture-image_2605523.jpg',
       theme_name: '널 먹겠다옹',
