@@ -51,7 +51,7 @@ function KakaoShare({ capsule_id, state }: KakaoProps) {
 
   return (
     <div
-      className="absolute bottom-0 mb-24 flex p-2 bg-[#FAE101] cursor-pointer w-50 font-Omu rounded-lg shadow-md"
+      className="z-10 absolute bottom-0 mb-24 flex p-2 bg-[#FAE101] cursor-pointer w-20 font-Omu rounded-lg shadow-md"
       onClick={shareKakao}
     >
       <img

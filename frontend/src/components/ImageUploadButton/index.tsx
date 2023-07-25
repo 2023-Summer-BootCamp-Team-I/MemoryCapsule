@@ -2,10 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 
 type typeProps = {
   type: string;
+  name: string;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  handlePostFile: Function;
 };
 
 // React 모듈과 useState, useRef 훅을 가져옴.
-function ImageUploadButton({ type }: typeProps) {
+function ImageUploadButton({ type, handlePostFile }: typeProps) {
   const [file, setFile] = useState<string | null>(null); //file, setfile 상태변수 선언. 초기값 null
   const [shapeToShow, setShapeToShow] = useState('');
 
@@ -42,6 +45,9 @@ function ImageUploadButton({ type }: typeProps) {
         }
       };
       reader.readAsDataURL(event.target.files[0]); // 선택한 파일을 데이터 URL로 읽어옴 //데이터 URL(Data URL)은 텍스트나 바이너리 데이터를 문자열 형태로 인코딩하여 표현하는 URL 형식
+
+      const newFile = event.target.files instanceof FileList ? event.target.files[0] : null;
+      handlePostFile(newFile);
     }
   };
   // handleUpload라는 함수를 정의. 파일 업로드 시 호출.
