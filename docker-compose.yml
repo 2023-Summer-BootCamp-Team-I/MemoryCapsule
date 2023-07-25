@@ -230,7 +230,7 @@ services:
       context: ./backend/django_back/
       dockerfile: Dockerfile
     container_name: gunicorn
-    command: gunicorn django_back.wsgi:application -b 0.0.0.0:8000
+    command: gunicorn django_back.wsgi:application -b 0.0.0.0:8000 --access-logfile -
     ports:
       - "8000:8000"
     volumes:

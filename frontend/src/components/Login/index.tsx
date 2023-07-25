@@ -30,7 +30,7 @@ function Login({ onSignUp, handleClick }: LoginProps) {
 
   const LoginAPI = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/api/v1/users/sign-in', formData, {
+      const response = await axios.post('http://localhost:80/api/v1/users/sign-in', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -43,7 +43,7 @@ function Login({ onSignUp, handleClick }: LoginProps) {
       handleClick();
     } catch (error) {
       console.error('API 요청 에러: ', error);
-      alert('로그인 정보가 일치하지 않습니다.');
+      alert(error + '로그인 정보가 일치하지 않습니다.');
     }
   };
 
