@@ -5,6 +5,9 @@ import ReactDatePicker from '../ReactDatePicker';
 import ImageUploadButton from '../ImageUploadButton';
 import axios from 'axios';
 
+import { useRecoilValue } from 'recoil';
+import { TokenState } from '../../utils/Recoil';
+
 interface CreateCapsuleNoteProps {
   onButtonClick: () => void;
   themeName: string;
@@ -12,6 +15,8 @@ interface CreateCapsuleNoteProps {
 }
 
 function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleNoteProps) {
+  const token = useRecoilValue(TokenState);
+
   // const [responseCapsule, setResponseCapsule] = useState('');
   const getCurrentDateTime = () => {
     const now = new Date();
@@ -63,7 +68,7 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
 
     //form data 생성
     const formData = new FormData();
-    formData.append('user_id', '1'); //보류
+    formData.append('jwt_token', token); //보류
     formData.append('capsule_name', title);
     formData.append('creator_id', '1'); // 보류
     formData.append('due_date', date);
@@ -74,7 +79,7 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
 
     // api 요청 보내기
     try {
-      const response = await axios.post('http://localhost:8080/api/v1/capsules/', formData, {
+      const response = await axios.post('http://localhost:8080/api/v1/capsules', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
