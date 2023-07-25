@@ -22,7 +22,7 @@ from drf_yasg.openapi import Schema, TYPE_INTEGER, TYPE_ARRAY
 @swagger_auto_schema(
     method='get',
     tags=["영상 조회"],
-    description="""default_video는 캡슐 기간이 종료 되었을 때 자동 생성되는 비디오고,
+    description="""default_video는 캡슐 기간이 종료 되었을 때 자동 생성되는 비디오고 ,
                 added_video는 자동 생성 이후 유저가 선택한 스토리들을 기준으로 캡슐 기간 종류 이후 생성할 수 있는 비디오 입니다."""
 )
 @swagger_auto_schema(
