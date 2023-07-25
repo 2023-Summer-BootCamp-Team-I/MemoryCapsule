@@ -45,7 +45,6 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
 
   const handleGetDate = (date: string) => {
     setDate(date);
-    console.log('date: ', date);
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,7 +67,7 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
     formData.append('capsule_name', title);
     formData.append('creator_id', '1'); // 보류
     formData.append('due_date', date);
-    formData.append('limit_count', '2');
+    formData.append('limit_count', '2'); // 보류
     formData.append('theme_id', String(themeId));
     formData.append('capsule_password', passward);
     formData.append('img_file', file);
@@ -113,6 +112,7 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
               value={title}
               placeholder="제목을 입력하세요"
               onChange={handleTitleChange}
+              style={{ background: 'none' }}
             ></input>
           </div>
 
