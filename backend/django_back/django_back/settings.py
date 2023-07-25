@@ -57,13 +57,13 @@ INSTALLED_APPS = [
     'django_celery_results',
     'django_prometheus',
     'flower',
-    'corsheaders',
+    # 'corsheaders',
 ]
 
 MIDDLEWARE = [
     # Cors Header 반드시 최상단에 위치할 것!!
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
+    # 'django.middleware.common.CommonMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -196,31 +196,31 @@ CACHES = {
         'LOCATION': 'redis://redis:6379',
     }
 }
-
-##CORS
-CORS_ORIGIN_ALLOW_ALL = True  # <- 모든 호스트 허용
-CORS_ALLOW_CREDENTIALS = True  # <-쿠키가 cross-site HTTP 요청에 포함될 수 있다
-
-# <-실제 요청에 허용되는 HTTP 동사 리스트
-CORS_ALLOW_METHODS = (
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-)
-
-CORS_ALLOW_HEADERS = (
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-)
+#
+# ##CORS
+# CORS_ORIGIN_ALLOW_ALL = True  # <- 모든 호스트 허용
+# CORS_ALLOW_CREDENTIALS = True  # <-쿠키가 cross-site HTTP 요청에 포함될 수 있다
+#
+# # <-실제 요청에 허용되는 HTTP 동사 리스트
+# CORS_ALLOW_METHODS = (
+#     'DELETE',
+#     'GET',
+#     'OPTIONS',
+#     'PATCH',
+#     'POST',
+#     'PUT',
+# )
+#
+# CORS_ALLOW_HEADERS = (
+#     'accept',
+#     'accept-encoding',
+#     'authorization',
+#     'content-type',
+#     'dnt',
+#     'origin',
+#     'user-agent',
+#     'x-csrftoken',
+#     'x-requested-with',
+# )
 
 APPEND_SLASH = False  # <- / 관련 에러 제거
