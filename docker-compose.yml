@@ -1,13 +1,10 @@
-
 version: "3.8"
 volumes:
   mysql_data:
 
   build_folder:
 
-
 services:
-
   mysqldb:
     build: ./backend/db
     container_name: mysqldb
@@ -20,7 +17,7 @@ services:
       - ./init/:/docker-entrypoint-initdb.d/
       - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "mysqldb" ]
+      test: ["CMD", "mysqladmin", "ping", "-h", "mysqldb"]
       timeout: 20s
       retries: 10
 
@@ -79,7 +76,7 @@ services:
     volumes:
       - ./backend/django_back:/app
     depends_on:
-      mysqldb :
+      mysqldb:
         condition: service_healthy
 
   rabbitmq:
@@ -126,7 +123,7 @@ services:
     build: ./backend/django_back/
     volumes:
       - ./backend/django_back:/backend
-    ports: [ ]
+    ports: []
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -172,7 +169,6 @@ services:
       - "mode=standalone"
     restart: always
     command: redis-server /usr/local/conf/redis.conf
-
 
 #  prometheus: # 프로메테우스 서비스 추가
 #    image: prom/prometheus

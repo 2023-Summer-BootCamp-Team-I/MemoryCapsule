@@ -1,31 +1,55 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const CreateTheme: React.FC = () => {
+interface ThemeProps {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  sendName: Function;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  sendId: Function;
+}
+
+function CreateTheme({ sendName, sendId }: ThemeProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const images = [
-    'https://img.freepik.com/free-photo/close-up-portrait-on-beautiful-cat_23-2149214373.jpg',
-    'https://photo.coolenjoy.co.kr/data/editor/1608/thumb-Bimg_20160830182658_rnuhpunc.jpg',
-    'https://png.pngtree.com/background/20230516/original/pngtree-tabby-cat-on-the-ground-with-green-eyes-picture-image_2605523.jpg',
-    // Add more image URLs here
+  const themes = [
+    {
+      theme_id: 1,
+      theme_img:
+        'https://img.freepik.com/free-photo/close-up-portrait-on-beautiful-cat_23-2149214373.jpg',
+      theme_name: '심심하다옹',
+    },
+    {
+      theme_id: 2,
+      theme_img:
+        'https://photo.coolenjoy.co.kr/data/editor/1608/thumb-Bimg_20160830182658_rnuhpunc.jpg',
+      theme_name: '졸리다옹',
+    },
+    {
+      theme_id: 3,
+      theme_img:
+        'https://png.pngtree.com/background/20230516/original/pngtree-tabby-cat-on-the-ground-with-green-eyes-picture-image_2605523.jpg',
+      theme_name: '널 먹겠다옹',
+    },
   ];
 
-  const themeNames = ['심심하다옹', '졸리다옹', '널 먹겠다옹']; // Add more theme names if needed
-
   const handlePrev = () => {
-    setActiveIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
+    setActiveIndex((prevIndex) => (prevIndex === 0 ? themes.length - 1 : prevIndex - 1));
   };
 
   const handleNext = () => {
-    setActiveIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+    setActiveIndex((prevIndex) => (prevIndex === themes.length - 1 ? 0 : prevIndex + 1));
   };
+
+  useEffect(() => {
+    sendName(themes[activeIndex].theme_name);
+    sendId(themes[activeIndex].theme_id);
+  }, [activeIndex]);
 
   return (
     <div>
-      <div className="py-3 text-2xl">{themeNames[activeIndex]}</div>
+      <div className="py-3 text-2xl">{themes[activeIndex].theme_name}</div>
       <div className="h-[25rem] w-[35rem] relative">
         <div className="absolute flex transform -translate-x-1/2 bottom-4 left-1/2">
-          {images.map((_, index) => (
+          {themes.map((_, index) => (
             <div
               key={index}
               className={`w-4 h-4 rounded-full mx-1 cursor-pointer ${
@@ -68,12 +92,12 @@ const CreateTheme: React.FC = () => {
 
         <img
           className="object-cover w-full h-full"
-          src={images[activeIndex]}
+          src={themes[activeIndex].theme_img}
           alt={`Carousel Image ${activeIndex}`}
         />
       </div>
     </div>
   );
-};
+}
 
 export default CreateTheme;
