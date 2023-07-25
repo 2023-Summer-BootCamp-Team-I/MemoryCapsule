@@ -5,7 +5,7 @@ FROM node:16-alpine
 WORKDIR /frontend
 
 # 현재 디렉터리의 모든 파일과 디렉터리를 컨테이너의 /frontend 디렉터리로 복사
-COPY . ./
+COPY . .
 
 # npm을 사용하여 종속성 설치
 RUN npm install
