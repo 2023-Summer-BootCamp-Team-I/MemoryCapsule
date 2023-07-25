@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import flowerImg1 from '../assets/images/login/flower1.png';
 import flowerImg2 from '../assets/images/login/flower2.png';
@@ -15,7 +15,7 @@ import { useRecoilState } from 'recoil';
 import { loggedInState } from '../utils/Recoil';
 import PasswordModal from '../components/MainUnopenCapsule/PasswordModal'; // 비밀
 
-const FirstPage: React.FC = () => {
+function FirstPage() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [passwdOpen, setPasswdOpen] = useState<boolean>(false);
 
@@ -87,6 +87,6 @@ const FirstPage: React.FC = () => {
       )}
     </div>
   );
-};
+}
 
 export default FirstPage;

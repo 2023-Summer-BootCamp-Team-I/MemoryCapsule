@@ -1,17 +1,17 @@
-
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // import { useContext } from 'react';
 // import { AuthContext } from '../../utils/AuthContext'; // AuthContext.tsx가 저장된 경로를 입력해주세요
 
-import { useSetRecoilState } from 'recoil';
-import { loggedInState } from '../../utils/Recoil';
+import { useSetRecoilState, useRecoilState } from 'recoil';
+import { loggedInState, UesrDataState } from '../../utils/Recoil';
 
 function Header() {
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const setLoggedIn = useSetRecoilState(loggedInState)!;
+  const [userNickname] = useRecoilState(UesrDataState);
 
   const handleLogout = async () => {
     await toast.promise(
@@ -27,6 +27,7 @@ function Header() {
 
     navigate('/');
     setLoggedIn(false);
+    window.localStorage.removeItem('recoil-persist-2');
   };
 
   return (
@@ -46,7 +47,7 @@ function Header() {
         </svg>
       </div>
 
-      <div className="cursor-pointer">루시</div>
+      <div className="cursor-pointer">{userNickname.nickname}</div>
 
       <div className="cursor-pointer" onClick={handleLogout}>
         로그아웃

@@ -44,6 +44,9 @@ function ImageUploadButton({ type, handlePostFile }: typeProps) {
         }
       };
       reader.readAsDataURL(event.target.files[0]); // 선택한 파일을 데이터 URL로 읽어옴 //데이터 URL(Data URL)은 텍스트나 바이너리 데이터를 문자열 형태로 인코딩하여 표현하는 URL 형식
+
+      const newFile = event.target.files instanceof FileList ? event.target.files[0] : null;
+      handlePostFile(newFile);
     }
 
     const newFile = event.target.files instanceof FileList ? event.target.files[0] : null;

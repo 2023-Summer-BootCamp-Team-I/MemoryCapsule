@@ -15,7 +15,9 @@ export default function UnOpenedCapsulePage() {
       {/* capsule_id: {capsule_id} */}
       {/* <StoryModal title="Detail" content="detail" />
       <StoryModal title="Create" content="create" /> */}
-      {capsule_id && <KakaoShare capsule_id={capsule_id} state={'unopened'} />}
+      <div className="absolute bottom-[28rem]">
+        {capsule_id && <KakaoShare capsule_id={capsule_id} state={'unopened'} />}
+      </div>
 
       <StoryList />
     </div>

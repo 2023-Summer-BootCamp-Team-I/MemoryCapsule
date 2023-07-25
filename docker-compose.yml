@@ -47,7 +47,6 @@ services:
 #    depends_on:
 #      - mysqldb
 
-
   backend:
     build:
       context: ./backend/django_back/
@@ -179,20 +178,20 @@ services:
 #    command:
 #      - "--config.file=/etc/prometheus/prometheus.yml"
 
-  flower:
-    image: mher/flower
-    container_name: flower
-    environment:
-      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672/
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-      - TZ=Asia/Seoul
-    ports:
-      - '5555:5555'
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-      celery_worker:
-        condition: service_started
+  # flower:
+  #   image: mher/flower
+  #   container_name: flower
+  #   environment:
+  #     - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672/
+  #     - CELERY_RESULT_BACKEND=redis://redis:6379/0
+  #     - TZ=Asia/Seoul
+  #   ports:
+  #     - '5555:5555'
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+  #     celery_worker:
+  #       condition: service_started
 
 #  grafana: # 그라파나 서비스 추가
 #    image: grafana/grafana
@@ -250,3 +249,14 @@ services:
       - ./backend/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - backend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/frontend
+      - /frontend/node_modules
+    ports:
+      - "5173:5173"
+    tty: true

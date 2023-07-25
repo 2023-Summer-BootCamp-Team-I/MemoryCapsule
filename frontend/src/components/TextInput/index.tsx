@@ -1,48 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type TextInputProps = {
   label: string;
   placeholder: string;
   title: string;
   type: string;
+  name: string;
+  // eslint-disable-next-line no-unused-vars
+  handleGetInputData: (name: string, value: string) => void;
 };
 
-function TextInput({ label, placeholder, title, type }: TextInputProps) {
+function TextInput({ label, placeholder, title, type, name, handleGetInputData }: TextInputProps) {
   const [colorToShow, setColorToShow] = useState('');
   const [borderToShow, setBorderToShow] = useState('');
-  const [heightToShow, setHeightToShow] = useState('');
   const [widthToShow, setWidthToShow] = useState('');
   const [labelToShow, setLabelToShow] = useState('');
-  const [user, setUser] = useState('');
+  const [data, setData] = useState('');
 
   useEffect(() => {
     if (title === 'login') {
       setColorToShow('placeholder-[#aaaaaa] opacity-60');
       setBorderToShow('border-b border-dotted border-black');
-      setHeightToShow('h-10');
       setWidthToShow('w-40');
       setLabelToShow('w-24');
     } else if (title === 'join') {
       setColorToShow('placeholder-neutral-300');
       setBorderToShow('');
-      setHeightToShow('h-10');
       setWidthToShow('w-30');
       setLabelToShow('w-20 font-bold');
     }
   }, [title]);
 
   return (
-    <div
-      className={`${heightToShow} flex items-center justify-center items-start ${borderToShow} bg-transparent`}
-    >
+    <div className={`flex items-center justify-center ${borderToShow} h-10 bg-transparent`}>
       <label className={`${labelToShow} text-sm text-left p-4`}>{label}</label>
       <input
         className={`${widthToShow}text-sm text-center ${colorToShow} outline=none focus:outline-none bg-transparent`}
         type={type}
-        id={user}
+        value={data}
         placeholder={placeholder}
         onChange={(e) => {
-          setUser(e.target.value);
+          setData(e.target.value);
+          handleGetInputData(name, e.target.value);
         }}
       ></input>
     </div>

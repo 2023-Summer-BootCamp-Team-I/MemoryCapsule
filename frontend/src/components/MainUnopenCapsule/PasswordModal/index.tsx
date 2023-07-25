@@ -40,7 +40,7 @@ export default function PasswordModal({ capsuleId, closeModal }: PasswordModalPr
         <h2 className="mb-4 text-2xl">Capsule ID: {capsuleId}</h2>
         <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
           <label className="flex flex-col space-y-2">
-            <span>Password:</span>
+            <span>Password를 입력해주세요!</span>
             <input
               type="password"
               value={password}
@@ -48,11 +48,14 @@ export default function PasswordModal({ capsuleId, closeModal }: PasswordModalPr
               className="p-2 border rounded-md"
             />
           </label>
-          <button type="submit" className="px-4 py-2 text-white bg-blue-500 rounded-md">
+          <button
+            type="submit"
+            className="px-4 py-2 text-black bg-[#FDE5C3] hover:bg-[#FFD08E] rounded-md"
+          >
             확인
           </button>
         </form>
-        <button onClick={closeModal} className="px-4 py-2 mt-4 text-black rounded-md">
+        <button onClick={closeModal} className="px-4 mt-4 text-black rounded-md">
           닫기
         </button>
       </div>

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import lottie, { AnimationItem } from 'lottie-web';
-import SendAnimation from '../../assets/lottie/SendLottie.json';
+import SendAnimation from '../../assets/lottie/sendLottie.json';
 
-const SendLottie: React.FC = () => {
+function SendLottie() {
   const [animation, setAnimation] = useState<AnimationItem | null>(null);
 
   useEffect(() => {
@@ -38,13 +38,13 @@ const SendLottie: React.FC = () => {
 
   return (
     <div
-      className="w-32 h-32 cursor-pointer -ml-4 "
+      className="w-32 h-32 -ml-4 cursor-pointer "
       id="lottieContainer"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     ></div>
   );
-};
+}
 
 export default SendLottie;
 
