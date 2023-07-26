@@ -211,15 +211,14 @@ services:
 #  alertmanager:
 #    image: prom/alertmanager
 #    env_file:
-#      - ./.env
+#      - ./backend/monitoring/.env
 #    volumes:
-#      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+#      - ./backend/monitoring/alertmanager.yml:/etc/alertmanager/alertmanager.yml
 #      - ./backend/monitoring/prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml # 이 줄 추가
 #    command:
 #      - '--config.file=/etc/alertmanager/alertmanager.yml'
 #    ports:
 #      - 9093:9093
-
 
 
   influxdb:
@@ -240,26 +239,6 @@ services:
       - ./backend/monitoring/samples:/scripts
     command: run /scripts/main.js
 
-
-
-
-#  controller:
-#    image: ngrinder/controller
-#    restart: always
-#    ports:
-#      - "1000:80"
-#      - "16001:16001"
-#      - "12000-12009:12000-12009"
-#    volumes:
-#      - ./backend/monitoring/ngrinder/ngrinder-controller:/opt/ngrinder-controller
-#
-#  agent:
-#    image: ngrinder/agent:latest
-#    restart: always
-#    links:
-#      - controller
-
-#
   frontend:
     build:
       context: ./frontend
