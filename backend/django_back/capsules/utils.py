@@ -41,7 +41,7 @@ def capsule_GET(request) -> (json, int):
 
     # due_date 가 현재 날짜보다 큰 경우는 open 되어 있는 캡슐이므로, __gt를 통해 open 되어 있는 캡슐을 가져왔다
     # 열려 있는 캡슐의 경우 due_date가 가까운 순으로 정렬하였다
-    if is_open:
+    if not is_open:
         my_capsules = Capsule.objects.filter(creator_id=user_uuid_obj, due_date__gt=timezone.now(),
                                              deleted_at__isnull=True).order_by('due_date')
         # my_capsules = Capsule.objects.all()
