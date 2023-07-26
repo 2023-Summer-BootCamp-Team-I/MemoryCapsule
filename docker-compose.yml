@@ -244,12 +244,26 @@ services:
     container_name: nginx
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./backend/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./backend/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./backend/nginx/data/certbot/conf:/etc/letsencrypt
+      - ./backend/nginx/data/certbot/www:/var/www/certbot
     depends_on:
       - backend
       - frontend
+    expose:
+      - '80'
+      - '443'
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./backend/certbot/data/certbot/conf:/etc/letsencrypt
+      - ./backend/certbot/data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   frontend:
     build:
