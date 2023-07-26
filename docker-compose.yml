@@ -21,31 +21,31 @@ services:
       timeout: 20s
       retries: 10
 
-#  mysql_exporter:
-#    image: prom/mysqld-exporter
-#    container_name: mysql_exporter
-#    volumes:
-#      - ./mysql_exporter/my.cnf:/root/.my.cnf
-#    command:
-#      - '--collect.global_status'
-#      - '--collect.info_schema.innodb_metrics'
-#      - '--collect.auto_increment.columns'
-#      - '--collect.info_schema.processlist'
-#      - '--collect.binlog_size'
-#      - '--collect.info_schema.tablestats'
-#      - '--collect.global_variables'
-#      - '--collect.info_schema.query_response_time'
-#      - '--collect.info_schema.userstats'
-#      - '--collect.info_schema.tables'
-#      - '--collect.perf_schema.tablelocks'
-#      - '--collect.perf_schema.file_events'
-#      - '--collect.perf_schema.eventswaits'
-#      - '--collect.perf_schema.indexiowaits'
-#      - '--collect.perf_schema.tableiowaits'
-#    ports:
-#      - 9104:9104
-#    depends_on:
-#      - mysqldb
+  #  mysql_exporter:
+  #    image: prom/mysqld-exporter
+  #    container_name: mysql_exporter
+  #    volumes:
+  #      - ./mysql_exporter/my.cnf:/root/.my.cnf
+  #    command:
+  #      - '--collect.global_status'
+  #      - '--collect.info_schema.innodb_metrics'
+  #      - '--collect.auto_increment.columns'
+  #      - '--collect.info_schema.processlist'
+  #      - '--collect.binlog_size'
+  #      - '--collect.info_schema.tablestats'
+  #      - '--collect.global_variables'
+  #      - '--collect.info_schema.query_response_time'
+  #      - '--collect.info_schema.userstats'
+  #      - '--collect.info_schema.tables'
+  #      - '--collect.perf_schema.tablelocks'
+  #      - '--collect.perf_schema.file_events'
+  #      - '--collect.perf_schema.eventswaits'
+  #      - '--collect.perf_schema.indexiowaits'
+  #      - '--collect.perf_schema.tableiowaits'
+  #    ports:
+  #      - 9104:9104
+  #    depends_on:
+  #      - mysqldb
 
   backend:
     build:
@@ -98,24 +98,24 @@ services:
       timeout: 5s
       retries: 5
 
-#  rabbitmq-exporter:
-#    depends_on:
-#      rabbitmq:
-#        condition: service_healthy
-#    image: kbudde/rabbitmq-exporter
-#    ports:
-#      - "9419:9419"
-#    container_name: rabbitmq-exporter
-#    environment:
-#      - RABBITMQ_HOST=rabbitmq
-#      - RABBITMQ_USER=guest
-#      - RABBITMQ_PASSWORD=guest
-#    command: [ "./rabbitmq_wait.sh", "rabbitmq", "rabbitmq_exporter" ]
-#    healthcheck:
-#      test: [ "CMD", "wget", "-q", "-O", "-", "http://localhost:9419" ]
-#      interval: 20s
-#      timeout: 10s
-#      retries: 5
+  #  rabbitmq-exporter:
+  #    depends_on:
+  #      rabbitmq:
+  #        condition: service_healthy
+  #    image: kbudde/rabbitmq-exporter
+  #    ports:
+  #      - "9419:9419"
+  #    container_name: rabbitmq-exporter
+  #    environment:
+  #      - RABBITMQ_HOST=rabbitmq
+  #      - RABBITMQ_USER=guest
+  #      - RABBITMQ_PASSWORD=guest
+  #    command: [ "./rabbitmq_wait.sh", "rabbitmq", "rabbitmq_exporter" ]
+  #    healthcheck:
+  #      test: [ "CMD", "wget", "-q", "-O", "-", "http://localhost:9419" ]
+  #      interval: 20s
+  #      timeout: 10s
+  #      retries: 5
 
   celery_worker:
     container_name: celery_worker
@@ -133,21 +133,20 @@ services:
     command: sh -c "python wait_mysql.py &&
       celery -A django_back worker --loglevel=info"
 
-
-#  celery_beat:
-#   container_name: celery_beat
-#   build: ./backend/django_back/
-#   volumes:
-#     - ./backend/django_back:/backend
-#   ports: [ ]
-#   depends_on:
-#     rabbitmq:
-#       condition: service_healthy
-#   environment:
-#     - C_FORCE_ROOT=true
-#     - TZ=Asia/Seoul
-#   command: sh -c "python wait_mysql.py &&
-#     celery -A django_back beat --loglevel=info"
+  #  celery_beat:
+  #   container_name: celery_beat
+  #   build: ./backend/django_back/
+  #   volumes:
+  #     - ./backend/django_back:/backend
+  #   ports: [ ]
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+  #   environment:
+  #     - C_FORCE_ROOT=true
+  #     - TZ=Asia/Seoul
+  #   command: sh -c "python wait_mysql.py &&
+  #     celery -A django_back beat --loglevel=info"
 
   redis_container:
     image: redis:latest
@@ -169,14 +168,14 @@ services:
     restart: always
     command: redis-server /usr/local/conf/redis.conf
 
-#  prometheus: # 프로메테우스 서비스 추가
-#    image: prom/prometheus
-#    ports:
-#      - "9090:9090"
-#    volumes:
-#      - ./backend/monitoring/prometheus:/etc/prometheus
-#    command:
-#      - "--config.file=/etc/prometheus/prometheus.yml"
+  #  prometheus: # 프로메테우스 서비스 추가
+  #    image: prom/prometheus
+  #    ports:
+  #      - "9090:9090"
+  #    volumes:
+  #      - ./backend/monitoring/prometheus:/etc/prometheus
+  #    command:
+  #      - "--config.file=/etc/prometheus/prometheus.yml"
 
   # flower:
   #   image: mher/flower
@@ -193,36 +192,36 @@ services:
   #     celery_worker:
   #       condition: service_started
 
-#  grafana: # 그라파나 서비스 추가
-#    image: grafana/grafana
-#    ports:
-#      - "3000:3000"
-#    depends_on:
-#      - prometheus
-#      - cadvisor
-#      - node-exporter
-#
-#
-#  cadvisor:
-#    image: gcr.io/cadvisor/cadvisor:v0.47.0
-#    container_name: cadvisor
-#    privileged: true
-#    ports:
-#      - "9600:8080"
-#    volumes:
-#      - /:/rootfs:ro
-#      - /var/run:/var/run:rw
-#      - /sys:/sys:ro
-#      - /var/lib/docker/:/var/lib/docker:ro
-#      - /proc/cpuinfo:/host/proc/cpuinfo:ro
-#      - /dev/disk:/dev/disk/:ro
-#    devices:
-#      - /dev/kmsg:/dev/kmsg
-#
-#  node-exporter:
-#    image: prom/node-exporter:latest
-#    ports:
-#      - "9100:9100"
+  #  grafana: # 그라파나 서비스 추가
+  #    image: grafana/grafana
+  #    ports:
+  #      - "3000:3000"
+  #    depends_on:
+  #      - prometheus
+  #      - cadvisor
+  #      - node-exporter
+  #
+  #
+  #  cadvisor:
+  #    image: gcr.io/cadvisor/cadvisor:v0.47.0
+  #    container_name: cadvisor
+  #    privileged: true
+  #    ports:
+  #      - "9600:8080"
+  #    volumes:
+  #      - /:/rootfs:ro
+  #      - /var/run:/var/run:rw
+  #      - /sys:/sys:ro
+  #      - /var/lib/docker/:/var/lib/docker:ro
+  #      - /proc/cpuinfo:/host/proc/cpuinfo:ro
+  #      - /dev/disk:/dev/disk/:ro
+  #    devices:
+  #      - /dev/kmsg:/dev/kmsg
+  #
+  #  node-exporter:
+  #    image: prom/node-exporter:latest
+  #    ports:
+  #      - "9100:9100"
 
   gunicorn:
     image: gunicorn:latest
@@ -254,6 +253,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    command: ["npm", "run", "dev"]
     volumes:
       - ./frontend:/frontend
       - /frontend/node_modules

@@ -13,6 +13,8 @@ import story_dummy from '../../../assets/data/story_dummy';
 import { StoryType } from '../../../utils/types';
 import Checkbox from '../CheckBox';
 
+import axios from 'axios';
+
 type StoryModalProps = {
   img?: string;
   title?: string;
@@ -21,9 +23,27 @@ type StoryModalProps = {
   onClose: () => void;
 };
 
-function StoryList() {
-  // eslint-disable-next-line no-console
+interface StoryListProps {
+  capsule_id: string | undefined;
+}
+
+function StoryList({ capsule_id }: StoryListProps) {
   console.log(story_dummy);
+
+  const [, setCapsules] = useState([]);
+
+  const getCapsules = async () => {
+    const response = await axios.get(`http://localhost:8080/api/v1/stories/${capsule_id}`);
+    setCapsules(response.data.capsules); //capsules에 우리가 사용할 배열이 담겨있음
+  };
+  // const getCapsulesStory = async () => {
+  //   const response = await axios.get('/api/v1/stories/${capsule_id}/${storyId}'); //${capsule_id}/${storyId}하면 에러
+  //   setCapsules(response.data.capsules);
+  // };
+
+  useEffect(() => {
+    getCapsules(); //페이지에 처음 접속했을때 capsule 목록을 보여주기 위해
+  }, []);
 
   useEffect(() => {
     const scrollbarStyle = `
@@ -104,19 +124,24 @@ function StoryList() {
   const [modalType, setModalType] = useState<'create' | 'detail' | null>(null);
 
   const handleImageClick = (index: number) => {
-    // Look up the story in the filtered list.
     const selectedStory = storiesToShow[index];
-    // Check ownership of the selected story.
     if (selectedStory.owner !== 'user1') {
       alert('⛔️Access Denied⛔️ You are not the owner of this story');
       return;
     }
-    // Look up the index of the selected story in the original list.
+
     const originalIndex = story_dummy.findIndex((story) => story === selectedStory);
     setSelectedImageIndex(originalIndex);
     setModalType('detail');
-    setIsOpen(true); // 이미지 클릭 시 모달 창 열기
+    setIsOpen(true); // 이미지 클릭 시 모달 창 열기]
+    // getCapsulesStory(storyId);
   };
+
+  // const [storyId, setStoryId] = useState<string>('');
+
+  // const getStoryId = async () => {
+  //   const response = await axios.get('');
+  // };
 
   const handlePlusButtonClick = () => {
     setModalType('create');
@@ -177,7 +202,7 @@ function StoryList() {
                   </svg>
                   <div className="absolute top-16 left-20">
                     {type === 'create' ? (
-                      <StoryCreateContent />
+                      <StoryCreateContent capsule_id={capsule_id} />
                     ) : (
                       <StoryDetailContent title={title} img={img} content={content} />
                     )}

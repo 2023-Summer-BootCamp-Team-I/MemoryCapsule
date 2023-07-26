@@ -35,7 +35,7 @@ function JoinModal({ onClose }: ModalProps) {
     console.log('formData: ', formData);
 
     try {
-      const response = await axios.post('http://0.0.0.0:80/api/v1/users/sign-up', formData, {
+      const response = await axios.post('http://localhost:80/api/v1/users/sign-up', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -46,7 +46,7 @@ function JoinModal({ onClose }: ModalProps) {
       alert('회원가입이 완료되었습니다');
       onClose();
     } catch (error) {
-      console.error('API 요청 에러: ', error);
+      console.error('[회원가입] API 요청 에러: ', error);
     }
   };
 
@@ -69,11 +69,7 @@ function JoinModal({ onClose }: ModalProps) {
           </span>
           <div className="flex flex-col items-center">
             <div className="py-5">
-              <ImageUploadButton
-                type="circle"
-                name="phone_number"
-                handlePostFile={handleGetFileData}
-              />
+              <ImageUploadButton type="circle" handlePostFile={handleGetFileData} />
             </div>
             <div>
               <form method="post" action="서버의url" id="join-form" onSubmit={SignUpAPI}>
