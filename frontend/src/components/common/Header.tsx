@@ -1,33 +1,24 @@
 import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-// import { useContext } from 'react';
-// import { AuthContext } from '../../utils/AuthContext'; // AuthContext.tsx가 저장된 경로를 입력해주세요
-
 import { useSetRecoilState, useRecoilState } from 'recoil';
-import { loggedInState, UesrDataState } from '../../utils/Recoil';
+import { loggedInState, loggingOutState, UesrDataState } from '../../utils/Recoil';
 
 function Header() {
   const navigate = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const setLoggedIn = useSetRecoilState(loggedInState)!;
+  const setLoggingOut = useSetRecoilState(loggingOutState);
   const [userNickname] = useRecoilState(UesrDataState);
 
   const handleLogout = async () => {
-    await toast.promise(
-      new Promise((resolve) => {
-        setTimeout(resolve, 2000);
-      }),
-      {
-        pending: '로그아웃되었습니다.',
-        success: '로그아웃되었습니다.',
-        error: '오류가 발생했습니다.',
-      }
-    );
+    setLoggingOut(true); // 로그아웃 시작 전에 상태를 true로 설정
 
-    navigate('/');
+    sessionStorage.removeItem('capsule_id');
     setLoggedIn(false);
     window.localStorage.removeItem('recoil-persist-2');
+
+    alert('로그아웃되었습니다');
+    navigate('/');
+
+    setLoggingOut(false); // 로그아웃 완료 후에 상태를 false로 설정
   };
 
   return (
@@ -52,7 +43,6 @@ function Header() {
       <div className="cursor-pointer" onClick={handleLogout}>
         로그아웃
       </div>
-      <ToastContainer />
     </div>
   );
 }

@@ -1,4 +1,8 @@
+/* eslint-disable no-console */
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import axios from 'axios';
 
 import flowerImg1 from '../assets/images/login/flower1.png';
 import flowerImg2 from '../assets/images/login/flower2.png';
@@ -9,11 +13,10 @@ import flowerImg4 from '../assets/images/login/flower4.png';
 import Login from '../components/Login';
 import JoinModal from '../components/JoinModal';
 import TreeLottie from '../components/TreeLottie';
-
-import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
-import { loggedInState } from '../utils/Recoil';
 import PasswordModal from '../components/MainUnopenCapsule/PasswordModal'; // 비밀
+
+import { loggedInState, TokenState } from '../utils/Recoil';
+import { AxiosErrorResponseType } from '../utils/types';
 
 function FirstPage() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -22,6 +25,7 @@ function FirstPage() {
   const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
   const navigate = useNavigate();
   const [capsuleId, setCapsuleId] = useState<string>('');
+  const token = useRecoilValue(TokenState);
 
   const onSignUp = () => {
     setIsModalOpen(true);
@@ -31,8 +35,36 @@ function FirstPage() {
     setIsModalOpen(false);
   };
 
+  const checkIsContainAPI = async (capsule_id: string | null) => {
+    if (capsule_id) {
+      try {
+        await axios
+          .get(
+            `http://localhost:80/api/v1/capsules/users?capsule_id=${capsule_id}&jwt_token=${token}`,
+            {
+              headers: {
+                Accept: 'application/json',
+              },
+            }
+          )
+          .then((response) => {
+            console.log('response: ', response);
+          });
+      } catch (error) {
+        const axiosError = error as AxiosErrorResponseType;
+        if (axiosError.response?.data.message) {
+          alert(axiosError.response.data.message);
+        } else {
+          alert('An unknown error occurred.');
+        }
+      }
+    }
+  };
+
   const handleClick = () => {
     const storedCapsuleId = sessionStorage.getItem('capsule_id');
+    checkIsContainAPI(storedCapsuleId);
+
     if (storedCapsuleId) {
       setCapsuleId(storedCapsuleId);
       setPasswdOpen(true);

@@ -16,6 +16,10 @@ export const loggedInState = atom<boolean>({
   default: false,
   effects_UNSTABLE: [persistAtom1],
 });
+export const loggingOutState = atom<boolean>({
+  key: 'loggingOutState',
+  default: false,
+});
 
 export const TokenState = atom<string>({
   key: 'tokenState',
