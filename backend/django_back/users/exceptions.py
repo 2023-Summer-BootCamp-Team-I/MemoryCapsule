@@ -8,7 +8,7 @@ class CustomException(Exception):
 
 def email_syntax_check(email):
     # 예외 상황이 발생할 경우 커스텀 예외를 던짐
-    if re.search(r'@.*\..*com', email):
+    if re.search(r'@.*\.', email):
         pass
     else:
         error_code = 401
