@@ -100,6 +100,8 @@ def sign_up(request):
 
             user_img_url = upload_image_for_api(request.FILES['img_file'])
             user.user_img_url = user_img_url
+            # user.user_img_url = request.data['img_file']
+
             # 유저 권한 : 0 == general, 1 == admin
             user.status = 0
             user.save()
@@ -115,6 +117,8 @@ def sign_up(request):
                 return JsonResponse({'code': '400', 'message': '이미 존재하는 전화번호 입니다'}, status=400)
 
             return JsonResponse({'code': '400', 'message': 'Unexpected error occurred'}, status=400)
+        except Exception as e:
+            JsonResponse({"message" : "에러 확인 불가"})
 
 
 # @swagger_auto_schema(
