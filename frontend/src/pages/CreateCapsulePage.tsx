@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import CreateCapsuleNote from '../components/CreateCapsuleNote';
-import CreateTheme from '../components/CreateTheme/indext';
+import CreateTheme from '../components/CreateTheme';
 
 import SendLodingLottie from '../components/SendLodindLottie';
 

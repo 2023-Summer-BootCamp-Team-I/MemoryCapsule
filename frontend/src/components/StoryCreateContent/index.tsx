@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { ChangeEvent, useState } from 'react';
 import pink from '../../assets/images/stickers/pink.png';
 import StoryInput from '../common/StoryInput';
