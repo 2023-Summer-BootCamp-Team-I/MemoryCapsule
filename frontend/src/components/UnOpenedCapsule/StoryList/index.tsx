@@ -245,7 +245,7 @@ function StoryList({ capsule_id }: StoryListProps) {
         <div className="flex title">
           제주도
           <div>
-            <CapsuleInfo />
+            <CapsuleInfo capsule_id={capsule_id} />
           </div>
         </div>
       </div>
@@ -253,7 +253,7 @@ function StoryList({ capsule_id }: StoryListProps) {
       <div className="flex justify-end">
         {/* 참여 유저 확인 모달 */}
         <div className="flex cursor-pointer">
-          <ProfileButton />
+          <ProfileButton capsule_id={capsule_id} />
           <span className="mt-1 ml-2 mr-5">3</span>
         </div>
 

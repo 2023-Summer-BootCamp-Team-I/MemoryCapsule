@@ -75,7 +75,7 @@ function StoryCreateContent({ capsule_id }: StoryCreateProps) {
   };
 
   const handleSubmitClick = () => {
-    if (!selectedImage || !title || !content) {
+    if (!selectedImage || !content) {
       alert('사진, 제목, 내용을 입력해주세요.');
       return;
     }

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useEffect, useState } from 'react';
 import CreateCapsuleNote from '../components/CreateCapsuleNote';
 import CreateTheme from '../components/CreateTheme';

@@ -1,34 +1,38 @@
+/* eslint-disable no-console */
+import axios from 'axios';
 import React, { useState, useRef } from 'react';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 
-interface User {
-  img: string;
-  role: string;
-  name: string;
-  uname: string;
-  story: number;
-  day: string;
+import { useRecoilValue } from 'recoil';
+import { TokenState } from '../../utils/Recoil';
+import { AxiosErrorResponseType, MyCapsuleListType } from '../../utils/types';
+
+interface CapsuleInfoProps {
+  capsule_id: string | undefined;
 }
 
-function CapsuleInfo() {
-  const users: User[] = [
-    {
-      img: 'https://image.kmib.co.kr/online_image/2020/0729/611819110014854946_3.jpg',
-      role: 'host',
-      name: '제주도',
-      uname: 'zion T',
-      story: 3,
-      day: '2023.4.21',
-    },
-  ];
-
+function CapsuleInfo({capsule_id} : CapsuleInfoProps) {
   const navigate = useNavigate();
+  const token = useRecoilValue(TokenState);
+  const [capsuleData, setCapsuleData] = useState<MyCapsuleListType>();
 
-  const handleDelete = () => {
-    // Add the code to actually delete the item
-    navigate('/mainunopened'); // Navigate to the desired URL
-    window.location.reload();
+  const handleDelete = async () => { 
+    try {
+      await axios.delete(`/api/v1/capsules/users?jwt_token=${token}&capsule_id=${capsule_id}`,
+      ).then((response) => {
+          console.log('response: ', response)
+          alert(response.data.message)
+          navigate('/mainunopened');
+      });
+      } catch(error) {
+        const axiosError = error as AxiosErrorResponseType;
+        if (axiosError.response?.data.message) {
+          alert(axiosError.response.data.message);
+        } else {
+          alert('An unknown error occurred.');
+        }
+    }
   };
 
   const [file, setFile] = useState<string | null>(null);
@@ -36,6 +40,7 @@ function CapsuleInfo() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const openModal = () => {
+    capsuleInfoAPI()
     setModalIsOpen(true);
   };
 
@@ -51,8 +56,6 @@ function CapsuleInfo() {
     setoutModal(false);
   };
 
-  const hostUser = users.find((user) => user.role === 'host');
-
   const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const reader = new FileReader();
@@ -65,6 +68,26 @@ function CapsuleInfo() {
     }
   };
 
+  const capsuleInfoAPI = async () => {
+    console.log('capsule_id: ', capsule_id);
+    
+    try {
+      await axios.get(`/api/v1/capsules/${capsule_id}?jwt_token=${token}`,
+      ).then((response) => {
+          console.log('response: ', response)
+          console.log('data: ', response.data.capsule_data)
+          setCapsuleData(response.data.capsule_data)
+      });
+      } catch(error) {
+          const axiosError = error as AxiosErrorResponseType;
+          if (axiosError.response?.data.message) {
+            alert(axiosError.response.data.message);
+          } else {
+            alert('An unknown error occurred.');
+          }
+    }
+  }
+
   return (
     <>
       <div>
@@ -75,7 +98,7 @@ function CapsuleInfo() {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-7 h-7 mt-2 ml-3 cursor-pointer"
+          className="mt-2 ml-3 cursor-pointer w-7 h-7"
         >
           <path
             strokeLinecap="round"
@@ -86,10 +109,11 @@ function CapsuleInfo() {
       </div>
 
       <Modal
+        ariaHideApp={false}
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         contentLabel="Members Modal"
-        className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-3xl p-8"
+        className="fixed p-8 transform -translate-x-1/2 -translate-y-1/2 bg-white top-1/2 left-1/2 rounded-3xl"
         overlayClassName="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80"
         style={{
           content: {
@@ -120,60 +144,61 @@ function CapsuleInfo() {
             />
           ) : (
             <img
-              src={users[0].img}
+              src={capsuleData?.capsule_img_url}
               alt="Original Image"
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           )}
         </div>
-        <div className="flex justify-center items-center mt-4 font-Omu ">
-          <p className="text-5xl">{users[0].name}</p>
+        <div className="flex items-center justify-center mt-4 font-Omu ">
+          <p className="text-4xl">{capsuleData?.capsule_name}</p>
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <div className="font-Omu mt-8">
-            <p className="text-3xl mt-6 ml-12 mr-12">방장 : {hostUser?.uname}</p>
-            <p className="text-3xl mt-6 ml-12 mr-12">인원 수 : {users.length}</p>
-            <p className="text-3xl mt-6 ml-12 mr-12">개봉 날짜 : {users[0].day}</p>
+          <div className="mt-8 font-Omu">
+            <p className="mt-6 ml-12 mr-12 text-3xl">방장 : {capsuleData?.nickname}</p>
+            {/* <p className="mt-6 ml-12 mr-12 text-3xl">인원 수 : {users.length}</p> */}
+            <p className="mt-6 ml-12 mr-12 text-3xl">개봉 날짜 : {capsuleData?.due_date.slice(0, 10)}</p>
           </div>
         </div>
 
         <button
-          className="fixed px-4 py-1 font-bold font-Omu text-green bg-red-500 rounded hover:bg-red-700 bottom-12 right-56 text-2xl"
+          className="fixed px-4 py-1 text-2xl font-bold bg-red-500 rounded font-Omu text-green hover:bg-red-700 bottom-12 right-56"
           onClick={closeModal}
         >
           확인
         </button>
         <button
-          className="fixed px-4 py-1 font-bold font-Omu text-green bg-red-500 rounded hover:bg-red-700 bottom-12 right-12 text-2xl"
+          className="fixed px-4 py-1 font-bold font-Omu text-white bg-[#EF4444] rounded hover:bg-[#B91C1B] bottom-12 right-12 text-2xl"
           onClick={outOpenModal}
         >
           나가기
         </button>
 
         <Modal
+          ariaHideApp={false}
           isOpen={outModalIsOpen}
           onRequestClose={outCloseModal}
           contentLabel="Members Modal"
-          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-3xl p-8"
+          className="fixed p-8 transform -translate-x-1/2 -translate-y-1/2 bg-white top-1/2 left-1/2 rounded-3xl"
           overlayClassName="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80"
           style={{
             content: {
-              width: '260px',
-              height: '250px',
+              width: '350px',
+              height: '230px',
             },
           }}
         >
-          <h1 className="font-Omu text-2xl">캡슐 나가기</h1>
-          <h2 className="font-Omu mt-8 text-xl">나가기를 하면 캡슐목록에서 삭제됩니다.</h2>
+          <h1 className="text-3xl font-Omu">캡슐 나가기</h1>
+          <h2 className="mt-8 text-xl font-Omu">나가기를 하면 캡슐목록에서 삭제됩니다.</h2>
           <button
-            className="fixed px-4 py-1 font-bold font-Omu text-green bg-red-500 rounded hover:bg-red-700 bottom-3 right-16 text-lg"
+            className="fixed px-4 py-1 text-lg font-bold rounded font-Omu bottom-3 right-20"
             onClick={outCloseModal}
           >
             취소
           </button>
           <button
-            className="fixed px-4 py-1 font-bold font-Omu text-green bg-red-500 rounded hover:bg-red-700 bottom-3 right-2 text-lg"
+            className="fixed px-4 py-1 text-lg font-bold bg-[#EF4444] rounded font-Omu text-white hover:bg-[#B91C1B] bottom-3 right-2"
             onClick={handleDelete}
           >
             나가기
