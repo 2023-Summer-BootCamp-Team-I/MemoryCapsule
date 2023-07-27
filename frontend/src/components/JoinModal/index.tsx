@@ -1,5 +1,3 @@
-// Modal.tsx
-
 import axios from 'axios';
 import { useState } from 'react';
 import noteImg3 from '../../assets/images/note/note3.png';
@@ -19,10 +17,16 @@ function JoinModal({ onClose }: ModalProps) {
     email: '',
     phone_number: '',
   });
+  const [passwordV2, setPasswordV2] = useState('');
   const handleGetInputData = (name: string, value: string) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
     // eslint-disable-next-line no-console
     console.log('[JoinModal] name: ', name, ', value: ', value);
+  };
+  const handleGetPwData = (name: string, value: string) => {
+    setPasswordV2(value);
+    // eslint-disable-next-line no-console
+    console.log('name: ', name, ', pw v2: ', value);
   };
   const handleGetFileData = (data: string): void => {
     setFormData((prevData) => ({ ...prevData, img_file: data }));
@@ -33,9 +37,13 @@ function JoinModal({ onClose }: ModalProps) {
   const SignUpAPI = async () => {
     // eslint-disable-next-line no-console
     console.log('formData: ', formData);
+    if (formData.password !== passwordV2) {
+      alert('비밀번호가 다릅니다!');
+      return;
+    }
 
     try {
-      const response = await axios.post('http://0.0.0.0:80/api/v1/users/sign-up', formData, {
+      const response = await axios.post('http://localhost:80/api/v1/users/sign-up', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -69,11 +77,7 @@ function JoinModal({ onClose }: ModalProps) {
           </span>
           <div className="flex flex-col items-center">
             <div className="py-5">
-              <ImageUploadButton
-                type="circle"
-                name="phone_number"
-                handlePostFile={handleGetFileData}
-              />
+              <ImageUploadButton type="circle" handlePostFile={handleGetFileData} />
             </div>
             <div>
               <form method="post" action="서버의url" id="join-form" onSubmit={SignUpAPI}>
@@ -107,7 +111,7 @@ function JoinModal({ onClose }: ModalProps) {
                   title="join"
                   type="password"
                   name="pw_v2"
-                  handleGetInputData={handleGetInputData}
+                  handleGetInputData={handleGetPwData}
                 />
                 <TextInput
                   label="Email"

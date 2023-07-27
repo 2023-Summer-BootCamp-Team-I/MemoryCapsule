@@ -39,4 +39,16 @@ export type StoryListOneType = {
   updated_at: string;
   story_id: number;
   is_mine: boolean;
+  
+// API 연동 중 만든 타입들
+export type MyCapsuleListType = {
+  capsule_id: number;
+  capsule_img_url: string;
+  capsule_name: string;
+  creator_id: string;
+  due_date: string;
+  limit_count: number;
+  theme_id: number;
+  created_at: string;
+  updated_at: string;
 };

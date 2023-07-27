@@ -1,18 +1,25 @@
+//CapsuleJoinGalleryPage
+
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import GalleryTopBookmark from '../components/CapsuleGallery/GalleryTopBookmark';
 
-import open_join_capsule from '../assets/data/open_join_capsule';
+// import open_join_capsule from '../assets/data/open_join_capsule';
 import unopen_join_capsule from '../assets/data/unopen_join_capsule';
 
 import OpenCapsule from '../components/MainOpenCapsule/OpenCapsule';
+import { MyCapsuleListType } from '../utils/types';
+import axios from 'axios';
+import { TokenState } from '../utils/Recoil';
+import { useRecoilValue } from 'recoil';
 import UnopenCapsule from '../components/MainUnopenCapsule/UnopenCapsule';
+// import UnopenCapsule from '../components/MainUnopenCapsule/UnopenCapsule';
 
-type OpenCapsuleType = {
-  id: string;
-  img: string;
-  name: string;
-};
+// type OpenCapsuleType = {
+//   id: string;
+//   img: string;
+//   name: string;
+// };
 
 type UnopenCapsuleType = {
   id: string;
@@ -26,15 +33,40 @@ export default function CapsuleJoinGalleryPage() {
   const { is_open } = useParams();
   const [activeTopBookmark, setActiveTopBookmark] = useState('purple');
 
-  const [joinCapsules, setJoinCapsules] = useState<(OpenCapsuleType | UnopenCapsuleType)[]>([]);
+  const [joinCapsules, setJoinCapsules] = useState<(MyCapsuleListType | UnopenCapsuleType)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const token = useRecoilValue(TokenState);
+
+  //캡슐 리스트 불러오기
+  const myCapsuleListAPI = async (is_open: boolean) => {
+    try {
+      await axios
+        .get(
+          `http://localhost:8080/api/v1/capsules?count=-1&is_open=${is_open}&jwt_token=${token}`,
+          {
+            headers: {
+              Accept: 'application/json',
+            },
+          }
+        )
+        .then((response) => {
+          console.log('response: ', response);
+          console.log('response.data.capsule_list: ', response.data.capsule_list);
+          setJoinCapsules(response.data.capsule_list);
+        });
+    } catch (error) {
+      console.log('api 불러오기 실패');
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     // 초기 데이터 로드
     if (is_open === 'true') {
-      setJoinCapsules(open_join_capsule());
+      myCapsuleListAPI(true);
     } else {
-      setJoinCapsules(unopen_join_capsule());
+      myCapsuleListAPI(false);
     }
   }, [is_open]);
 
@@ -49,7 +81,7 @@ export default function CapsuleJoinGalleryPage() {
       if (is_open === 'true') {
         setJoinCapsules((prevCapsules) => [
           ...prevCapsules,
-          ...open_join_capsule().slice(prevCapsules.length),
+          ...joinCapsules.slice(prevCapsules.length),
         ]);
       } else {
         setJoinCapsules((prevCapsules) => [
@@ -88,20 +120,20 @@ export default function CapsuleJoinGalleryPage() {
       >
         {joinCapsules?.map((capsule, index) => {
           if (is_open === 'true') {
-            const openCapsule = capsule as OpenCapsuleType;
+            const openCapsule = capsule as MyCapsuleListType;
             return (
               <div
-                key={openCapsule.id}
+                key={openCapsule.capsule_id}
                 className={`hover:cursor-pointer ${index === 0 ? 'ml-[5rem] mt-[2.5rem]' : ''}`}
               >
                 <OpenCapsule capsule={openCapsule} />
               </div>
             );
           } else {
-            const unopenCapsule = capsule as UnopenCapsuleType;
+            const unopenCapsule = capsule as MyCapsuleListType;
             return (
               <div
-                key={unopenCapsule.id}
+                key={unopenCapsule.capsule_id}
                 className={`hover:cursor-pointer ${index === 0 ? 'ml-[5rem] mt-[2.5rem]' : ''}`}
               >
                 <UnopenCapsule capsule={unopenCapsule} />

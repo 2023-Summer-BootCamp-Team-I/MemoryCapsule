@@ -69,6 +69,24 @@ from rest_framework.parsers import JSONParser
 def sign_up(request):
     if request.method == 'POST':
         try:
+            if 'img_file' not in request.FILES:
+                return JsonResponse({'code': 400, 'message': '이미지가 제공되지 않았습니다.'}, status=400)
+
+            if not request.POST.get("id"):
+                return JsonResponse({'code': '400', 'message': '아이디는 필수 항목입니다.'}, status=400)
+
+            if not request.POST.get("password"):
+                return JsonResponse({'code': '400', 'message': '비밀번호는 필수 항목입니다.'}, status=400)
+
+            if not request.POST.get("email"):
+                return JsonResponse({'code': '400', 'message': '이메일은 필수 항목입니다.'}, status=400)
+
+            if not request.POST.get("phone_number"):
+                return JsonResponse({'code': '400', 'message': '전화번호는 필수 항목입니다.'}, status=400)
+
+            if not request.POST.get("nickname"):
+                return JsonResponse({'code': '400', 'message': '닉네임은 필수 항목입니다.'}, status=400)
+
             email_syntax_check(request.data["email"])
 
             user = create_user(
@@ -82,30 +100,25 @@ def sign_up(request):
 
             user_img_url = upload_image_for_api(request.FILES['img_file'])
             user.user_img_url = user_img_url
+            # user.user_img_url = request.data['img_file']
+
             # 유저 권한 : 0 == general, 1 == admin
             user.status = 0
             user.save()
             return JsonResponse({'code': '201', 'message': '회원 가입이 완료되었습니다', 'created_at': user.created_at}, status=201)
-        except CustomException as e:
-            error_response = {
-                "error_code": e.error_code,
-                "message": str(e)
-            }
-            return JsonResponse(error_response, status=400)
         except IntegrityError:
-            user_id_confirm = User.objects.filter(id__icontains=request.data["id"]).count()
-            if user_id_confirm > 0:
+            if User.objects.filter(id=request.data["id"]).exists():
                 return JsonResponse({'code': '400', 'message': '이미 존재하는 아이디 입니다'}, status=400)
 
-            user_email_confirm = User.objects.filter(email__icontains=request.data["email"]).count()
-            if user_email_confirm > 0:
+            if User.objects.filter(email=request.data["email"]).exists():
                 return JsonResponse({'code': '400', 'message': '이미 존재하는 이메일 입니다'}, status=400)
 
-            user_phone_number_confirm = User.objects.filter(phone_number__icontains=request.POST["phone_number"]).count()
-            if user_phone_number_confirm > 0:
+            if User.objects.filter(phone_number=request.data["phone_number"]).exists():
                 return JsonResponse({'code': '400', 'message': '이미 존재하는 전화번호 입니다'}, status=400)
 
             return JsonResponse({'code': '400', 'message': 'Unexpected error occurred'}, status=400)
+        except Exception as e:
+            JsonResponse({"message" : "에러 확인 불가"})
 
 
 # @swagger_auto_schema(
