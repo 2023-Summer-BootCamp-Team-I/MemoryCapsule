@@ -1,13 +1,14 @@
 import capsuleLabel from '../../../assets/images/stickers/pink2.png';
+import { MyCapsuleListType } from '../../../utils/types';
 
-interface Capsule {
-  id: string;
-  img: string;
-  name: string;
-}
+// interface Capsule {
+//   id: string;
+//   img: string;
+//   name: string;
+// }
 
 interface OpenCapsuleProps {
-  capsule: Capsule;
+  capsule: MyCapsuleListType;
 }
 
 function OpenCapsule({ capsule }: OpenCapsuleProps) {
@@ -16,7 +17,7 @@ function OpenCapsule({ capsule }: OpenCapsuleProps) {
       <div
         className="flex items-center justify-center w-20 h-24 bg-center bg-no-repeat rounded-full shadow-ButtonShadow"
         style={{
-          backgroundImage: `url(${capsule.img})`,
+          backgroundImage: `url(${capsule.capsule_img_url})`,
           backgroundSize: 'cover',
           objectFit: 'cover',
           width: '10.5rem',
@@ -27,7 +28,7 @@ function OpenCapsule({ capsule }: OpenCapsuleProps) {
       <div className="relative w-32 -mt-4">
         <img src={capsuleLabel} className="h-12" />
         <div className="absolute text-xl font-semibold text-white transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-36">
-          {capsule.name}
+          {capsule.capsule_name}
         </div>
       </div>
     </div>

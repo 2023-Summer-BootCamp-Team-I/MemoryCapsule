@@ -1,3 +1,5 @@
+//MainUnOpenedPage
+
 /* eslint-disable no-console */
 import { useNavigate } from 'react-router-dom';
 import HighLight from '../components/common/HightLight';
@@ -35,11 +37,14 @@ function MainUnOpenedPage() {
         .then((response) => {
           console.log('response: ', response);
           console.log('response.data.my_capsule_list: ', response.data.my_capsule_list);
-          if (is_open === true) {
-            setMyCapsule(response.data.my_capsule_list);
-          } else {
-            setJoinCapsule(response.data.capsule_list);
-          }
+          setMyCapsule(response.data.my_capsule_list);
+          setJoinCapsule(response.data.capsule_list);
+          // if (is_open === true) {
+          //   setMyCapsule(response.data.my_capsule_list);
+          //   setJoinCapsule(response.data.capsule_list);
+          // } else {
+          //   setJoinCapsule(response.data.capsule_list);
+          // }
         });
     } catch (error) {
       console.log('api 불러오기 실패');
@@ -48,7 +53,7 @@ function MainUnOpenedPage() {
   };
 
   useEffect(() => {
-    capsuleListAPI(true);
+    capsuleListAPI(is_open);
   }, []);
 
   return (

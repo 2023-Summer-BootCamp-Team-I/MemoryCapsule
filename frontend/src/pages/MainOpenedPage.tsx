@@ -1,16 +1,62 @@
+//MainOpenedPage
+
 import { useNavigate } from 'react-router-dom';
 import HighLight from '../components/common/HightLight';
 import OpenCapsule from '../components/MainOpenCapsule/OpenCapsule';
 
-import open_join_capsule from '../assets/data/open_join_capsule';
-import open_my_capsule from '../assets/data/open_my_capsule';
+// import open_join_capsule from '../assets/data/open_join_capsule';
+// import open_my_capsule from '../assets/data/open_my_capsule';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { TokenState } from '../utils/Recoil';
+import { MyCapsuleListType } from '../utils/types';
 
 function MainOpenedPage() {
   const navigate = useNavigate();
   const is_open = true;
 
-  const openMyCapsules = open_my_capsule();
-  const openJoinCapsules = open_join_capsule();
+  // const OpenMyCapsule = open_my_capsule();
+  // const openJoinCapsule = open_join_capsule();
+
+  const token = useRecoilValue(TokenState);
+
+  const [OpenMyCapsule, setOpenMyCapsule] = useState<MyCapsuleListType[]>([]);
+  const [openJoinCapsule, setOpenJoinCapsule] = useState<MyCapsuleListType[]>([]);
+
+  const capsuleListAPI = async (is_open: boolean) => {
+    try {
+      await axios
+        .get(
+          `http://localhost:8080/api/v1/capsules?count=5&is_open=${is_open}&jwt_token=${token}`,
+          {
+            headers: {
+              Accept: 'application/json',
+            },
+          }
+        )
+        .then((response) => {
+          console.log('response: ', response);
+          console.log('response.data.my_capsule_list: ', response.data.my_capsule_list);
+          console.log('response.data.capsule_list: ', response.data.capsule_list);
+          setOpenMyCapsule(response.data.my_capsule_list);
+          setOpenJoinCapsule(response.data.capsule_list);
+          // if (is_open === true) {
+          //   setOpenMyCapsule(response.data.my_capsule_list);
+          //   setOpenJoinCapsule(response.data.capsule_list);
+          // } else {
+          //   setOpenJoinCapsule(response.data.capsule_list);
+          // }
+        });
+    } catch (error) {
+      console.log('api 불러오기 실패');
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    capsuleListAPI(is_open);
+  }, []);
 
   return (
     <div className="h-[42rem] w-[75rem] font-Omu grid grid-rows-2 grid-flow-row-dense">
@@ -21,10 +67,10 @@ function MainOpenedPage() {
             <HighLight color="blue" title="내가 만든 캡슐" />
           </div>
           <div className="flex flex-row space-x-[5rem] ml-[0.7rem]">
-            {openMyCapsules.slice(0, 5).map((capsule) => (
+            {OpenMyCapsule.slice(0, 5).map((capsule) => (
               <div
-                key={capsule.id}
-                onClick={() => navigate(`/opened/${capsule.id}`)}
+                key={capsule.capsule_id}
+                onClick={() => navigate(`/opened/${capsule.capsule_id}`)}
                 className="hover:cursor-pointer"
               >
                 <OpenCapsule capsule={capsule} />
@@ -57,10 +103,10 @@ function MainOpenedPage() {
             <HighLight color="blue" title="내가 참여한 캡슐" />
           </div>
           <div className="flex flex-row space-x-[5rem] ml-[0.7rem]">
-            {openJoinCapsules.slice(0, 5).map((capsule) => (
+            {openJoinCapsule.slice(0, 5).map((capsule) => (
               <div
-                key={capsule.id}
-                onClick={() => navigate(`/opened/${capsule.id}`)}
+                key={capsule.capsule_id}
+                onClick={() => navigate(`/opened/${capsule.capsule_id}`)}
                 className="hover:cursor-pointer"
               >
                 <OpenCapsule capsule={capsule} />

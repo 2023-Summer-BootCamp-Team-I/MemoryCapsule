@@ -13,6 +13,7 @@ import axios from 'axios';
 import { useRecoilValue } from 'recoil';
 import { TokenState } from '../utils/Recoil';
 import { MyCapsuleListType } from '../utils/types';
+import OpenCapsule from '../components/MainOpenCapsule/OpenCapsule';
 
 // type OpenCapsuleType = {
 //   id: string;
@@ -37,6 +38,7 @@ function CapsuleMyGalleryPage() {
 
   const token = useRecoilValue(TokenState);
 
+  //캡슐 리스트 불러오기
   const myCapsuleListAPI = async (is_open: boolean) => {
     try {
       await axios
@@ -61,7 +63,7 @@ function CapsuleMyGalleryPage() {
 
   useEffect(() => {
     // 초기 데이터 로드
-    if (is_open === 'false') {
+    if (is_open === 'true') {
       myCapsuleListAPI(true);
     } else {
       myCapsuleListAPI(false);
@@ -134,7 +136,7 @@ function CapsuleMyGalleryPage() {
                 key={openCapsule.capsule_id}
                 className={`hover:cursor-pointer ${index === 0 ? 'ml-[5rem] mt-[2.5rem]' : ''}`}
               >
-                {/* <OpenCapsule capsule={openCapsule} /> */}
+                <OpenCapsule capsule={openCapsule} />
               </div>
             );
           }
