@@ -3,6 +3,8 @@ import pink from '../../assets/images/stickers/pink.png';
 import StoryInput from '../common/StoryInput';
 
 import axios from 'axios';
+import { useRecoilValue } from 'recoil';
+import { TokenState } from '../../utils/Recoil';
 
 interface StoryCreateProps {
   capsule_id: string | undefined;
@@ -13,12 +15,12 @@ function StoryCreateContent({ capsule_id }: StoryCreateProps) {
   const [selectedFile, setSelectedFile] = useState('');
   const [previousImage, setPreviousImage] = useState('');
   const [title, setTitle] = useState<string>('');
+  const token = useRecoilValue(TokenState);
 
   const [content, setContent] = useState<string>('');
   //const [file, setSelectedImage] = useState('');
 
   const onLoadFile = (e: ChangeEvent<HTMLInputElement>) => {
-    //: ChangeEvent<HTMLInputElement>지움
     if (e.target.files?.length) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const file: any = e.target.files instanceof FileList ? e.target.files[0] : null;
@@ -38,13 +40,13 @@ function StoryCreateContent({ capsule_id }: StoryCreateProps) {
     if (selectedImage) {
       const formData = new FormData();
 
-      formData.append('creator_id', '1');
+      formData.append('jwt_token', token);
       formData.append('story_title', title);
       formData.append('story_content', content);
       formData.append('filename', selectedFile);
 
       try {
-        const response = await axios.post('http://localhost:8080/api/v1/stories/2', formData, {
+        const response = await axios.post(`/api/v1/stories/${capsule_id}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

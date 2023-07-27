@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import plusbutton from '../../../assets/images/plusbutton.png';
 import titlemark from '../../../assets/images/titlemark.png';
@@ -10,7 +11,7 @@ import StoryDetailContent from '../../StoryDetailContent';
 import ProfileButton from '../../ProfileButton';
 import CapsuleInfo from '../../CapsuleInfo';
 import story_dummy from '../../../assets/data/story_dummy';
-import { StoryType } from '../../../utils/types';
+import { StoryListType, StoryListOneType } from '../../../utils/types';
 import Checkbox from '../CheckBox';
 
 import axios from 'axios';
@@ -18,9 +19,7 @@ import { useRecoilValue } from 'recoil';
 import { TokenState } from '../../../utils/Recoil';
 
 type StoryModalProps = {
-  img?: string;
-  title?: string;
-  content?: string;
+  story_data?: StoryListOneType | undefined;
   type: 'create' | 'detail';
   onClose: () => void;
 };
@@ -33,25 +32,20 @@ function StoryList({ capsule_id }: StoryListProps) {
   console.log(story_dummy);
 
   const token = useRecoilValue(TokenState);
+  const [storyList, setStoryList] = useState<StoryListType[]>([]);
 
   const storyListAPI = async () => {
     try {
-      await axios
-        .get(`http://localhost:8080/api/v1/stories/${capsule_id}&jwt_token=${token}`)
-        .then((response) => {
-          console.log('response: ', response);
-          console.log(response.data.StoryList);
-        });
+      await axios.get(`/api/v1/stories/${capsule_id}?jwt_token=${token}`).then((response) => {
+        console.log('response: ', response);
+        console.log(response.data.story_list);
+        setStoryList(response.data.story_list);
+      });
     } catch (error) {
       console.log('api 불러오기 실패');
       console.log(error);
     }
   };
-
-  // const getCapsulesStory = async () => {
-  //   const response = await axios.get('/api/v1/stories/${capsule_id}/${storyId}'); //${capsule_id}/${storyId}하면 에러
-  //   setCapsules(response.data.capsules);
-  // };
 
   useEffect(() => {
     storyListAPI(); //페이지에 처음 접속했을때 capsule 목록을 보여주기 위해
@@ -134,15 +128,32 @@ function StoryList({ capsule_id }: StoryListProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [modalType, setModalType] = useState<'create' | 'detail' | null>(null);
+  const [storyOne, setStoryOne] = useState<StoryListOneType>();
 
-  const handleImageClick = (index: number) => {
+  const storyListOneAPI = async (story_id: number) => {
+    try {
+      await axios
+        .get(`/api/v1/stories/${capsule_id}/${story_id}?jwt_token=${token}`)
+        .then((response) => {
+          console.log('response: ', response);
+          setStoryOne(response.data);
+          // setStoryList(response.data.story_list);
+        });
+    } catch (error) {
+      console.log('api 불러오기 실패');
+      console.log(error);
+    }
+  };
+
+  const handleImageClick = (index: number, story_id: number) => {
     const selectedStory = storiesToShow[index];
-    if (selectedStory.owner !== 'user1') {
+    if (selectedStory.is_mine !== true) {
       alert('⛔️Access Denied⛔️ You are not the owner of this story');
       return;
     }
+    storyListOneAPI(story_id);
 
-    const originalIndex = story_dummy.findIndex((story) => story === selectedStory);
+    const originalIndex = storyList.findIndex((story) => story === selectedStory);
     setSelectedImageIndex(originalIndex);
     setModalType('detail');
     setIsOpen(true); // 이미지 클릭 시 모달 창 열기]
@@ -168,15 +179,13 @@ function StoryList({ capsule_id }: StoryListProps) {
 
   // 체크 박스
   const [checked, setChecked] = useState(false);
-  const storiesToShow = checked
-    ? story_dummy.filter((story) => story.owner === 'user1')
-    : story_dummy;
+  const storiesToShow = checked ? storyList.filter((story) => story.is_mine === true) : storyList;
 
   const handleCheckedChange = (checked: boolean) => {
     setChecked(checked);
   };
 
-  const StoryModal = ({ img, title, type, content }: StoryModalProps) => {
+  const StoryModal = ({ story_data, type }: StoryModalProps) => {
     return (
       <div>
         {isOpen && (
@@ -216,7 +225,7 @@ function StoryList({ capsule_id }: StoryListProps) {
                     {type === 'create' ? (
                       <StoryCreateContent capsule_id={capsule_id} />
                     ) : (
-                      <StoryDetailContent title={title} img={img} content={content} />
+                      <StoryDetailContent story_data={story_data} />
                     )}
                   </div>
                 </div>
@@ -255,7 +264,7 @@ function StoryList({ capsule_id }: StoryListProps) {
 
       <div className="custom-scroll-container">
         <div className="custom-scroll-content">
-          {storiesToShow.map((picture: StoryType, index: number) => (
+          {storiesToShow.map((story: StoryListType, index: number) => (
             <div key={index} className="picture-container">
               <div style={{ position: 'relative' }}>
                 <img
@@ -282,18 +291,18 @@ function StoryList({ capsule_id }: StoryListProps) {
                     fontSize: 20,
                   }}
                 >
-                  {picture.title}
+                  {story.story_title}
                 </p>
                 <img
-                  src={picture.owner === 'user1' ? picture.img : letter}
-                  onClick={() => handleImageClick(index)}
-                  alt={picture.owner}
+                  src={story.is_mine === true ? story.story_url : letter}
+                  onClick={() => handleImageClick(index, story.story_id)}
+                  alt={String(story.is_mine)}
                   width={220}
                   className={`z-0 object-cover ${
-                    picture.owner === 'user1' ? 'h-52' : 'h-full'
+                    story.is_mine === true ? 'h-52' : 'h-full'
                   } w-52 image-shadow`}
                   style={{ zIndex: 0, marginTop: '20px', marginBottom: '10px', cursor: 'pointer' }}
-                  title={picture.owner} // 이미지에 title 속성 추가
+                  title={String(story.is_mine)} // 이미지에 title 속성 추가
                 />
               </div>
             </div>
@@ -310,13 +319,7 @@ function StoryList({ capsule_id }: StoryListProps) {
       </div>
       {isOpen && modalType === 'create' && <StoryModal type="create" onClose={handleCloseModal} />}
       {isOpen && modalType === 'detail' && selectedImageIndex !== null && (
-        <StoryModal
-          title={story_dummy[selectedImageIndex]?.title}
-          img={story_dummy[selectedImageIndex]?.img}
-          type="detail"
-          content={story_dummy[selectedImageIndex]?.content}
-          onClose={handleCloseModal}
-        />
+        <StoryModal story_data={storyOne} type="detail" onClose={handleCloseModal} />
       )}
     </div>
   );

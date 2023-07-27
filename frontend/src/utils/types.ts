@@ -18,3 +18,25 @@ export type StoryType = {
   title: string;
   content: string;
 };
+
+export type StoryListType = {
+  creator: string;
+  is_mine: boolean;
+  story_id: number;
+  story_title: string;
+  story_url: string;
+};
+
+export type StoryListOneType = {
+  code: number;
+  message: string;
+  creator_id: string;
+  capsule_id: number;
+  story_title: string;
+  story_content: string;
+  story_img_url: string;
+  created_at: string;
+  updated_at: string;
+  story_id: number;
+  is_mine: boolean;
+};
