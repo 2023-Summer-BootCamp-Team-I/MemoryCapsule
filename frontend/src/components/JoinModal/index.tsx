@@ -35,7 +35,7 @@ function JoinModal({ onClose }: ModalProps) {
     console.log('formData: ', formData);
 
     try {
-      const response = await axios.post('http://0.0.0.0:80/api/v1/users/sign-up', formData, {
+      const response = await axios.post('http://localhost:80/api/v1/users/sign-up', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

@@ -10,15 +10,14 @@ import uuid
 
 
 class User(BaseModel):
-    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    id = models.CharField(unique=True, max_length=60)
-    password = models.CharField(max_length=80)
-    phone_number = models.CharField(unique=True, max_length=13)
-    email = models.CharField(unique=True, max_length=200, null=True, blank=True)
-    nickname = models.CharField(max_length=60)
+    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, null=False, blank=False)
+    id = models.CharField(unique=True, max_length=60, null=False, blank=False)
+    password = models.CharField(max_length=80, null=False, blank=False)
+    phone_number = models.CharField(unique=True, max_length=13, null=False, blank=False)
+    email = models.CharField(unique=True, max_length=200, null=False, blank=False)
+    nickname = models.CharField(max_length=60, null=False, blank=False)
     status = models.IntegerField(default=0)
     user_img_url = models.CharField(max_length=255, null=True, blank=True)
-
 
     class Meta:
         db_table = 'user'

@@ -1,7 +1,7 @@
 version: "3.8"
+
 volumes:
   mysql_data:
-
   build_folder:
 
 services:
@@ -20,32 +20,6 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "mysqldb"]
       timeout: 20s
       retries: 10
-
-#  mysql_exporter:
-#    image: prom/mysqld-exporter
-#    container_name: mysql_exporter
-#    volumes:
-#      - ./mysql_exporter/my.cnf:/root/.my.cnf
-#    command:
-#      - '--collect.global_status'
-#      - '--collect.info_schema.innodb_metrics'
-#      - '--collect.auto_increment.columns'
-#      - '--collect.info_schema.processlist'
-#      - '--collect.binlog_size'
-#      - '--collect.info_schema.tablestats'
-#      - '--collect.global_variables'
-#      - '--collect.info_schema.query_response_time'
-#      - '--collect.info_schema.userstats'
-#      - '--collect.info_schema.tables'
-#      - '--collect.perf_schema.tablelocks'
-#      - '--collect.perf_schema.file_events'
-#      - '--collect.perf_schema.eventswaits'
-#      - '--collect.perf_schema.indexiowaits'
-#      - '--collect.perf_schema.tableiowaits'
-#    ports:
-#      - 9104:9104
-#    depends_on:
-#      - mysqldb
 
   backend:
     build:
@@ -98,24 +72,6 @@ services:
       timeout: 5s
       retries: 5
 
-#  rabbitmq-exporter:
-#    depends_on:
-#      rabbitmq:
-#        condition: service_healthy
-#    image: kbudde/rabbitmq-exporter
-#    ports:
-#      - "9419:9419"
-#    container_name: rabbitmq-exporter
-#    environment:
-#      - RABBITMQ_HOST=rabbitmq
-#      - RABBITMQ_USER=guest
-#      - RABBITMQ_PASSWORD=guest
-#    command: [ "./rabbitmq_wait.sh", "rabbitmq", "rabbitmq_exporter" ]
-#    healthcheck:
-#      test: [ "CMD", "wget", "-q", "-O", "-", "http://localhost:9419" ]
-#      interval: 20s
-#      timeout: 10s
-#      retries: 5
 
   celery_worker:
     container_name: celery_worker
@@ -197,27 +153,29 @@ services:
     image: grafana/grafana
     ports:
       - "3000:3000"
+    volumes:
+      - ./backend/monitoring/grafana:/etc/grafana/provisioning/
     depends_on:
       - prometheus
-      - cadvisor
+#      - cadvisor
       - node-exporter
 
 
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.47.0
-    container_name: cadvisor
-    privileged: true
-    ports:
-      - "9600:8080"
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /proc/cpuinfo:/host/proc/cpuinfo:ro
-      - /dev/disk:/dev/disk/:ro
-    devices:
-      - /dev/kmsg:/dev/kmsg
+#  cadvisor:
+#    image: gcr.io/cadvisor/cadvisor:v0.47.0
+#    container_name: cadvisor
+#    privileged: true
+#    ports:
+#      - "9600:8080"
+#    volumes:
+#      - /:/rootfs:ro
+#      - /var/run:/var/run:rw
+#      - /sys:/sys:ro
+#      - /var/lib/docker/:/var/lib/docker:ro
+#      - /proc/cpuinfo:/host/proc/cpuinfo:ro
+#      - /dev/disk:/dev/disk/:ro
+#    devices:
+#      - /dev/kmsg:/dev/kmsg
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -250,17 +208,34 @@ services:
     depends_on:
       - backend
 
-  alertmanager:
-    image: prom/alertmanager
-    env_file:
-      - "./.env"
-    volumes:
-      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
-      - ./backend/monitoring/prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml # 이 줄 추가
-    command:
-      - '--config.file=/etc/alertmanager/alertmanager.yml'
-    ports:
-      - 9093:9093
+#  alertmanager:
+#    image: prom/alertmanager
+#    volumes:
+#      - ./backend/monitoring/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+#      - ./backend/monitoring/prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml # 이 줄 추가
+#    command:
+#      - '--config.file=/etc/alertmanager/alertmanager.yml'
+#    ports:
+#      - 9093:9093
+
+
+#  influxdb:
+#    image: influxdb:1.8
+#    ports:
+#      - "8086:8086"
+#    environment:
+#      - INFLUXDB_DB=k6
+
+#  k6:
+#    image: grafana/k6:latest
+#    platform: linux/amd64
+#    ports:
+#      - "6565:6565"
+#    environment:
+#      - K6_OUT=influxdb=http://influxdb:8086/k6
+#    volumes:
+#      - ./backend/monitoring/samples:/scripts
+#    command: run /scripts/main.js
 
   frontend:
     build:
