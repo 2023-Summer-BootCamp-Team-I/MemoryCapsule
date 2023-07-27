@@ -250,17 +250,17 @@ services:
     depends_on:
       - backend
 
-  alertmanager:
-    image: prom/alertmanager
-    env_file:
-      - "./.env"
-    volumes:
-      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
-      - ./backend/monitoring/prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml # 이 줄 추가
-    command:
-      - '--config.file=/etc/alertmanager/alertmanager.yml'
-    ports:
-      - 9093:9093
+#  alertmanager:
+#    image: prom/alertmanager
+#    env_file:
+#      - "./.env"
+#    volumes:
+#      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+#      - ./backend/monitoring/prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml # 이 줄 추가
+#    command:
+#      - '--config.file=/etc/alertmanager/alertmanager.yml'
+#    ports:
+#      - 9093:9093
 
   frontend:
     build:

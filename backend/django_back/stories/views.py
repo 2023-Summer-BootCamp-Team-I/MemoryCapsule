@@ -110,12 +110,16 @@ def story_capsule_func(request, capsule_id):
         return JsonResponse({"code": 400, "message": "스토리 생성에 실패하였습니다."}, status=400)
 
     elif request.method =='GET':
-        user_uuid_obj = get_user_uuid_obj_from_jwt(request.GET.get('jwt_token', None))
-
         try:
             capsule = Capsule.objects.get(capsule_id=capsule_id)
         except Capsule.DoesNotExist:
             return JsonResponse({"code": 404, "message": "캡슐이 존재하지 않습니다."}, status=404)
+
+        if timezone.now() < capsule.due_date:
+            user_uuid_obj = get_user_uuid_obj_from_jwt(request.GET.get('jwt_token', None))
+        else :
+            user_uuid_obj = None
+
         story_list = []
         stories = Story.objects.filter(capsule_id=capsule_id, deleted_at__isnull=True)
         for story in stories :
@@ -123,7 +127,6 @@ def story_capsule_func(request, capsule_id):
                 "story_id" : story.story_id,
                 "story_title" : story.story_title,
                 "story_url" : story.story_img_url,
-                "creator" : story.creator_id,
                 "is_mine": story.creator_id == user_uuid_obj
             }
 
@@ -201,6 +204,7 @@ def story_capsule_func(request, capsule_id):
 def story_func(request, capsule_id, story_id) :
 
     if request.method == 'GET' :
+
         user_uuid_obj = get_user_uuid_obj_from_jwt(request.GET.get('jwt_token', None))
 
         try:
