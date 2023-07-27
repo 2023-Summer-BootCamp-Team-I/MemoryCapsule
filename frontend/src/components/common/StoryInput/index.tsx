@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 
 interface StoryInputProps {
-  placeholder?: string;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  handleGetTitle: Function;
 }
 
-function StoryInput({ placeholder = '제목을 입력하세요' }: StoryInputProps) {
+function StoryInput({ handleGetTitle }: StoryInputProps) {
   const [value, setValue] = useState<string>('');
+  const placeholder = '제목을 입력하세요';
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    // 이 함수가 제목이라는 input에게 변화가 일어날때마다 실행되는 함수야 그래서 나는 이 함수에 handleGetTitle이라는 함수를 넣어서 값을 가져올거야
     const newValue = event.target.value;
-    setValue(newValue);
+    setValue(newValue); // 1: 철수, 2: 영희
+    handleGetTitle(newValue);
   }
 
   useEffect(() => {

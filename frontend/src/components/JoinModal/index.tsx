@@ -44,6 +44,10 @@ function JoinModal({ onClose }: ModalProps) {
   const SignUpAPI = async () => {
     // eslint-disable-next-line no-console
     console.log('formData: ', formData);
+    if (formData.password !== passwordV2) {
+      alert('비밀번호가 다릅니다!');
+      return;
+    }
 
     if (!isFormDataComplete(formData)) {
       alert('모든 값들을 입력해주세요!');

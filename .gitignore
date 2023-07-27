@@ -15,4 +15,4 @@ venv
 migrations
 *.ini
 .DS_Store
-certbot
+backend/monitoring/alertmanager.yml

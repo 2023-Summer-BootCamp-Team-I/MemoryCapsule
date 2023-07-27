@@ -4,9 +4,7 @@ from datetime import datetime, timedelta
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.http import JsonResponse, HttpRequest
 from rest_framework.decorators import api_view
-from capsules.models import *
 from musics.models import *
-from stories.models import *
 from themes.models import *
 from users.models import *
 from capsules.views import *
@@ -14,8 +12,6 @@ from users.views import *
 from core.uuid_decode import *
 from django.test import RequestFactory
 from django.core.files.uploadedfile import SimpleUploadedFile
-
-
 
 # /api/v1/test-data/
 @api_view(['GET'])
@@ -59,12 +55,6 @@ def insert_test_data(request) -> json:
     for theme_data in themes_data:
         theme = Theme.objects.create(**theme_data)
 
-
-
-
-
-
-
     # User 회원가입 API 호출
 
     file_path = 'django_back/capsule.jpg'
@@ -96,14 +86,6 @@ def insert_test_data(request) -> json:
 
         mock_request.FILES['img_file'] = img_file
         result = sign_up(mock_request)
-
-
-
-
-
-
-
-
 
 
 
@@ -167,15 +149,6 @@ def insert_test_data(request) -> json:
 
 
 
-
-
-
-
-
-
-
-
-
     # 스토리 생성 API
 
     # 스토리 생성 API에 사용할 데이터 준비
@@ -201,4 +174,3 @@ def insert_test_data(request) -> json:
         story = Story.objects.create(**story_data)
 
     return JsonResponse({'result': "good"}, safe=False, status=200)
-

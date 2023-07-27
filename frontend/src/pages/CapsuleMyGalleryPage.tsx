@@ -1,18 +1,25 @@
+/* eslint-disable no-console */
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import GalleryTopBookmark from '../components/CapsuleGallery/GalleryTopBookmark';
 
-import OpenCapsule from '../components/MainOpenCapsule/OpenCapsule';
+// import OpenCapsule from '../components/MainOpenCapsule/OpenCapsule';
 import UnopenCapsule from '../components/MainUnopenCapsule/UnopenCapsule';
 
-import open_my_capsule from '../assets/data/open_my_capsule';
+// import open_my_capsule from '../assets/data/open_my_capsule';
 import unopen_my_capsule from '../assets/data/unopen_my_capsule';
+import axios from 'axios';
 
-type OpenCapsuleType = {
-  id: string;
-  img: string;
-  name: string;
-};
+import { useRecoilValue } from 'recoil';
+import { TokenState } from '../utils/Recoil';
+import { MyCapsuleListType } from '../utils/types';
+import OpenCapsule from '../components/MainOpenCapsule/OpenCapsule';
+
+// type OpenCapsuleType = {
+//   id: string;
+//   img: string;
+//   name: string;
+// };
 
 type UnopenCapsuleType = {
   id: string;
@@ -26,15 +33,40 @@ function CapsuleMyGalleryPage() {
   const { is_open } = useParams();
   const [activeTopBookmark, setActiveTopBookmark] = useState('orange');
 
-  const [myCapsules, setMyCapsules] = useState<(OpenCapsuleType | UnopenCapsuleType)[]>([]);
+  const [myCapsules, setMyCapsules] = useState<(MyCapsuleListType | UnopenCapsuleType)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const token = useRecoilValue(TokenState);
+
+  //캡슐 리스트 불러오기
+  const myCapsuleListAPI = async (is_open: boolean) => {
+    try {
+      await axios
+        .get(
+          `http://localhost:8080/api/v1/capsules?count=-1&is_open=${is_open}&jwt_token=${token}`,
+          {
+            headers: {
+              Accept: 'application/json',
+            },
+          }
+        )
+        .then((response) => {
+          console.log('response: ', response);
+          console.log('response.data.my_capsule_list: ', response.data.my_capsule_list);
+          setMyCapsules(response.data.my_capsule_list);
+        });
+    } catch (error) {
+      console.log('api 불러오기 실패');
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     // 초기 데이터 로드
     if (is_open === 'true') {
-      setMyCapsules(open_my_capsule());
+      myCapsuleListAPI(true);
     } else {
-      setMyCapsules(unopen_my_capsule());
+      myCapsuleListAPI(false);
     }
   }, [is_open]);
 
@@ -49,7 +81,7 @@ function CapsuleMyGalleryPage() {
       if (is_open === 'true') {
         setMyCapsules((prevCapsules) => [
           ...prevCapsules,
-          ...open_my_capsule().slice(prevCapsules.length),
+          ...myCapsules.slice(prevCapsules.length),
         ]);
       } else {
         setMyCapsules((prevCapsules) => [
@@ -87,24 +119,24 @@ function CapsuleMyGalleryPage() {
         ref={containerRef}
       >
         {myCapsules?.map((capsule, index) => {
-          if (is_open === 'true') {
-            const openCapsule = capsule as OpenCapsuleType;
+          if (is_open === 'false') {
+            const unopenCapsule = capsule as MyCapsuleListType;
             return (
               <div
-                key={openCapsule.id}
-                className={`hover:cursor-pointer ${index === 0 ? 'ml-[5rem] mt-[2.5rem]' : ''}`}
-              >
-                <OpenCapsule capsule={openCapsule} />
-              </div>
-            );
-          } else {
-            const unopenCapsule = capsule as UnopenCapsuleType;
-            return (
-              <div
-                key={unopenCapsule.id}
+                key={unopenCapsule.capsule_id}
                 className={`hover:cursor-pointer ${index === 0 ? 'ml-[5rem] mt-[2.5rem]' : ''}`}
               >
                 <UnopenCapsule capsule={unopenCapsule} />
+              </div>
+            );
+          } else {
+            const openCapsule = capsule as MyCapsuleListType;
+            return (
+              <div
+                key={openCapsule.capsule_id}
+                className={`hover:cursor-pointer ${index === 0 ? 'ml-[5rem] mt-[2.5rem]' : ''}`}
+              >
+                <OpenCapsule capsule={openCapsule} />
               </div>
             );
           }

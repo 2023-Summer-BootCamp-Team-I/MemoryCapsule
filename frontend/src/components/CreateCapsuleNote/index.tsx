@@ -6,6 +6,9 @@ import ReactDatePicker from '../ReactDatePicker';
 import ImageUploadButton from '../ImageUploadButton';
 import axios from 'axios';
 
+import { useRecoilValue } from 'recoil';
+import { TokenState } from '../../utils/Recoil';
+
 interface CreateCapsuleNoteProps {
   onButtonClick: () => void;
   themeName: string;
@@ -13,6 +16,8 @@ interface CreateCapsuleNoteProps {
 }
 
 function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleNoteProps) {
+  const token = useRecoilValue(TokenState);
+
   // const [responseCapsule, setResponseCapsule] = useState('');
   const getCurrentDateTime = () => {
     const now = new Date();
@@ -64,7 +69,7 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
 
     //form data 생성
     const formData = new FormData();
-    formData.append('jwt_token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiNzI3YTYwYjAtZGI4My00NGJjLWI4M2EtZGJlMTcwYzE1NjU2IiwiZXhwIjoxNjkwNDM2ODMxfQ._Tbge_R8bmvFYhvFMSEfitWoYLlH2yed8Qni7lIY9xY'); //보류
+    formData.append('jwt_token', token); //보류
     formData.append('capsule_name', title);
     formData.append('due_date', date);
     formData.append('limit_count', '15'); // 보류

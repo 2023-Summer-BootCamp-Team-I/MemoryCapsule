@@ -1,10 +1,7 @@
-import React from 'react';
-import MuseumTheme from '../components/Themes/MuseumTheme';
-
 export default function OpenedVideoPage() {
   return (
     <div>
-      <MuseumTheme />
+      <div className="w-[60rem] h-[35rem] bg-black"></div>
     </div>
   );
 }

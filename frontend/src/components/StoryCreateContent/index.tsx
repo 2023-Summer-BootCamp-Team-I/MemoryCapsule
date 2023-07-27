@@ -3,20 +3,67 @@ import { ChangeEvent, useState } from 'react';
 import pink from '../../assets/images/stickers/pink.png';
 import StoryInput from '../common/StoryInput';
 
-function StoryCreateContent() {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [previousImage, setPreviousImage] = useState<string | null>(null);
-  // const [title, setTitle] = useState<string>('');
-  const [content, setContent] = useState<string>('');
+import axios from 'axios';
+import { useRecoilValue } from 'recoil';
+import { TokenState } from '../../utils/Recoil';
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+interface StoryCreateProps {
+  capsule_id: string | undefined;
+}
+
+function StoryCreateContent({ capsule_id }: StoryCreateProps) {
+  const [selectedImage, setSelectedImage] = useState('');
+  const [selectedFile, setSelectedFile] = useState('');
+  const [previousImage, setPreviousImage] = useState('');
+  const [title, setTitle] = useState<string>('');
+  const token = useRecoilValue(TokenState);
+
+  const [content, setContent] = useState<string>('');
+  //const [file, setSelectedImage] = useState('');
+
+  const onLoadFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length) {
-      const file = e.target.files?.[0];
-      const newImage = file ? URL.createObjectURL(file) : null;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const file: any = e.target.files instanceof FileList ? e.target.files[0] : null;
       setPreviousImage(selectedImage);
-      setSelectedImage(newImage);
+      console.log('filename: ', file);
+
+      setSelectedFile(file); //api를 사용하기 위해서 사용하는 변수
+      setSelectedImage(URL.createObjectURL(file)); //보여주기 위한 변수 preview
     } else {
       setSelectedImage(previousImage);
+    }
+  };
+
+  const createStoryApi = async () => {
+    console.log('capsule Id: ', capsule_id);
+
+    if (selectedImage) {
+      const formData = new FormData();
+
+      formData.append('jwt_token', token);
+      formData.append('story_title', title);
+      formData.append('story_content', content);
+      formData.append('filename', selectedFile);
+
+      try {
+        const response = await axios.post(`/api/v1/stories/${capsule_id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log(response);
+
+        if (response.status == 200) {
+          alert('업로드되었습니다.');
+          window.location.reload();
+        } else {
+          console.log('데이터 전송 실패ㅠ');
+          console.log('error message text: ', response.statusText);
+        }
+      } catch (error) {
+        console.error('에러 발생: ', error);
+      }
     }
   };
 
@@ -32,6 +79,15 @@ function StoryCreateContent() {
       alert('사진, 제목, 내용을 입력해주세요.');
       return;
     }
+    // alert('업로드되었습니다.');
+    // window.location.reload();
+    createStoryApi();
+  };
+
+  const handleGetTitle = (data: string) => {
+    // 나는 이 함수를 StoryInput이라는 파일에게 전달을 함으로써 값을 가져올 거야
+    setTitle(data);
+    console.log('[StoryCreateContent] title: ', data);
   };
 
   return (
@@ -77,16 +133,13 @@ function StoryCreateContent() {
         type="file"
         accept="image/*"
         className="hidden"
-        onChange={handleImageChange}
+        onChange={onLoadFile}
         onClick={() => setPreviousImage(selectedImage)}
         id="image-input"
       />
 
       <div className="max-w-sm p-4 mt-5 bg-white rounded-lg shadow-lg h-80 font-Omu">
-        {/* <div className="pb-2 text-2xl break-words border-b border-gray-200">
-          <input placeholder="제목을 입력하세요" className="w-full" maxLength={10} />
-        </div> */}
-        <StoryInput />
+        <StoryInput handleGetTitle={handleGetTitle} />
         <div className="max-w-sm pt-2 break-words">
           <textarea
             placeholder="내용을 입력하세요"

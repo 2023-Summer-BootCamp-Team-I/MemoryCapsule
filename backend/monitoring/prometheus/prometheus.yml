@@ -21,9 +21,9 @@ scrape_configs:
     static_configs:
       - targets: ['backend:8080']
 
-#  - job_name: 'rabbitmq-exporter'
-#    static_configs:
-#      - targets: ['rabbitmq-exporter:9419']
+  - job_name: 'rabbitmq-exporter'
+    static_configs:
+      - targets: ['rabbitmq-exporter:9419']
 
 #  - job_name: 'mysqldb'
 #    static_configs:
