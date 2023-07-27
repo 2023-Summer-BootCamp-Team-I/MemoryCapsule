@@ -11,6 +11,6 @@ route:
 receivers:
 - name: 'slack-notifications'
   slack_configs:
-  - api_url: '${API_URL}'
+  - api_url: 'https://hooks.slack.com/services/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'
     channel: '#team-i'
     username: 'AlertManager For Team-I'

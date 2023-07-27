@@ -210,8 +210,6 @@ services:
 
 #  alertmanager:
 #    image: prom/alertmanager
-#    env_file:
-#      - ./backend/monitoring/.env
 #    volumes:
 #      - ./backend/monitoring/alertmanager.yml:/etc/alertmanager/alertmanager.yml
 #      - ./backend/monitoring/prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml # 이 줄 추가
@@ -221,23 +219,23 @@ services:
 #      - 9093:9093
 
 
-  influxdb:
-    image: influxdb:1.8
-    ports:
-      - "8086:8086"
-    environment:
-      - INFLUXDB_DB=k6
+#  influxdb:
+#    image: influxdb:1.8
+#    ports:
+#      - "8086:8086"
+#    environment:
+#      - INFLUXDB_DB=k6
 
-  k6:
-    image: grafana/k6:latest
-    platform: linux/amd64
-    ports:
-      - "6565:6565"
-    environment:
-      - K6_OUT=influxdb=http://influxdb:8086/k6
-    volumes:
-      - ./backend/monitoring/samples:/scripts
-    command: run /scripts/main.js
+#  k6:
+#    image: grafana/k6:latest
+#    platform: linux/amd64
+#    ports:
+#      - "6565:6565"
+#    environment:
+#      - K6_OUT=influxdb=http://influxdb:8086/k6
+#    volumes:
+#      - ./backend/monitoring/samples:/scripts
+#    command: run /scripts/main.js
 
   frontend:
     build:

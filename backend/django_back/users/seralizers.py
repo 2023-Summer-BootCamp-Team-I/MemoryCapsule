@@ -28,3 +28,4 @@ class UserForm(forms.Form):
 
         if User.objects.filter(nickname=nickname).exists():
             self.add_error('nickname', 'This nickname is already taken')
+
