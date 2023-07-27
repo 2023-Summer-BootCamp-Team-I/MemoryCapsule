@@ -5,10 +5,10 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains="memorycapsule.co.kr"
+domains=memorycapsule.co.kr
 rsa_key_size=4096
-data_path="../certbot"
-email="may1998@tukorea.ac.kr" # Adding a valid address is strongly recommended
+data_path="./backend/certbot"
+email="imk0980@gmail.com" # Adding a valid address is strongly recommended
 staging=1 # Set to 1 if you're testing your setup to avoid hitting request limits
 
 if [ -d "$data_path" ]; then
