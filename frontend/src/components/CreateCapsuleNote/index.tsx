@@ -64,18 +64,17 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
 
     //form data 생성
     const formData = new FormData();
-    formData.append('user_id', '1'); //보류
+    formData.append('jwt_token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiNzI3YTYwYjAtZGI4My00NGJjLWI4M2EtZGJlMTcwYzE1NjU2IiwiZXhwIjoxNjkwNDM2ODMxfQ._Tbge_R8bmvFYhvFMSEfitWoYLlH2yed8Qni7lIY9xY'); //보류
     formData.append('capsule_name', title);
-    formData.append('creator_id', '1'); // 보류
     formData.append('due_date', date);
-    formData.append('limit_count', '2'); // 보류
+    formData.append('limit_count', '15'); // 보류
     formData.append('theme_id', String(themeId));
     formData.append('capsule_password', passward);
     formData.append('img_file', file);
 
     // api 요청 보내기
     try {
-      const response = await axios.post('http://localhost:80/api/v1/capsules', formData, {
+      const response = await axios.post('/api/v1/capsules', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

@@ -1,11 +1,12 @@
-import { useState, ChangeEvent } from 'react';
+/* eslint-disable no-console */
+import { ChangeEvent, useState } from 'react';
 import pink from '../../assets/images/stickers/pink.png';
 import StoryInput from '../common/StoryInput';
 
 function StoryCreateContent() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [previousImage, setPreviousImage] = useState<string | null>(null);
-  const [title, setTitle] = useState<string>('');
+  // const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,12 +28,10 @@ function StoryCreateContent() {
   };
 
   const handleSubmitClick = () => {
-    if (!selectedImage || !title || !content) {
+    if (!selectedImage || !content) {
       alert('사진, 제목, 내용을 입력해주세요.');
       return;
     }
-    alert('업로드되었습니다.');
-    window.location.reload();
   };
 
   return (
@@ -84,7 +83,6 @@ function StoryCreateContent() {
       />
 
       <div className="max-w-sm p-4 mt-5 bg-white rounded-lg shadow-lg h-80 font-Omu">
-
         {/* <div className="pb-2 text-2xl break-words border-b border-gray-200">
           <input placeholder="제목을 입력하세요" className="w-full" maxLength={10} />
         </div> */}
