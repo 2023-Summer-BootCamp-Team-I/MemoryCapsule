@@ -15,4 +15,4 @@ venv
 migrations
 *.ini
 .DS_Store
-alertmanager.yml
+backend/monitoring/alertmanager.yml
