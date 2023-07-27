@@ -39,3 +39,18 @@ export type AxiosErrorResponseType = {
     };
   };
 };
+
+export type JoinUserType = {
+  img_file: string;
+  id: string;
+  password: string;
+  email: string;
+  phone_number: string;
+};
+
+export type CapsuleMateType = {
+  length: number;
+  user_id: string;
+  nickname: string;
+  user_img_url: string;
+};

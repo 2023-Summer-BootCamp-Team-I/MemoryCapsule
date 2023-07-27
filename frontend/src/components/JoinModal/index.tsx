@@ -2,6 +2,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 import noteImg3 from '../../assets/images/note/note3.png';
+import { AxiosErrorResponseType, JoinUserType } from '../../utils/types';
 import ImageUploadButton from '../ImageUploadButton';
 import TextInput from '../TextInput';
 
@@ -34,16 +35,28 @@ function JoinModal({ onClose }: ModalProps) {
     console.log('[JoinModal] file data: ', data);
   };
 
+  const isFormDataComplete = (data: JoinUserType) => {
+    return Object.values(data).every(
+      (value) => value !== null && value !== undefined && value !== ''
+    );
+  };
+
   const SignUpAPI = async () => {
     // eslint-disable-next-line no-console
     console.log('formData: ', formData);
+
+    if (!isFormDataComplete(formData)) {
+      alert('모든 값들을 입력해주세요!');
+      return;
+    }
+
     if (formData.password !== passwordV2) {
       alert('비밀번호가 다릅니다!');
       return;
     }
 
     try {
-      const response = await axios.post('http://localhost:80/api/v1/users/sign-up', formData, {
+      const response = await axios.post('/api/v1/users/sign-up', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -54,7 +67,12 @@ function JoinModal({ onClose }: ModalProps) {
       alert('회원가입이 완료되었습니다');
       onClose();
     } catch (error) {
-      console.error('API 요청 에러: ', error);
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 

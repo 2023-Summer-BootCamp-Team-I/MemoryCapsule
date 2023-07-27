@@ -19,7 +19,7 @@ export default function UnOpenedCapsulePage() {
         {capsule_id && <KakaoShare capsule_id={capsule_id} state={'unopened'} />}
       </div>
 
-      <StoryList />
+      <StoryList capsule_id={capsule_id} />
     </div>
   );
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useState } from 'react';
 import noteImg2 from '../../assets/images/note/note2.png';
 import SendLottie from '../SendLottie';
@@ -74,7 +75,7 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
 
     // api 요청 보내기
     try {
-      const response = await axios.post('http://localhost:8080/api/v1/capsules/', formData, {
+      const response = await axios.post('http://localhost:80/api/v1/capsules', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
