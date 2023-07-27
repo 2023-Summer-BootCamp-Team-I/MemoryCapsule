@@ -49,11 +49,13 @@ function ProfileButton({ capsule_id }: ProfileProps) {
     console.log('capsule_id: ', capsule_id);
 
     try {
-      await axios.get(`/api/v1/capsules/users?capsule_id=2&jwt_token=${token}`).then((response) => {
-        console.log('response.data: ', response.data);
-        setCapsuleMateHost(response.data.host_user);
-        setCapsuleMateMember(response.data.user);
-      });
+      await axios
+        .get(`/api/v1/capsules/users?capsule_id=${capsule_id}&jwt_token=${token}`)
+        .then((response) => {
+          console.log('response.data: ', response.data);
+          setCapsuleMateHost(response.data.host_user);
+          setCapsuleMateMember(response.data.user);
+        });
     } catch (error) {
       const axiosError = error as AxiosErrorResponseType;
       if (axiosError.response?.data.message) {

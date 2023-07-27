@@ -19,7 +19,7 @@ function CapsuleInfo({capsule_id} : CapsuleInfoProps) {
 
   const handleDelete = async () => { 
     try {
-      await axios.delete(`/api/v1/capsules/users?jwt_token=${token}&capsule_id=2`,
+      await axios.delete(`/api/v1/capsules/users?jwt_token=${token}&capsule_id=${capsule_id}`,
       ).then((response) => {
           console.log('response: ', response)
           alert(response.data.message)
@@ -72,7 +72,7 @@ function CapsuleInfo({capsule_id} : CapsuleInfoProps) {
     console.log('capsule_id: ', capsule_id);
     
     try {
-      await axios.get(`/api/v1/capsules/2?jwt_token=${token}`,
+      await axios.get(`/api/v1/capsules/${capsule_id}?jwt_token=${token}`,
       ).then((response) => {
           console.log('response: ', response)
           console.log('data: ', response.data.capsule_data)
@@ -156,7 +156,7 @@ function CapsuleInfo({capsule_id} : CapsuleInfoProps) {
 
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div className="mt-8 font-Omu">
-            <p className="mt-6 ml-12 mr-12 text-3xl">방장 : BBangJang</p>
+            <p className="mt-6 ml-12 mr-12 text-3xl">방장 : {capsuleData?.nickname}</p>
             {/* <p className="mt-6 ml-12 mr-12 text-3xl">인원 수 : {users.length}</p> */}
             <p className="mt-6 ml-12 mr-12 text-3xl">개봉 날짜 : {capsuleData?.due_date.slice(0, 10)}</p>
           </div>

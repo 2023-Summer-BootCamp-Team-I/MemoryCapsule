@@ -24,9 +24,10 @@ export type MyCapsuleListType = {
   capsule_id: number;
   capsule_img_url: string;
   capsule_name: string;
-  creator_id: string;
+  capsule_password: string;
   due_date: string;
   limit_count: number;
+  nickname: string;
   theme_id: number;
   created_at: string;
   updated_at: string;
