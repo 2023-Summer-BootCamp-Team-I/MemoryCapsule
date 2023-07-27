@@ -21,7 +21,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework.permissions import AllowAny
 from django.conf import settings
-from .views import *
+from django_back.views import *
 
 
 schema_view = get_schema_view(

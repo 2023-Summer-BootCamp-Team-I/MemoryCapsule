@@ -4,7 +4,7 @@ volumes:
 
   build_folder:
 
-services:
+services: 
   mysqldb:
     build: ./backend/db
     container_name: mysqldb
@@ -20,6 +20,8 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "mysqldb"]
       timeout: 20s
       retries: 10
+    networks:
+      - app-tier
 
 #  mysql_exporter:
 #    image: prom/mysqld-exporter
@@ -77,6 +79,9 @@ services:
     depends_on:
       mysqldb:
         condition: service_healthy
+    networks:
+      - app-tier
+
 
   rabbitmq:
     container_name: rabbitmq
@@ -97,6 +102,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - app-tier
 
 #  rabbitmq-exporter:
 #    depends_on:
@@ -168,6 +175,8 @@ services:
       - "mode=standalone"
     restart: always
     command: redis-server /usr/local/conf/redis.conf
+    networks:
+      - app-tier
 
 #  prometheus: # 프로메테우스 서비스 추가
 #    image: prom/prometheus
@@ -238,6 +247,8 @@ services:
     depends_on:
       - mysqldb
       - celery_worker
+    networks:
+      - app-tier
 
   nginx:
     image: nginx:1.15-alpine
@@ -258,7 +269,8 @@ services:
       - '80'
       - '443'
     command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
-    
+    networks:
+      - app-tier  
 
   certbot:
     image: certbot/certbot
@@ -284,3 +296,7 @@ services:
     tty: true
     environment:
       - npm_config_cache=/frontend/.npm/_cacache
+
+networks:
+  app-tier:
+    driver: bridge
