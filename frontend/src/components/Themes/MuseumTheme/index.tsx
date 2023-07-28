@@ -1,9 +1,14 @@
 import React, { useRef } from 'react';
 import MuseumBg from '../../../assets/images/MuseumBg.png';
 import MuseumAlbum from '../../../assets/images/MuseumAlbum.png';
-import story_dummy from '../../../assets/data/story_dummy';
+// import story_dummy from '../../../assets/data/story_dummy';
 
-function MuseumTheme() {
+import { StoryListType } from '../../../utils/types';
+interface ThemeProps {
+  openStory: StoryListType[];
+}
+
+function MuseumTheme({ openStory }: ThemeProps) {
   const scrollbarStyle = `
     .custom-scroll-container {
         width: 1000px;
@@ -66,7 +71,7 @@ function MuseumTheme() {
       <div className="custom-scroll-container" ref={customScrollRef} onWheel={handleScroll}>
         <div className="custom-scroll-content">
           <div style={{ display: 'flex', flexWrap: 'nowrap' }}>
-            {story_dummy.map((story, index) => (
+            {openStory.map((story, index) => (
               <div
                 key={index}
                 style={{
@@ -78,7 +83,7 @@ function MuseumTheme() {
                 }}
               >
                 <img
-                  src={story.img}
+                  src={story.story_url}
                   style={{ width: '100%', height: '270px', objectFit: 'cover' }}
                 />
                 <img
@@ -93,8 +98,8 @@ function MuseumTheme() {
                     transform: 'translateX(-50%)',
                   }}
                 />
-                <h3 className="font-Yeongdeok text-3xl mt-3 mb-2">{story.title}</h3>
-                <p className="font-Yeongdeok text-xl">{story.content}</p>
+                <h3 className="mt-3 mb-2 text-3xl font-Yeongdeok">{story.story_title}</h3>
+                <p className="text-xl font-Yeongdeok">{story.story_title}</p>
               </div>
             ))}
           </div>

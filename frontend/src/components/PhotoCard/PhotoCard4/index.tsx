@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
-
-interface StoryType {
-  img: string;
-  owner: string;
-  title: string;
-  content: string;
-}
+import { StoryListType } from '../../../utils/types';
 
 interface PhotoCardProps {
-  data: StoryType;
+  data: StoryListType;
 }
 
 function PhotoCard4({ data }: PhotoCardProps) {
@@ -33,8 +27,8 @@ function PhotoCard4({ data }: PhotoCardProps) {
   }`;
 
   return (
-    <div className="flex flex-col justify-end w-full h-full relative">
-      <div className="z-20 relative">
+    <div className="relative flex flex-col justify-end w-full h-full">
+      <div className="relative z-20">
         <div
           className={cardStyles}
           style={{
@@ -43,10 +37,10 @@ function PhotoCard4({ data }: PhotoCardProps) {
           onClick={handleClick}
         >
           <div className={circleStyles}></div>
-          <div className={imageStyles} style={{ backgroundImage: `url(${data.img})` }}></div>
+          <div className={imageStyles} style={{ backgroundImage: `url(${data.story_url})` }}></div>
           <div className={textStyles}>
-            <div className="border-b pb-4 text-xl">{data.title}</div>
-            <div className=" pt-4 text-lg">{data.content}</div>
+            <div className="pb-4 text-xl border-b">{data.story_title}</div>
+            <div className="pt-4 text-lg ">{data.story_title}</div>
           </div>
         </div>
       </div>
