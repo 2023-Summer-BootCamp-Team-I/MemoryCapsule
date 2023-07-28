@@ -82,14 +82,12 @@ def video_work(request, capsule_id):
             user_choice_url_list = []
             for story_id in user_choice_list:
                 story_image = Story.objects.get(pk=story_id).story_img_url
-                for i in range(2):
-                    user_choice_url_list.append(story_image)
+                user_choice_url_list.append(story_image)
+                #     for i in range(2):
             user_choice_url_list.sort()
 
             async_video_url = create_user_choice_video.delay(capsule.capsule_id, music.music_id, user_choice_url_list)
             video_url = async_video_url.wait()
-
-
 
             video = Video.objects.create(
                 creator=user,
