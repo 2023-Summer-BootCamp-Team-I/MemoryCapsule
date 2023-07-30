@@ -15,6 +15,7 @@ from api.message_api import send_normal_message
 from moviepy.editor import *
 import logging
 
+
 def make_video(capsule_id, video_number, image_urls, music_url):
     logger = logging.getLogger(__name__)
     s3_client = boto3.client('s3')
@@ -34,12 +35,31 @@ def make_video(capsule_id, video_number, image_urls, music_url):
         except Exception as e:
             logger.error(f"Failed to process image at {image_url}. Exception: {e}. Skipping...")
 
-    # Determine video dimensions
-    max_height = max(image.shape[0] for image in images)
-    max_width = max(image.shape[1] for image in images)
+    def add_padding(img, desired_width, desired_height):
+        old_height, old_width = img.shape[:2]
+        final_image = np.zeros((desired_height, desired_width, 3), np.uint8)
+        final_image.fill(255) # or whatever color you like
 
-    # Resize images to have the same dimensions
-    images_resized = [cv2.resize(image, (max_width, max_height), interpolation=cv2.INTER_LANCZOS4) for image in images]
+        x_offset = (desired_width - old_width) // 2
+        y_offset = (desired_height - old_height) // 2
+
+        final_image[y_offset:y_offset+old_height, x_offset:x_offset+old_width] = img
+        return final_image
+
+    # Define desired video dimensions
+    desired_height = 560
+    desired_width = 960
+
+    # Resize images to maintain aspect ratio and add padding if necessary
+    images_resized = []
+    for image in images:
+        old_height, old_width = image.shape[:2]
+        ratio = min(desired_width/old_width, desired_height/old_height)
+        new_width = int(old_width * ratio)
+        new_height = int(old_height * ratio)
+        resized_image = cv2.resize(image, (new_width, new_height), interpolation=cv2.INTER_LANCZOS4)
+        padded_image = add_padding(resized_image, desired_width, desired_height)
+        images_resized.append(padded_image)
 
     # Create video clips from images (2 seconds for each image)
     clips = [ImageClip(img, duration=2).set_duration(2).set_fps(0.5) for img in images_resized]
@@ -58,7 +78,7 @@ def make_video(capsule_id, video_number, image_urls, music_url):
     # Set audio of the video
     final_video = video.set_audio(final_audio)
     final_output = f'video-of-capsule{capsule_id}-no{video_number}.mp4'
-    final_video.write_videofile(final_output, codec='libx264', audio_codec='aac')
+    final_video.write_videofile(final_output, codec='mpeg4', audio_codec='aac')
 
     # Upload the final video to S3
     s3_client.upload_file(final_output, bucket_name, final_output)
