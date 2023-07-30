@@ -10,15 +10,10 @@ from videos.models import Video
 from capsules.models import *
 from musics.models import Music
 from celery import shared_task
-from datetime import datetime
-import pytz
 from django.utils import timezone
-import logging
 from api.message_api import send_normal_message
 from moviepy.editor import *
 import logging
-
-
 
 def make_video(capsule_id, video_number, image_urls, music_url):
     logger = logging.getLogger(__name__)
@@ -34,6 +29,7 @@ def make_video(capsule_id, video_number, image_urls, music_url):
             image_data = urllib.request.urlopen(image_url).read()
             image_array = np.asarray(bytearray(image_data), dtype=np.uint8)
             image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             images.append(image)
         except Exception as e:
             logger.error(f"Failed to process image at {image_url}. Exception: {e}. Skipping...")
@@ -42,55 +38,46 @@ def make_video(capsule_id, video_number, image_urls, music_url):
     max_height = max(image.shape[0] for image in images)
     max_width = max(image.shape[1] for image in images)
 
-    # Create video writer
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out_video = cv2.VideoWriter(output_video_key, fourcc, 0.5, (max_width, max_height))
+    # Resize images to have the same dimensions
+    images_resized = [cv2.resize(image, (max_width, max_height), interpolation=cv2.INTER_LANCZOS4) for image in images]
 
+    # Create video clips from images (2 seconds for each image)
+    clips = [ImageClip(img, duration=2).set_duration(2).set_fps(0.5) for img in images_resized]
+
+    # Concatenate video clips
+    video = concatenate_videoclips(clips)
+
+    # Download and process music
+    music_data = urllib.request.urlopen(music_url).read()
+    with open('music.mp3', 'wb') as f:
+        f.write(music_data)
+
+    audio = AudioFileClip('music.mp3')
+    final_audio = audio.subclip(0, video.duration)
+
+    # Set audio of the video
+    final_video = video.set_audio(final_audio)
+    final_output = f'video-of-capsule{capsule_id}-no{video_number}.mp4'
+    final_video.write_videofile(final_output, codec='libx264', audio_codec='aac')
+
+    # Upload the final video to S3
+    s3_client.upload_file(final_output, bucket_name, final_output)
+
+    # Delete temporary files
+    if os.path.exists('music.mp3'):
+        os.remove('music.mp3')
+    if os.path.exists(final_output):
+        os.remove(final_output)
+
+    logger.info(f'Video uploaded to: https://{bucket_name}.s3.ap-northeast-2.amazonaws.com/{final_output}')
     try:
-        # Write images to video
-        for idx, image in enumerate(images):
-            logger.info(f"Writing image {idx} to video")
-            resized_image = cv2.resize(image, (max_width, max_height), interpolation=cv2.INTER_LANCZOS4)
-            out_video.write(resized_image)
-
-        out_video.release()
-
-        # Download and process music
-        music_data = urllib.request.urlopen(music_url).read()
-        with open('music.mp3', 'wb') as f:
-            f.write(music_data)
-
-        video_clip = VideoFileClip(output_video_key)
-        audio_clip = AudioFileClip('music.mp3')
-
-        video_clip = video_clip.set_audio(audio_clip)
-
-        final_output = f'video-of-capsule{capsule_id}-no{video_number}.mp4'
-        video_duration = min(video_clip.duration, len(images) * 2)
-        video_clip = video_clip.subclip(0, video_duration)
-        final_clip = concatenate_videoclips([video_clip])
-        final_clip.write_videofile(final_output, codec='libx264', audio_codec='aac')
-
-        # Upload the final video to S3
-        s3_client.upload_file(final_output, bucket_name, final_output)
-
-        # Delete temporary files
-        if os.path.exists(output_video_key):
-            os.remove(output_video_key)
-        if os.path.exists('music.mp3'):
-            os.remove('music.mp3')
-        if os.path.exists(final_output):
-            os.remove(final_output)
-
-        logger.info(f'Video uploaded to: https://{bucket_name}.s3.ap-northeast-2.amazonaws.com/{final_output}')
         return f'https://{bucket_name}.s3.ap-northeast-2.amazonaws.com/{final_output}'
 
     finally:
-        if out_video.isOpened():
-            out_video.release()
-        cv2.destroyAllWindows()
         if os.path.exists(output_video_key):
             os.remove(output_video_key)
+        cv2.destroyAllWindows()
+
 
 def random_video_url_maker(capsule, stories):
     story_id_list = []
@@ -159,9 +146,9 @@ def default_video_maker(capsule_id, music_id):
 
     return video_url
 
+
 def user_choice_video_maker(capsule_id, music_id, user_choice_list):
     video_count = Video.objects.filter(capsule=capsule_id).count() + 1
     music = Music.objects.get(pk=music_id)
     music_url = music.music_url
     return make_video(capsule_id, video_count, user_choice_list, music_url)
-

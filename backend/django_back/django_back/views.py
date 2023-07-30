@@ -13,6 +13,7 @@ from core.uuid_decode import *
 from django.test import RequestFactory
 from django.core.files.uploadedfile import SimpleUploadedFile
 
+
 # /api/v1/test-data/
 @api_view(['GET'])
 def insert_test_data(request) -> json:
