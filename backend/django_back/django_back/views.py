@@ -9,6 +9,7 @@ from themes.models import *
 from users.models import *
 from capsules.views import *
 from users.views import *
+from stories.views import *
 from core.uuid_decode import *
 from django.test import RequestFactory
 from django.core.files.uploadedfile import SimpleUploadedFile
