@@ -16,3 +16,5 @@ migrations
 *.ini
 .DS_Store
 backend/monitoring/alertmanager.yml
+*.crt
+elk/logs
