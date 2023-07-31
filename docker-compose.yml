@@ -1,7 +1,6 @@
 version: "3.8"
 
 volumes:
-  mysql_data:
   build_folder:
   esdata:
     driver: local
@@ -20,7 +19,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - ./elk/logs/mysql_data:/var/lib/mysql/mysql
       - ./init/:/docker-entrypoint-initdb.d/
       - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
@@ -223,6 +222,7 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/django_back:/app
+      - ./elk/logs/gunicorn_data:/var/log
     depends_on:
       - mysqldb
       - celery_worker
@@ -240,7 +240,7 @@ services:
     volumes:
       - ./backend/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./backend/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./backend/elk/logs:/var/log/nginx
+      - ./elk/logs/nginx_data:/var/log/nginx
     depends_on:
       - backend
 

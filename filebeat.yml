@@ -3,30 +3,29 @@ filebeat.inputs:
     id: default-filestream
     paths:
       - ingest_data/*.log
-    scan_frequency: 5s
 
   - type: log
+    enabled: true
     paths:
-      - /var/lib/mysql/*.log
+      - elk/logs/mysql_data/*.log
     fields:
       log_type: mysql
-    scan_frequency: 5s
 
 
   - type: log
+    enabled: true
     paths:
-      - /var/log/nginx/*.log
+      - elk/logs/nginx_data/*.log
     fields:
       log_type: nginx
-    scan_frequency: 5s
 
 
   - type: log
+    enabled: true
     paths:
-      - /var/log/*.log
+      - elk/logs/gunicorn_data/*.log
     fields:
       log_type: gunicorn
-    scan_frequency: 5s
 
 
 
