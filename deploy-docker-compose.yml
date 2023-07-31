@@ -3,24 +3,25 @@ version: "3.8"
 volumes:
   build_folder: null
   mysql_data:
-
-services:
-  mysqldb:
-    build: ./backend/db
-    container_name: mysqldb
-    env_file:
-      - "./backend/db/.env"
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./init/:/docker-entrypoint-initdb.d/
-      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "mysqldb"]
-      timeout: 20s
-      retries: 10
-
+    
+services: 
+#  mysqldb:
+#    build: ./backend/db
+#    container_name: mysqldb
+#    env_file:
+#      - "./backend/db/.env"
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+#      - ./init/:/docker-entrypoint-initdb.d/
+#      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+#    healthcheck:
+#      test: ["CMD", "mysqladmin", "ping", "-h", "mysqldb"]
+#      timeout: 20s
+#      retries: 10
+#    networks:
+#      - app-tier
 
 #  mysql_exporter:
 #    image: prom/mysqld-exporter
@@ -76,10 +77,12 @@ services:
       - "8080:8080"
     volumes:
       - ./backend/django_back:/app
-    depends_on:
-      mysqldb:
-        condition: service_healthy
-    
+#    depends_on:
+#      mysqldb:
+#        condition: service_healthy
+    networks:
+      - app-tier
+
 
   rabbitmq:
     container_name: rabbitmq
@@ -100,7 +103,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-   
+    networks:
+      - app-tier
+
 #  rabbitmq-exporter:
 #    depends_on:
 #      rabbitmq:
@@ -135,6 +140,8 @@ services:
       - broker_connection_retry_on_startup=true
     command: sh -c "python wait_mysql.py &&
       celery -A django_back worker --loglevel=info"
+    networks:
+      - app-tier
 
 
 #  celery_beat:
@@ -171,6 +178,8 @@ services:
       - "mode=standalone"
     restart: always
     command: redis-server /usr/local/conf/redis.conf
+    networks:
+      - app-tier
 
   prometheus: # 프로메테우스 서비스 추가
     image: prom/prometheus
@@ -239,8 +248,10 @@ services:
     volumes:
       - ./backend/django_back:/app
     depends_on:
-      - mysqldb
+#      - mysqldb
       - celery_worker
+    networks:
+      - app-tier
 
   nginx:
     image: nginx:1.15-alpine
@@ -256,11 +267,13 @@ services:
       - build_folder:/var/www/frontend
     depends_on:
       - backend
-      - frontend
+#      - frontend
     expose:
       - '80'
       - '443'
     command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+    networks:
+      - app-tier  
 
   certbot:
     image: certbot/certbot
@@ -271,7 +284,7 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     depends_on:
       - nginx
-
+    
   frontend:
     container_name: frontend
     build:
@@ -288,3 +301,9 @@ services:
     tty: true
     environment:
       - npm_config_cache=/frontend/.npm/_cacache
+
+ 
+
+networks:
+  app-tier:
+    driver: bridge
