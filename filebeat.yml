@@ -4,28 +4,12 @@ filebeat.inputs:
     paths:
       - ingest_data/*.log
 
-  - type: log
+  - type: filestream
     enabled: true
     paths:
-      - elk/logs/mysql_data/*.log
-    fields:
-      log_type: mysql
-
-
-  - type: log
-    enabled: true
-    paths:
-      - elk/logs/nginx_data/*.log
+      - /var/log/nginx/*.log
     fields:
       log_type: nginx
-
-
-  - type: log
-    enabled: true
-    paths:
-      - elk/logs/gunicorn_data/*.log
-    fields:
-      log_type: gunicorn
 
 
 
@@ -42,9 +26,13 @@ setup.kibana:
   username: ${ELASTIC_USER}
   password: ${ELASTIC_PASSWORD}
 
-output.elasticsearch:
-  hosts: ${ELASTIC_HOSTS}
-  username: ${ELASTIC_USER}
-  password: ${ELASTIC_PASSWORD}
-  ssl.enabled: true
-  ssl.certificate_authorities: "certs/ca/ca.crt"
+output.logstash:
+  enabled: true
+  hosts: ["logstash:5044"]
+
+#output.elasticsearch:
+#  hosts: ${ELASTIC_HOSTS}
+#  username: ${ELASTIC_USER}
+#  password: ${ELASTIC_PASSWORD}
+#  ssl.enabled: true
+#  ssl.certificate_authorities: "certs/ca/ca.crt"

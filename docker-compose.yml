@@ -19,18 +19,14 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./elk/logs/mysql_data:/var/lib/mysql/mysql
+      - ./elk/logs/mysql_data:/var/var/log
       - ./init/:/docker-entrypoint-initdb.d/
       - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "mysqldb"]
       timeout: 20s
       retries: 10
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "5"
+    command: ["--general-log", "--general-log-file=/var/log/mysql.log"]
 
   backend:
     build:
@@ -63,11 +59,6 @@ services:
       mysqldb:
         condition: service_healthy
 
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "5"
 
   rabbitmq:
     container_name: rabbitmq
@@ -106,12 +97,6 @@ services:
     command: sh -c "python wait_mysql.py &&
       celery -A django_back worker --loglevel=info"
 
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "5"
-
 
 #  celery_beat:
 #   container_name: celery_beat
@@ -148,11 +133,6 @@ services:
     restart: always
     command: redis-server /usr/local/conf/redis.conf
 
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "5"
 #
 #  prometheus: # 프로메테우스 서비스 추가
 #    image: prom/prometheus
@@ -226,11 +206,6 @@ services:
     depends_on:
       - mysqldb
       - celery_worker
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "5"
 
   nginx:
     image: nginx:latest
@@ -244,11 +219,6 @@ services:
     depends_on:
       - backend
 
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "5"
 
   frontend:
     build:
@@ -261,11 +231,6 @@ services:
     ports:
       - "5173:5173"
     tty: true
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "5"
 
 #  alertmanager:
 #    image: prom/alertmanager
