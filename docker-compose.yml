@@ -5,11 +5,6 @@ volumes:
   esdata:
     driver: local
 
-networks:
-  default:
-    name: elastic
-    external: true
-
 services:
   mysqldb:
     build: ./backend/db
