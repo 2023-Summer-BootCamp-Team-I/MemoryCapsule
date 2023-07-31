@@ -35,7 +35,7 @@ services:
                python manage.py makemigrations users &&
                python manage.py migrate &&
                python manage.py makemigrations musics &&
-               python manage.py migrate &&
+               python manage.py migrate && 
                python manage.py makemigrations themes &&
                python manage.py migrate &&
                python manage.py makemigrations capsules &&
@@ -91,6 +91,10 @@ services:
       - broker_connection_retry_on_startup=true
     command: sh -c "python wait_mysql.py &&
       celery -A django_back worker --loglevel=info"
+    deploy:
+      resources:
+        limits:
+          memory: 10G
 
 
 #  celery_beat:
@@ -181,10 +185,10 @@ services:
 #    devices:
 #      - /dev/kmsg:/dev/kmsg
 
-  node-exporter:
-    image: prom/node-exporter:latest
-    ports:
-      - "9100:9100"
+#  node-exporter:
+#    image: prom/node-exporter:latest
+#    ports:
+#      - "9100:9100"
 
   gunicorn:
     image: gunicorn:latest
@@ -213,7 +217,6 @@ services:
       - ./elk/logs/nginx_data:/var/log/nginx
     depends_on:
       - backend
-
 
   frontend:
     build:
