@@ -1,3 +1,5 @@
+//StoryList
+
 /* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 
@@ -12,12 +14,7 @@ import StoryDetailContent from '../../StoryDetailContent';
 import ProfileButton from '../../ProfileButton';
 import CapsuleInfo from '../../CapsuleInfo';
 import story_dummy from '../../../assets/data/story_dummy';
-import {
-  StoryListType,
-  StoryListOneType,
-  AxiosErrorResponseType,
-  MyCapsuleListType,
-} from '../../../utils/types';
+import { StoryListType, StoryListOneType } from '../../../utils/types';
 import Checkbox from '../CheckBox';
 
 import axios from 'axios';
@@ -39,7 +36,6 @@ function StoryList({ capsule_id }: StoryListProps) {
 
   const token = useRecoilValue(TokenState);
   const [storyList, setStoryList] = useState<StoryListType[]>([]);
-  const [capsuleData, setCapsuleData] = useState<MyCapsuleListType>();
 
   const storyListAPI = async () => {
     try {
@@ -53,28 +49,9 @@ function StoryList({ capsule_id }: StoryListProps) {
       console.log(error);
     }
   };
-  const capsuleInfoAPI = async () => {
-    console.log('capsule_id: ', capsule_id);
-
-    try {
-      await axios.get(`/api/v1/capsules/${capsule_id}?jwt_token=${token}`).then((response) => {
-        console.log('response: ', response);
-        console.log('data: ', response.data.capsule_data);
-        setCapsuleData(response.data.capsule_data);
-      });
-    } catch (error) {
-      const axiosError = error as AxiosErrorResponseType;
-      if (axiosError.response?.data.message) {
-        alert(axiosError.response.data.message);
-      } else {
-        alert('An unknown error occurred.');
-      }
-    }
-  };
 
   useEffect(() => {
     storyListAPI(); //페이지에 처음 접속했을때 capsule 목록을 보여주기 위해
-    capsuleInfoAPI();
   }, []);
 
   useEffect(() => {
@@ -90,7 +67,7 @@ function StoryList({ capsule_id }: StoryListProps) {
       }
       .title {
         position: absolute;
-        width:190px;
+        width:130px;
         top: 60%;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -232,8 +209,8 @@ function StoryList({ capsule_id }: StoryListProps) {
               >
                 &#8203;
               </span>
-              <div className="inline-block overflow-hidden text-left align-bottom transition-all transform rounded-lg sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div className="relative">
+              <div className="w-full h-full inline-block overflow-hidden text-left align-bottom transition-all transform rounded-lg sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div className="relative w-full h-full bg-red-200">
                   <img src={note} className="w-full h-full" />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -241,7 +218,8 @@ function StoryList({ capsule_id }: StoryListProps) {
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
-                    className="absolute cursor-pointer w-7 h-7 right-5 top-7"
+                    // className="absolute cursor-pointer w-7 h-7 right-5 top-7"
+                    className="flex text-end absolute cursor-pointer w-7 h-7 right-5 top-7"
                     type="button"
                     onClick={handleCloseModal}
                   >
@@ -267,10 +245,10 @@ function StoryList({ capsule_id }: StoryListProps) {
     <div className="plus-button-wrapper">
       <div className="title-wrapper">
         <img src={titlemark} alt="Title Mark" />
-        <div className="flex title font-Omu">
-          {capsuleData?.capsule_name}
+        <div className="flex title justify-center">
+          <div>제</div>
           <div>
-            <CapsuleInfo capsule_id={capsule_id} />
+            <CapsuleInfo />
           </div>
         </div>
       </div>
@@ -278,8 +256,8 @@ function StoryList({ capsule_id }: StoryListProps) {
       <div className="flex justify-end">
         {/* 참여 유저 확인 모달 */}
         <div className="flex cursor-pointer">
-          <ProfileButton capsule_id={capsule_id} />
-          <span className="mt-1 ml-2 mr-5 font-Omu">mate</span>
+          <ProfileButton />
+          <span className="mt-1 ml-2 mr-5">3</span>
         </div>
 
         {/* 내 스토리만 보기 체크박스 */}

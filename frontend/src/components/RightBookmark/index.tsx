@@ -44,7 +44,7 @@ export default function RightBookmark({ activeBookmark, setActiveBookmark }: Rig
   }, [location.pathname]);
 
   return (
-    <>
+    <div className="absolute right-[25rem] bottom-[50rem]">
       <Bookmark
         markImage={blue_mark}
         alt="Blue Mark"
@@ -74,6 +74,6 @@ export default function RightBookmark({ activeBookmark, setActiveBookmark }: Rig
         svgPath="M12 4.5v15m7.5-7.5h-15"
         top="44"
       />
-    </>
+    </div>
   );
 }

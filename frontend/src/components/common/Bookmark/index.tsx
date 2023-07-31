@@ -22,10 +22,11 @@ export default function Bookmark({
   return (
     <div
       style={{ top: `${top}rem` }}
-      className={'absolute w-44 p-4 flex justify-end items-center ml-[81rem]'}
+      className={'absolute w-44 p-2 flex justify-end items-center ml-[15rem]'}
     >
       <div
-        className={`absolute h-20 hover:cursor-pointer ${activeState ? 'z-40' : 'z-30 hover:z-40'}`}
+        className={`h-20 hover:cursor-pointer ${activeState ? 'z-50' : 'z-30 hover:z-50'}`}
+        // ${activeState ? 'z-50' : 'z-30 hover:z-50'}
         onClick={() => {
           setActiveState();
         }}

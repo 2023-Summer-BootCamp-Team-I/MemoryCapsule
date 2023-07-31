@@ -51,15 +51,15 @@ function KakaoShare({ capsule_id, state }: KakaoProps) {
 
   return (
     <div
-      className="z-10 absolute bottom-0 mb-24 flex p-2 bg-[#FAE101] cursor-pointer w-20 font-Omu rounded-lg shadow-md"
+      className="flex justify-between p-2 px-4 z-10 absolute bottom-0 mb-24 flex bg-[#FAE101] cursor-pointer w-24 font-Omu rounded-lg shadow-md"
       onClick={shareKakao}
     >
       <img
         src="//dev.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png"
         alt="카카오톡 공유하기"
-        className="mr-1 w-7 h-7"
+        className="w-7 h-7"
       />
-      share
+      <div className="text-center pt-[0.1rem]">share</div>
     </div>
   );
 }
