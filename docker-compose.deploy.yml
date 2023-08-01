@@ -4,49 +4,6 @@ volumes:
   build_folder: null
 
 services:
-  mysqldb:
-    build: ./backend/db
-    container_name: mysqldb
-    env_file:
-      - "./backend/db/.env"
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./elk/logs/mysql_data:/var/var/log
-      - ./init/:/docker-entrypoint-initdb.d/
-      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "mysqldb"]
-      timeout: 20s
-      retries: 10
-    command: ["--general-log", "--general-log-file=/var/log/mysql.log"]
-
-#  mysql_exporter:
-#    image: prom/mysqld-exporter
-#    container_name: mysql_exporter
-#    volumes:
-#      - ./mysql_exporter/my.cnf:/root/.my.cnf
-#    command:
-#      - '--collect.global_status'
-#      - '--collect.info_schema.innodb_metrics'
-#      - '--collect.auto_increment.columns'
-#      - '--collect.info_schema.processlist'
-#      - '--collect.binlog_size'
-#      - '--collect.info_schema.tablestats'
-#      - '--collect.global_variables'
-#      - '--collect.info_schema.query_response_time'
-#      - '--collect.info_schema.userstats'
-#      - '--collect.info_schema.tables'
-#      - '--collect.perf_schema.tablelocks'
-#      - '--collect.perf_schema.file_events'
-#      - '--collect.perf_schema.eventswaits'
-#      - '--collect.perf_schema.indexiowaits'
-#      - '--collect.perf_schema.tableiowaits'
-#    ports:
-#      - 9104:9104
-#    depends_on:
-#      - mysqldb
-
   backend:
     build:
       context: ./backend/django_back/
@@ -60,7 +17,7 @@ services:
                python manage.py makemigrations users &&
                python manage.py migrate &&
                python manage.py makemigrations musics &&
-               python manage.py migrate && 
+               python manage.py migrate &&
                python manage.py makemigrations themes &&
                python manage.py migrate &&
                python manage.py makemigrations capsules &&
@@ -75,10 +32,9 @@ services:
       - "8080:8080"
     volumes:
       - ./backend/django_back:/app
-    depends_on:
-      mysqldb:
-        condition: service_healthy
-    
+#    depends_on:
+#      mysqldb:
+#        condition: service_healthy
 
 
   rabbitmq:
@@ -135,10 +91,22 @@ services:
       - broker_connection_retry_on_startup=true
     command: sh -c "python wait_mysql.py &&
       celery -A django_back worker --loglevel=info"
-    deploy:
-      resources:
-        limits:
-          memory: 10G
+
+
+#  celery_beat:
+#   container_name: celery_beat
+#   build-i: ./backend/django_back/
+#   volumes:
+#     - ./backend/django_back:/backend
+#   ports: [ ]
+#   depends_on:
+#     rabbitmq:
+#     -  condition: service_healthy
+#   environment:
+#     - C_FORCE_ROOT=true
+#     - TZ=Asia/Seoul
+#   command: sh -c "python wait_mysql.py &&
+#     celery -A django_back beat --loglevel=info"
 
   redis_container:
     image: redis:latest
@@ -193,6 +161,7 @@ services:
       - cadvisor
       - node-exporter
 
+
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.47.0
     container_name: cadvisor
@@ -225,9 +194,8 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/django_back:/app
-      - ./elk/logs/gunicorn_data:/var/log
     depends_on:
-      - mysqldb
+#      - mysqldb
       - celery_worker
 
   nginx:
@@ -238,14 +206,13 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./backend/nginx/nginx_develop.conf:/etc/nginx/nginx.conf
-      - ./backend/certbot/conf:/etc/letsencrypt
-      - ./backend/certbot/www:/var/www/certbot
+      - ./backend/nginx/nginx_deploy.conf:/etc/nginx/nginx.conf
+      - /certbot/conf:/etc/letsencrypt:ro
+      - /certbot/www:/var/www/certbot:ro
       - build_folder:/var/www/frontend
     depends_on:
       - backend
       - frontend
-      - gunicorn
     expose:
       - '80'
       - '443'
@@ -255,12 +222,12 @@ services:
     image: certbot/certbot
     restart: unless-stopped
     volumes:
-      - ./backend/certbot/conf:/etc/letsencrypt
-      - ./backend/certbot/www:/var/www/certbot
+      - /certbot/conf:/etc/letsencrypt:ro
+      - /certbot/www:/var/www/certbot:ro
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     depends_on:
       - nginx
-
+    
   frontend:
     container_name: frontend
     build:
@@ -277,34 +244,5 @@ services:
     tty: true
     environment:
       - npm_config_cache=/frontend/.npm/_cacache
-
-#  alertmanager:
-#    image: prom/alertmanager
-#    volumes:
-#      - ./backend/monitoring/alertmanager.yml:/etc/alertmanager/alertmanager.yml
-#      - ./backend/monitoring/prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml # 이 줄 추가
-#    command:
-#      - '--config.file=/etc/alertmanager/alertmanager.yml'
-#    ports:
-#      - 9093:9093
-
-
-#  influxdb:
-#    image: influxdb:1.8
-#    ports:
-#      - "8086:8086"
-#    environment:
-#      - INFLUXDB_DB=k6
-
-#  k6:
-#    image: grafana/k6:latest
-#    platform: linux/amd64
-#    ports:
-#      - "6565:6565"
-#    environment:
-#      - K6_OUT=influxdb=http://influxdb:8086/k6
-#    volumes:
-#      - ./backend/monitoring/samples:/scripts
-#    command: run /scripts/main.js
 
 

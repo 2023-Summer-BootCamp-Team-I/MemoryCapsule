@@ -17,7 +17,6 @@ export default function UnOpenedCapsulePage() {
 
   return (
     <div>
-      <StoryModal title="Create" content="create" /> */}
       {capsule_id && <KakaoShare capsule_id={capsule_id} state={'unopened'} />}
 
       <StoryList capsule_id={capsule_id} />

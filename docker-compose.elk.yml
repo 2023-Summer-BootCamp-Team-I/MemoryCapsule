@@ -5,6 +5,9 @@
 
 version: '3.7'
 
+volumes:
+  elasticsearch_data:
+
 services:
   elasticsearch:
     build:
@@ -13,7 +16,7 @@ services:
         ELASTIC_VERSION: 8.5.2
     volumes:
       - ./elk/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
-      - elasticsearch:/usr/share/elasticsearch/data:Z
+      - elasticsearch_data:/usr/share/elasticsearch/data:Z
     ports:
       - 9200:9200
       - 9300:9300
@@ -77,6 +80,3 @@ services:
       - logstash
       - elasticsearch
       - kibana
-
-volumes:
-  elasticsearch:
