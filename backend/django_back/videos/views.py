@@ -83,22 +83,9 @@ def video_work(request, capsule_id):
                 story_image = Story.objects.get(pk=story_id).story_img_url
                 user_choice_url_list.append(story_image)
 
-            async_video_url = create_user_choice_video.delay(capsule.capsule_id, music.music_id, user_choice_url_list)
+            async_video_url = create_user_choice_video.delay(capsule.capsule_id, music.music_id, user_choice_url_list, user.user_id)
             video_url = async_video_url.wait()
-
-            video = Video.objects.create(
-                creator=user,
-                capsule=capsule,
-                music=music,
-                story_video_url=video_url
-            )
-
-            # story_video 테이블 생성용
-            for story_id in user_choice_list:
-                StoryVideo.objects.create(
-                    story=Story.objects.get(pk=story_id),
-                    video=video
-                )
+            video = Video.objects.get(story_video_url=video_url)
 
             return JsonResponse({
                 'code': 201,

@@ -6,6 +6,7 @@ import boto3
 import os
 import random
 from stories.models import Story
+from users.models import User
 from videos.models import Video
 from capsules.models import *
 from musics.models import Music
@@ -16,7 +17,7 @@ from moviepy.editor import *
 import logging
 
 
-def make_video(capsule_id, video_number, image_urls, music_url):
+def make_video(capsule_id, video_number, image_urls, music_url, user_id):
     logger = logging.getLogger(__name__)
     s3_client = boto3.client('s3')
     bucket_name = 'memory-capsule'
@@ -90,8 +91,22 @@ def make_video(capsule_id, video_number, image_urls, music_url):
         os.remove(final_output)
 
     logger.info(f'Video uploaded to: https://{bucket_name}.s3.ap-northeast-2.amazonaws.com/{final_output}')
+
+    video_url_result = f'https://{bucket_name}.s3.ap-northeast-2.amazonaws.com/{final_output}'
+
     try:
-        return f'https://{bucket_name}.s3.ap-northeast-2.amazonaws.com/{final_output}'
+        user = User.objects.get(pk=user_id)
+        capsule = Capsule.objects.get(pk=capsule_id)
+        music = Music.objects.get(music_url=music_url)
+
+        Video.objects.create(
+            creator=user,
+            capsule=capsule,
+            music=music,
+            story_video_url=video_url_result
+        )
+
+        return video_url_result
 
     finally:
         if os.path.exists(output_video_key):
@@ -152,7 +167,8 @@ def default_video_maker(capsule_id, music_id):
         # 로그 남기기
         logger.info(f'Video creation complete for capsule {capsule_id} at {timezone.now()}')
 
-        video_url = make_video(capsule_id, video_count, video_image_url_list_final, music_url)  # 회원 아이디, 회원 비디오 개수,
+        creator_id = capsule.creator.user_id
+        video_url = make_video(capsule_id, video_count, video_image_url_list_final, music_url, creator_id)  # 회원 아이디, 회원 비디오 개수,
         # s3 업로드 용 함수
 
     # 일반 메세지 전송
@@ -167,8 +183,8 @@ def default_video_maker(capsule_id, music_id):
     return video_url
 
 
-def user_choice_video_maker(capsule_id, music_id, user_choice_list):
+def user_choice_video_maker(capsule_id, music_id, user_choice_list, user_id):
     video_count = Video.objects.filter(capsule=capsule_id).count() + 1
     music = Music.objects.get(pk=music_id)
     music_url = music.music_url
-    return make_video(capsule_id, video_count, user_choice_list, music_url)
+    return make_video(capsule_id, video_count, user_choice_list, music_url, user_id)
