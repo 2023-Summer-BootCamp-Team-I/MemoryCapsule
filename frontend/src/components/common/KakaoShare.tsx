@@ -32,8 +32,8 @@ function KakaoShare({ capsule_id, state }: KakaoProps) {
         description: '같이 와서 추억을 공유해봐요!',
         imageUrl: 'https://cdn.pixabay.com/photo/2014/08/24/02/05/time-425818_1280.jpg', // 공유할 이미지 URL
         link: {
-          mobileWebUrl: `http://localhost:5173/${state}/${capsule_id}`, // 모바일에서 연결될 링크
-          webUrl: `http://localhost:5173/${state}/${capsule_id}`, // PC에서 연결될 링크
+          mobileWebUrl: `http://localhost/${state}/${capsule_id}`, // 모바일에서 연결될 링크
+          webUrl: `http://localhost/${state}/${capsule_id}`, // PC에서 연결될 링크
         },
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

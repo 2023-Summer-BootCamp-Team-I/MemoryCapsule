@@ -70,8 +70,8 @@ function AppRoutes() {
       <Route path="/unopened/:capsule_id" element={loggedIn ? <UnOpenedCapsulePage /> : null} />
 
       <Route path="/opened/:capsule_id" element={<OpenedCapsulePage />} />
-      <Route path="/story" element={loggedIn ? <OpenedStoryPage /> : null} />
-      <Route path="/video" element={loggedIn ? <OpenedVideoPage /> : null} />
+      <Route path="/opened/story/:capsule_id" element={loggedIn ? <OpenedStoryPage /> : null} />
+      <Route path="/opened/video/:capsule_id" element={loggedIn ? <OpenedVideoPage /> : null} />
     </Routes>
   );
 }

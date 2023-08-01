@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import KakaoShare from '../components/common/KakaoShare';
@@ -17,7 +18,9 @@ export default function UnOpenedCapsulePage() {
 
   return (
     <div>
-      {capsule_id && <KakaoShare capsule_id={capsule_id} state={'unopened'} />}
+      <div className="absolute bottom-[28rem]">
+        {capsule_id && <KakaoShare capsule_id={capsule_id} state={'unopened'} />}
+      </div>
 
       <StoryList capsule_id={capsule_id} />
     </div>
