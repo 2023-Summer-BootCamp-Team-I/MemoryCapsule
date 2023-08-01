@@ -1,7 +1,7 @@
 import http from "k6/http";
 import { check } from "k6";
 import { sleep } from 'k6';
-export let options = {
+export let options = { 2sa
     stages: [
         // Ramp-up from 1 to 30 VUs in 30s
         { duration: "30s", target: 30 },
