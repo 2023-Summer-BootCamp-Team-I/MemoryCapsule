@@ -49,8 +49,12 @@ function StoryList({ capsule_id }: StoryListProps) {
         setStoryList(response.data.story_list);
       });
     } catch (error) {
-      console.log('api 불러오기 실패');
-      console.log(error);
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
   const capsuleInfoAPI = async () => {
@@ -286,7 +290,7 @@ function StoryList({ capsule_id }: StoryListProps) {
         <Checkbox checked={checked} onChecked={handleCheckedChange} />
       </div>
 
-      <hr className="my-4 border-gray-200" />
+      <hr className="my-4 border-gray-200 w-[rem]" />
 
       <div className="custom-scroll-container">
         <div className="custom-scroll-content">

@@ -34,7 +34,7 @@ function Background({ children }: ChildrenProps) {
       <div className="absolute left-1/2 transform -translate-x-1/2 h-[47rem] w-[80rem] bg-white rounded-[1.875rem] flex justify-center items-center z-30 shadow-lg" />
 
       {location.pathname !== '/' && loggedIn === true && (
-        <div className="absolute top-[4rem] z-50 right-[9rem]">
+        <div className="absolute top-[4rem] z-40 right-[9rem]">
           <Header />
         </div>
       )}
