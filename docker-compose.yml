@@ -245,6 +245,7 @@ services:
     depends_on:
       - backend
       - frontend
+      - gunicorn
     expose:
       - '80'
       - '443'
