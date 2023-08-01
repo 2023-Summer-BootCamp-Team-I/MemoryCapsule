@@ -47,8 +47,8 @@ def make_video(capsule_id, video_number, image_urls, music_url):
         return final_image
 
     # Define desired video dimensions
-    desired_height = 560
-    desired_width = 960
+    desired_width = 1920
+    desired_height = 1080
 
     # Resize images to maintain aspect ratio and add padding if necessary
     images_resized = []
