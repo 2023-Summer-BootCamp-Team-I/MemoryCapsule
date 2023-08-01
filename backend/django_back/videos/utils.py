@@ -78,7 +78,7 @@ def make_video(capsule_id, video_number, image_urls, music_url):
     # Set audio of the video
     final_video = video.set_audio(final_audio)
     final_output = f'video-of-capsule{capsule_id}-no{video_number}.mp4'
-    final_video.write_videofile(final_output, codec='mpeg4', audio_codec='aac')
+    final_video.write_videofile(final_output, codec='libx264', audio_codec='aac')
 
     # Upload the final video to S3
     s3_client.upload_file(final_output, bucket_name, final_output)

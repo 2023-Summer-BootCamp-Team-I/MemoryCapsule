@@ -61,7 +61,7 @@ function JoinModal({ onClose }: ModalProps) {
 
     try {
       const response = await axios.post(
-        'https://memorycapsule.co.kr/api/v1/users/sign-up',
+        '/api/v1/users/sign-up',
         formData,
         {
           // const response = await axios.post('/api/v1/users/sign-up', formData, {

@@ -21,11 +21,11 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 def insert_test_data(request) -> json:
     # 기존 데이터 전부 삭제
     Music.objects.all().delete()
-    Capsule.objects.all().delete()
     Theme.objects.all().delete()
-    Story.objects.all().delete()
-    User.objects.all().delete()
-    UserCapsule.objects.all().delete()
+    # Capsule.objects.all().delete()
+    # Story.objects.all().delete()
+    # User.objects.all().delete()
+    # UserCapsule.objects.all().delete()
 
     # Music 데이터 리스트 생성
     music_url = 'https://memory-capsule.s3.ap-northeast-2.amazonaws.com/music-no1.mp3'
