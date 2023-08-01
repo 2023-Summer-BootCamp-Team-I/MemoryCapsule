@@ -1,14 +1,15 @@
+import { useState } from 'react';
+import axios from 'axios';
+import { useSetRecoilState } from 'recoil';
+import { TokenState, UesrDataState } from '../../utils/Recoil';
+import { AxiosErrorResponseType } from '../../utils/types';
+
 import TextInput from '../../components/TextInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquareCheck } from '@fortawesome/free-regular-svg-icons';
 
 import blueImg1 from '../../assets/images/stickers/blue.png';
 import blueImg2 from '../../assets/images/stickers/blue2.png';
-import { useState } from 'react';
-import axios from 'axios';
-import { useSetRecoilState } from 'recoil';
-import { TokenState, UesrDataState } from '../../utils/Recoil';
-
 interface LoginProps {
   onSignUp: () => void;
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -30,11 +31,16 @@ function Login({ onSignUp, handleClick }: LoginProps) {
 
   const LoginAPI = async () => {
     try {
-      const response = await axios.post('https://memorycapsule.co.kr/api/v1/users/sign-in', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.post(
+        'https://memorycapsule.co.kr/api/v1/users/sign-in',
+        formData,
+        {
+          // const response = await axios.post('/api/v1/users/sign-in', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
       // eslint-disable-next-line no-console
       console.log('response: ', response);
       setToken(response.data.jwt_token);
@@ -42,8 +48,12 @@ function Login({ onSignUp, handleClick }: LoginProps) {
 
       handleClick();
     } catch (error) {
-      console.error('API 요청 에러: ', error);
-      alert(error + '로그인 정보가 일치하지 않습니다.');
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 

@@ -1,15 +1,60 @@
+//MainUnOpenedPage
+
+/* eslint-disable no-console */
 import { useNavigate } from 'react-router-dom';
 import HighLight from '../components/common/HightLight';
 import UnopenCapsule from '../components/MainUnopenCapsule/UnopenCapsule';
 
-import unopen_join_capsule from '../assets/data/unopen_join_capsule';
-import unopen_my_capsule from '../assets/data/unopen_my_capsule';
+// import unopen_join_capsule from '../assets/data/unopen_join_capsule';
+// import unopen_my_capsule from '../assets/data/unopen_my_capsule';
+import axios from 'axios';
+
+import { useRecoilValue } from 'recoil';
+import { TokenState } from '../utils/Recoil';
+import { useEffect, useState } from 'react';
+import { MyCapsuleListType } from '../utils/types';
 
 function MainUnOpenedPage() {
   const navigate = useNavigate();
-  const unopenMyCapsules = unopen_my_capsule();
-  const unopenJoinCapsules = unopen_join_capsule();
+  // const unopenMyCapsules = unopen_my_capsule();
+  // const unopenJoinCapsules = unopen_join_capsule();
   const is_open = false;
+  const token = useRecoilValue(TokenState);
+  const [myCapsule, setMyCapsule] = useState<MyCapsuleListType[]>([]);
+  const [joinCapsule, setJoinCapsule] = useState<MyCapsuleListType[]>([]);
+
+  const capsuleListAPI = async (is_open: boolean) => {
+    try {
+      await axios
+        .get(
+          `http://localhost:8080/api/v1/capsules?count=5&is_open=${is_open}&jwt_token=${token}`,
+          {
+            headers: {
+              Accept: 'application/json',
+            },
+          }
+        )
+        .then((response) => {
+          console.log('response: ', response);
+          console.log('response.data.my_capsule_list: ', response.data.my_capsule_list);
+          setMyCapsule(response.data.my_capsule_list);
+          setJoinCapsule(response.data.capsule_list);
+          // if (is_open === true) {
+          //   setMyCapsule(response.data.my_capsule_list);
+          //   setJoinCapsule(response.data.capsule_list);
+          // } else {
+          //   setJoinCapsule(response.data.capsule_list);
+          // }
+        });
+    } catch (error) {
+      console.log('api 불러오기 실패');
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    capsuleListAPI(is_open);
+  }, []);
 
   return (
     <div className="h-[42rem] w-[75rem] font-Omu grid grid-rows-2 grid-flow-row-dense">
@@ -20,10 +65,10 @@ function MainUnOpenedPage() {
             <HighLight color="blue" title="내가 만든 캡슐" />
           </div>
           <div className="flex flex-row space-x-[5rem] ml-[0.7rem]">
-            {unopenMyCapsules.slice(0, 5).map((capsule) => (
+            {myCapsule.map((capsule) => (
               <div
-                key={capsule.id}
-                onClick={() => navigate(`/unopened/${capsule.id}`)}
+                key={capsule.capsule_id}
+                onClick={() => navigate(`/unopened/${capsule.capsule_id}`)}
                 className="hover:cursor-pointer"
               >
                 <UnopenCapsule capsule={capsule} />
@@ -56,10 +101,10 @@ function MainUnOpenedPage() {
             <HighLight color="blue" title="내가 참여한 캡슐" />
           </div>
           <div className="flex flex-row space-x-[5rem] ml-[0.7rem]">
-            {unopenJoinCapsules.slice(0, 5).map((capsule) => (
+            {joinCapsule.map((capsule) => (
               <div
-                key={capsule.id}
-                onClick={() => navigate(`/unopened/${capsule.id}`)}
+                key={capsule.capsule_id}
+                onClick={() => navigate(`/unopened/${capsule.capsule_id}`)}
                 className="hover:cursor-pointer"
               >
                 <UnopenCapsule capsule={capsule} />

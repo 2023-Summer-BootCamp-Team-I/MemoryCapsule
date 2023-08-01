@@ -1,8 +1,11 @@
+/* eslint-disable no-console */
 // PasswordModal.js
 
+import axios from 'axios';
 import { useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { loggedInState } from '../../../utils/Recoil';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { loggedInState, TokenState } from '../../../utils/Recoil';
+import { AxiosErrorResponseType } from '../../../utils/types';
 
 interface PasswordModalProps {
   capsuleId: string;
@@ -11,25 +14,44 @@ interface PasswordModalProps {
 
 export default function PasswordModal({ capsuleId, closeModal }: PasswordModalProps) {
   const [password, setPassword] = useState('');
-  const password_answer = '1234';
-  const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
+  const setLoggedIn = useSetRecoilState(loggedInState);
+  const token = useRecoilValue(TokenState);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // eslint-disable-next-line no-console
     console.log(`Capsule ID: ${capsuleId}, Password: ${password}`);
+    const formData = new FormData();
+    formData.append('jwt_token', token);
+    formData.append('capsule_password', password);
 
-    // 비밀번호 확인 로직 추가
-    if (password === password_answer) {
-      // 비밀번호가 올바를 경우 세션 스토리지 clear
-      setLoggedIn(true);
-      // eslint-disable-next-line no-console
-      console.log('isLoggedIn: ', loggedIn);
+    try {
+      await axios
+        .post('http://localhost:80/api/v1/capsules/users', {
+          jwt_token: token,
+          capsule_id: Number(capsuleId),
+          capsule_password: password,
+        })
+        .then((response) => {
+          // eslint-disable-next-line no-console
+          console.log(response);
 
-      alert('로그인 성공하였습니다!');
-    } else {
-      // 비밀번호가 틀렸을 경우 처리 (예: 에러 메시지 표시)
-      alert('비밀번호가 틀렸습니다!');
+          setLoggedIn(true);
+          alert(response.data.message);
+        });
+    } catch (error) {
+      console.log(error);
+
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        if (axiosError.response?.data.message === '이미 캡슐에 포함된 유저입니다.') {
+          setLoggedIn(true);
+        } else {
+          alert(axiosError.response.data.message);
+        }
+      } else {
+        alert('An unknown error occurred.');
+      }
       setPassword('');
     }
   };

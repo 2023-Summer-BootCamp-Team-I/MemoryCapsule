@@ -1,25 +1,52 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import pink from '../../assets/images/stickers/pink.png';
+import { StoryListOneType } from '../../utils/types';
+import axios from 'axios';
+import { useRecoilValue } from 'recoil';
+import { TokenState } from '../../utils/Recoil';
 
 interface DetailProps {
-  title: string | undefined;
-  img: string | undefined;
-  content: string | undefined;
+  story_data: StoryListOneType | undefined;
 }
 
-function StoryDetailContent({ title, img, content }: DetailProps) {
+function StoryDetailContent({ story_data }: DetailProps) {
   const navigate = useNavigate();
-
+  const token = useRecoilValue(TokenState);
   const [editMode, setEditMode] = useState(false);
-  const [editTitle, setEditTitle] = useState(title);
-  const [editContent, setEditContent] = useState(content);
-  const [editImage, setEditImage] = useState(img);
+  const [editTitle, setEditTitle] = useState(String(story_data && story_data.story_title));
+  const [editContent, setEditContent] = useState(String(story_data && story_data.story_content));
+  const [editImage, setEditImage] = useState(String(story_data && story_data.story_img_url));
+  const [selectedImage, setSelectedImage] = useState('');
+
+  const editStoryApi = async () => {
+    const formData = new FormData();
+
+    formData.append('jwt_token', token);
+    formData.append('story_title', editTitle);
+    formData.append('story_content', editContent);
+    formData.append('filename', editImage);
+
+    try {
+      await axios
+        .put(`/api/v1/stories/${story_data?.capsule_id}/${story_data?.story_id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          alert('수정이 완료되었습니다.');
+        });
+    } catch (error) {
+      console.error('에러 발생: ', error);
+    }
+  };
 
   const handleEdit = () => {
     setEditMode(!editMode);
     if (editMode) {
-      alert('수정이 완료되었습니다.');
+      editStoryApi();
     }
   };
 
@@ -32,15 +59,23 @@ function StoryDetailContent({ title, img, content }: DetailProps) {
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const newImage = event.target?.result as string;
-        setEditImage(newImage);
-      };
-      reader.readAsDataURL(file);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const file: any = e.target.files instanceof FileList ? e.target.files[0] : null;
+
+      // const reader = new FileReader();
+      // reader.onload = (event) => {
+      //   const newImage = event.target?.result as string;
+      //   console.log(newImage);
+      //   setEditImage(newImage);
+      // };
+      setEditImage(file);
+      setSelectedImage(URL.createObjectURL(file));
+      console.log(file);
+      console.log(URL.createObjectURL(file));
+
+      // reader.readAsDataURL(file);
     }
   };
 
@@ -53,7 +88,7 @@ function StoryDetailContent({ title, img, content }: DetailProps) {
           <div>
             <label htmlFor="image-input">
               <img
-                src={editImage}
+                src={selectedImage}
                 className="object-cover w-full h-full cursor-pointer"
                 alt="Story Image"
               />

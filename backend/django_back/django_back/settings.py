@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import environ
 import datetime
-
+import logging
 env = environ.Env()
 env.read_env()
 import os
@@ -201,11 +201,15 @@ CELERY_TIMEZONE = 'Asia/Seoul'
 CELERY_TASK_REVOKE = True
 CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 
+CELERYD_HIJACK_ROOT_LOGGER = False
+CELERYD_REDIRECT_STDOUTS = False
+
 DATA_UPLOAD_MAX_MEMORY_SIZE = int(1e10)
 
 CELERY_FLOWER_USER = 'root'  # Flower 웹 인터페이스 사용자 이름
 CELERY_FLOWER_PASSWORD = 'root'  # Flower 웹 인터페이스 비밀번호
 
+logging.basicConfig(level=logging.DEBUG)
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',

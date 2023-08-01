@@ -1,9 +1,13 @@
+/* eslint-disable no-console */
 import React, { useState } from 'react';
 import noteImg2 from '../../assets/images/note/note2.png';
 import SendLottie from '../SendLottie';
 import ReactDatePicker from '../ReactDatePicker';
 import ImageUploadButton from '../ImageUploadButton';
 import axios from 'axios';
+
+import { useRecoilValue } from 'recoil';
+import { TokenState } from '../../utils/Recoil';
 
 interface CreateCapsuleNoteProps {
   onButtonClick: () => void;
@@ -12,6 +16,8 @@ interface CreateCapsuleNoteProps {
 }
 
 function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleNoteProps) {
+  const token = useRecoilValue(TokenState);
+
   // const [responseCapsule, setResponseCapsule] = useState('');
   const getCurrentDateTime = () => {
     const now = new Date();
@@ -63,18 +69,17 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
 
     //form data 생성
     const formData = new FormData();
-    formData.append('user_id', '1'); //보류
+    formData.append('jwt_token', token); //보류
     formData.append('capsule_name', title);
-    formData.append('creator_id', '1'); // 보류
     formData.append('due_date', date);
-    formData.append('limit_count', '2'); // 보류
+    formData.append('limit_count', '15'); // 보류
     formData.append('theme_id', String(themeId));
     formData.append('capsule_password', passward);
     formData.append('img_file', file);
 
     // api 요청 보내기
     try {
-      const response = await axios.post('http://localhost:8080/api/v1/capsules/', formData, {
+      const response = await axios.post('/api/v1/capsules', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

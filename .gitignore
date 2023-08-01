@@ -18,3 +18,6 @@ migrations
 *.key
 *.pem
 backend/certbot/*
+backend/monitoring/alertmanager.yml
+*.crt
+elk/logs

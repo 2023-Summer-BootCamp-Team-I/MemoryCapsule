@@ -17,17 +17,20 @@ import OpenedVideoPage from './pages/OpenedVideoPage'; // 개봉 비디오 페�
 import Background from './components/common/Background';
 
 import { RecoilRoot, useRecoilValue } from 'recoil';
-import { loggedInState } from './utils/Recoil';
+import { loggedInState, loggingOutState } from './utils/Recoil';
 
 function AppRoutes() {
   const navigate = useNavigate();
   const location = useLocation();
   const loggedIn = useRecoilValue(loggedInState);
+  const loggingOut = useRecoilValue(loggingOutState);
 
   const isFirstRender = useRef(true);
 
   // 로그인 상태를 확인하고, 로그인이 필요한 페이지에 접근하는 경우 경고를 표시하고 라우트를 변경하는 useEffect
   useEffect(() => {
+    if (loggingOut) return; // 로그아웃 중이면 로직을 실행하지 않습니다
+
     if (!loggedIn && location.pathname !== '/') {
       const paths = location.pathname.split('/');
       if (paths[1] === 'unopened') {

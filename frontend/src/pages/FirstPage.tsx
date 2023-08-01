@@ -1,4 +1,7 @@
+/* eslint-disable no-console */
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 
 import flowerImg1 from '../assets/images/login/flower1.png';
 import flowerImg2 from '../assets/images/login/flower2.png';
@@ -9,11 +12,9 @@ import flowerImg4 from '../assets/images/login/flower4.png';
 import Login from '../components/Login';
 import JoinModal from '../components/JoinModal';
 import TreeLottie from '../components/TreeLottie';
-
-import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
-import { loggedInState } from '../utils/Recoil';
 import PasswordModal from '../components/MainUnopenCapsule/PasswordModal'; // 비밀
+
+import { loggedInState } from '../utils/Recoil';
 
 function FirstPage() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -33,6 +34,7 @@ function FirstPage() {
 
   const handleClick = () => {
     const storedCapsuleId = sessionStorage.getItem('capsule_id');
+
     if (storedCapsuleId) {
       setCapsuleId(storedCapsuleId);
       setPasswdOpen(true);

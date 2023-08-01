@@ -1,8 +1,8 @@
-// Modal.tsx
-
+/* eslint-disable no-console */
 import axios from 'axios';
 import { useState } from 'react';
 import noteImg3 from '../../assets/images/note/note3.png';
+import { AxiosErrorResponseType, JoinUserType } from '../../utils/types';
 import ImageUploadButton from '../ImageUploadButton';
 import TextInput from '../TextInput';
 
@@ -19,10 +19,15 @@ function JoinModal({ onClose }: ModalProps) {
     email: '',
     phone_number: '',
   });
+  const [passwordV2, setPasswordV2] = useState('');
   const handleGetInputData = (name: string, value: string) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
     // eslint-disable-next-line no-console
     console.log('[JoinModal] name: ', name, ', value: ', value);
+  };
+  const handleGetPwData = (name: string, value: string) => {
+    setPasswordV2(value);
+    console.log('name: ', name, ', pw v2: ', value);
   };
   const handleGetFileData = (data: string): void => {
     setFormData((prevData) => ({ ...prevData, img_file: data }));
@@ -30,23 +35,53 @@ function JoinModal({ onClose }: ModalProps) {
     console.log('[JoinModal] file data: ', data);
   };
 
+  const isFormDataComplete = (data: JoinUserType) => {
+    return Object.values(data).every(
+      (value) => value !== null && value !== undefined && value !== ''
+    );
+  };
+
   const SignUpAPI = async () => {
     // eslint-disable-next-line no-console
     console.log('formData: ', formData);
+    if (formData.password !== passwordV2) {
+      alert('비밀번호가 다릅니다!');
+      return;
+    }
+
+    if (!isFormDataComplete(formData)) {
+      alert('모든 값들을 입력해주세요!');
+      return;
+    }
+
+    if (formData.password !== passwordV2) {
+      alert('비밀번호가 다릅니다!');
+      return;
+    }
 
     try {
-      const response = await axios.post('https://memorycapsule.co.kr/api/v1/users/sign-up', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.post(
+        'https://memorycapsule.co.kr/api/v1/users/sign-up',
+        formData,
+        {
+          // const response = await axios.post('/api/v1/users/sign-up', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
       // eslint-disable-next-line no-console
       console.log(response);
 
       alert('회원가입이 완료되었습니다');
       onClose();
     } catch (error) {
-      console.error('API 요청 에러: ', error);
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 
@@ -69,10 +104,7 @@ function JoinModal({ onClose }: ModalProps) {
           </span>
           <div className="flex flex-col items-center">
             <div className="py-5">
-              <ImageUploadButton
-                type="circle"
-                handlePostFile={handleGetFileData}
-              />
+              <ImageUploadButton type="circle" handlePostFile={handleGetFileData} />
             </div>
             <div>
               <form method="post" action="서버의url" id="join-form" onSubmit={SignUpAPI}>
@@ -106,7 +138,7 @@ function JoinModal({ onClose }: ModalProps) {
                   title="join"
                   type="password"
                   name="pw_v2"
-                  handleGetInputData={handleGetInputData}
+                  handleGetInputData={handleGetPwData}
                 />
                 <TextInput
                   label="Email"

@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react';
+import Museum from '../../assets/images/ThemeThumb/museum_theme.png';
+import PhotoCard from '../../assets/images/ThemeThumb/photocard_theme.png';
+import Window from '../../assets/images/ThemeThumb/window_theme.png';
 
 interface ThemeProps {
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -13,21 +16,18 @@ function CreateTheme({ sendName, sendId }: ThemeProps) {
   const themes = [
     {
       theme_id: 1,
-      theme_img:
-        'https://img.freepik.com/free-photo/close-up-portrait-on-beautiful-cat_23-2149214373.jpg',
-      theme_name: '심심하다옹',
+      theme_img: PhotoCard,
+      theme_name: '포토카드 테마',
     },
     {
       theme_id: 2,
-      theme_img:
-        'https://photo.coolenjoy.co.kr/data/editor/1608/thumb-Bimg_20160830182658_rnuhpunc.jpg',
-      theme_name: '졸리다옹',
+      theme_img: Museum,
+      theme_name: '박물관 테마',
     },
     {
       theme_id: 3,
-      theme_img:
-        'https://png.pngtree.com/background/20230516/original/pngtree-tabby-cat-on-the-ground-with-green-eyes-picture-image_2605523.jpg',
-      theme_name: '널 먹겠다옹',
+      theme_img: Window,
+      theme_name: '윈도우 테마',
     },
   ];
 
@@ -93,7 +93,7 @@ function CreateTheme({ sendName, sendId }: ThemeProps) {
         <img
           className="object-cover w-full h-full"
           src={themes[activeIndex].theme_img}
-          alt={`Carousel Image ${activeIndex}`}
+          alt={`Capsule Image ${activeIndex}`}
         />
       </div>
     </div>
