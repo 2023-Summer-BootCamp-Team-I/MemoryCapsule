@@ -1,6 +1,5 @@
 from celery import shared_task
 from .utils import user_choice_video_maker
-from videos.models import Video
 
 @shared_task
 def create_user_choice_video(capsule_id, music_id, user_choice_list):

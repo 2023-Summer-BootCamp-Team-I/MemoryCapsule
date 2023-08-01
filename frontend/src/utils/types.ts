@@ -77,7 +77,6 @@ export type CapsuleMateType = {
   nickname: string;
   user_img_url: string;
 };
-
 export type OpenCapsuleVideoType = {
   video_url: string;
   music: string;
