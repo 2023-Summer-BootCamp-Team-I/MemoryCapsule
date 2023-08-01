@@ -149,11 +149,11 @@ def default_video_maker(capsule_id, music_id):
         # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{capsule_id}_no{video_count})
         video_count = Video.objects.filter(capsule=capsule_id).count() + 1
 
+        # s3 업로드 용 함수
+        video_url = make_video(capsule_id, video_count, video_image_url_list_final, music_url)  # 회원 아이디, 회원 비디오 개수,
+
         # 로그 남기기
         logger.info(f'Video creation complete for capsule {capsule_id} at {timezone.now()}')
-
-        video_url = make_video(capsule_id, video_count, video_image_url_list_final, music_url)  # 회원 아이디, 회원 비디오 개수,
-        # s3 업로드 용 함수
 
     # 일반 메세지 전송
     user_capsules = UserCapsule.objects.filter(capsule_id=capsule_id, deleted_at__isnull=True)
