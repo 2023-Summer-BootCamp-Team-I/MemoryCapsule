@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import heart from '../../../assets/images/PhotoTheme/heart.png';
 
 interface StoryType {
@@ -35,7 +35,7 @@ function PhotoCard3({ data }: PhotoCardProps) {
 
   return (
     <div className="flex flex-col justify-start w-full h-full right-5">
-      <div className=" relative">
+      <div className="relative ">
         {/* opacity-50 */}
         <img
           src={heart}
@@ -53,8 +53,8 @@ function PhotoCard3({ data }: PhotoCardProps) {
           <div className={circleStyles}></div>
           <div className={imageStyles} style={{ backgroundImage: `url(${data.img})` }}></div>
           <div className={textStyles}>
-            <div className="border-b pb-4 text-xl">{data.title}</div>
-            <div className=" pt-4 text-lg">{data.content}</div>
+            <div className="pb-4 text-xl border-b">{data.title}</div>
+            <div className="pt-4 text-lg ">{data.content}</div>
           </div>
         </div>
       </div>

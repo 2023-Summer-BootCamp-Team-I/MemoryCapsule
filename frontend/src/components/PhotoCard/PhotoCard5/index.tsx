@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 interface StoryType {
   img: string;
@@ -52,8 +52,8 @@ function PhotoCard5({ data }: PhotoCardProps) {
           <div className={circleStyles}></div>
           <div className={imageStyles} style={{ backgroundImage: `url(${data.img})` }}></div>
           <div className={textStyles}>
-            <div className="border-b pb-4 text-xl">{data.title}</div>
-            <div className=" pt-4 text-lg">{data.content}</div>
+            <div className="pb-4 text-xl border-b">{data.title}</div>
+            <div className="pt-4 text-lg ">{data.content}</div>
           </div>
         </div>
       </div>

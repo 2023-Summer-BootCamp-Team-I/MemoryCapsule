@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import axios from 'axios';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -21,8 +20,6 @@ function ProfileButton({ capsule_id }: ProfileProps) {
   const openModal = () => {
     CapsuleMateAPI();
     setModalIsOpen(true);
-    console.log('host: ', capsuleMateHost);
-    console.log('member: ', capsuleMateMember);
   };
 
   const closeModal = () => {
@@ -46,13 +43,10 @@ function ProfileButton({ capsule_id }: ProfileProps) {
   }
 
   const CapsuleMateAPI = async () => {
-    console.log('capsule_id: ', capsule_id);
-
     try {
       await axios
         .get(`/api/v1/capsules/users?capsule_id=${capsule_id}&jwt_token=${token}`)
         .then((response) => {
-          console.log('response.data: ', response.data);
           setCapsuleMateHost(response.data.host_user);
           setCapsuleMateMember(response.data.user);
         });

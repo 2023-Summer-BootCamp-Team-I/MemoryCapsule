@@ -130,7 +130,7 @@ services:
       - "mode=standalone"
     restart: always
     command: redis-server /usr/local/conf/redis.conf
-#
+
 #  prometheus: # 프로메테우스 서비스 추가
 #    image: prom/prometheus
 #    ports:
@@ -188,32 +188,32 @@ services:
 #    ports:
 #      - "9100:9100"
 
-#  gunicorn:
-#    image: gunicorn:latest
-#    build:
-#      context: ./backend/django_back/
-#      dockerfile: Dockerfile
-#    container_name: gunicorn
-#    command: gunicorn django_back.wsgi:application -b 0.0.0.0:8000 --access-logfile -
-#    ports:
-#      - "8000:8000"
-#    volumes:
-#      - ./backend/django_back:/app
-#    depends_on:
-#      - mysqldb
-#      - celery_worker
+  gunicorn:
+    image: gunicorn:latest
+    build:
+      context: ./backend/django_back/
+      dockerfile: Dockerfile
+    container_name: gunicorn
+    command: gunicorn django_back.wsgi:application -b 0.0.0.0:8000 --access-logfile -
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/django_back:/app
+    depends_on:
+      - mysqldb
+      - celery_worker
 
-#  nginx:
-#    image: nginx:latest
-#    container_name: nginx
-#    ports:
-#      - "80:80"
-#    volumes:
-#      - ./backend/nginx/nginx.conf:/etc/nginx/nginx.conf
-#      - ./backend/nginx/default.conf:/etc/nginx/conf.d/default.conf
-#      - ./backend/elk/logs:/var/log/nginx
-#    depends_on:
-#      - backend
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./backend/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./backend/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./backend/elk/logs:/var/log/nginx
+    depends_on:
+      - backend
 
 #  alertmanager:
 #    image: prom/alertmanager
@@ -292,14 +292,14 @@ services:
 #    depends_on:
 #      - elasticsearch
 #
-#  frontend:
-#    build:
-#      context: ./frontend
-#      dockerfile: Dockerfile
-#    command: ["npm", "run", "dev"]
-#    volumes:
-#      - ./frontend:/frontend
-#      - /frontend/node_modules
-#    ports:
-#      - "5173:5173"
-#    tty: true
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    command: ["npm", "run", "dev"]
+    volumes:
+      - ./frontend:/frontend
+      - /frontend/node_modules
+    ports:
+      - "5173:5173"
+    tty: true

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import plusbutton from '../../../assets/images/plusbutton.png';
 import titlemark from '../../../assets/images/titlemark.png';
@@ -10,7 +11,6 @@ import StoryCreateContent from '../../StoryCreateContent';
 import StoryDetailContent from '../../StoryDetailContent';
 import ProfileButton from '../../ProfileButton';
 import CapsuleInfo from '../../CapsuleInfo';
-import story_dummy from '../../../assets/data/story_dummy';
 import {
   StoryListType,
   StoryListOneType,
@@ -34,17 +34,15 @@ interface StoryListProps {
 }
 
 function StoryList({ capsule_id }: StoryListProps) {
-  console.log(story_dummy);
-
+  const navigate = useNavigate();
   const token = useRecoilValue(TokenState);
   const [storyList, setStoryList] = useState<StoryListType[]>([]);
   const [capsuleData, setCapsuleData] = useState<MyCapsuleListType>();
+  const [ddayString, setDdayString] = useState<string | null>(null);
 
   const storyListAPI = async () => {
     try {
       await axios.get(`/api/v1/stories/${capsule_id}?jwt_token=${token}`).then((response) => {
-        console.log('response: ', response);
-        console.log(response.data.story_list);
         setStoryList(response.data.story_list);
       });
     } catch (error) {
@@ -57,12 +55,8 @@ function StoryList({ capsule_id }: StoryListProps) {
     }
   };
   const capsuleInfoAPI = async () => {
-    console.log('capsule_id: ', capsule_id);
-
     try {
       await axios.get(`/api/v1/capsules/${capsule_id}?jwt_token=${token}`).then((response) => {
-        console.log('response: ', response);
-        console.log('data: ', response.data.capsule_data);
         setCapsuleData(response.data.capsule_data);
       });
     } catch (error) {
@@ -74,6 +68,33 @@ function StoryList({ capsule_id }: StoryListProps) {
       }
     }
   };
+
+  function calculateDday(targetDateString: string) {
+    const now = new Date();
+    const targetDate = new Date(targetDateString.split(' ')[0]); // 시간 부분 제거
+
+    const diff = targetDate.getTime() - now.getTime();
+    const diffDays = Math.ceil(diff / (1000 * 60 * 60 * 24));
+
+    if (diffDays > 0) {
+      return `D-${diffDays}`;
+    } else if (diffDays === 0) {
+      return 'D-DAY';
+    } else {
+      return `D+${Math.abs(diffDays)}`;
+    }
+  }
+
+  useEffect(() => {
+    if (capsuleData?.due_date) {
+      const calculatedDday = calculateDday(capsuleData.due_date);
+      setDdayString(calculatedDday);
+      if (ddayString === 'D-DAY') {
+        alert('개봉된 캡슐입니다.');
+        navigate(`/opened/${capsule_id}`);
+      }
+    }
+  }, [capsuleData]);
 
   useEffect(() => {
     storyListAPI(); //페이지에 처음 접속했을때 capsule 목록을 보여주기 위해
@@ -164,13 +185,16 @@ function StoryList({ capsule_id }: StoryListProps) {
       await axios
         .get(`/api/v1/stories/${capsule_id}/${story_id}?jwt_token=${token}`)
         .then((response) => {
-          console.log('response: ', response);
           setStoryOne(response.data);
-          // setStoryList(response.data.story_list);
+          // console.log('[storyListOneAPI] response: ', response.data);
         });
     } catch (error) {
-      console.log('api 불러오기 실패');
-      console.log(error);
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 
@@ -186,14 +210,7 @@ function StoryList({ capsule_id }: StoryListProps) {
     setSelectedImageIndex(originalIndex);
     setModalType('detail');
     setIsOpen(true); // 이미지 클릭 시 모달 창 열기]
-    // getCapsulesStory(storyId);
   };
-
-  // const [storyId, setStoryId] = useState<string>('');
-
-  // const getStoryId = async () => {
-  //   const response = await axios.get('');
-  // };
 
   const handlePlusButtonClick = () => {
     setModalType('create');
@@ -215,6 +232,13 @@ function StoryList({ capsule_id }: StoryListProps) {
   };
 
   const StoryModal = ({ story_data, type }: StoryModalProps) => {
+    const handleSVGClick = () => {
+      handleCloseModal();
+      if (type === 'detail') {
+        storyListAPI();
+      }
+    };
+
     return (
       <div>
         {isOpen && (
@@ -246,7 +270,7 @@ function StoryList({ capsule_id }: StoryListProps) {
                     stroke="currentColor"
                     className="absolute cursor-pointer w-7 h-7 right-5 top-7"
                     type="button"
-                    onClick={handleCloseModal}
+                    onClick={handleSVGClick}
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
@@ -269,6 +293,9 @@ function StoryList({ capsule_id }: StoryListProps) {
   return (
     <div className="plus-button-wrapper">
       <div className="title-wrapper">
+        <span className="absolute mt-3 -ml-[31rem] font-Omu text-4xl font-bold text-shadow text-black bg-white bg-opacity-70 p-3 rounded-lg underline">
+          {ddayString}
+        </span>
         <img src={titlemark} alt="Title Mark" />
         <div className="flex title font-Omu">
           {capsuleData?.capsule_name}

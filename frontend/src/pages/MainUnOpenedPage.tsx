@@ -1,23 +1,16 @@
-//MainUnOpenedPage
-
-/* eslint-disable no-console */
 import { useNavigate } from 'react-router-dom';
 import HighLight from '../components/common/HightLight';
 import UnopenCapsule from '../components/MainUnopenCapsule/UnopenCapsule';
 
-// import unopen_join_capsule from '../assets/data/unopen_join_capsule';
-// import unopen_my_capsule from '../assets/data/unopen_my_capsule';
 import axios from 'axios';
 
 import { useRecoilValue } from 'recoil';
 import { TokenState } from '../utils/Recoil';
 import { useEffect, useState } from 'react';
-import { MyCapsuleListType } from '../utils/types';
+import { AxiosErrorResponseType, MyCapsuleListType } from '../utils/types';
 
 function MainUnOpenedPage() {
   const navigate = useNavigate();
-  // const unopenMyCapsules = unopen_my_capsule();
-  // const unopenJoinCapsules = unopen_join_capsule();
   const is_open = false;
   const token = useRecoilValue(TokenState);
   const [myCapsule, setMyCapsule] = useState<MyCapsuleListType[]>([]);
@@ -32,20 +25,16 @@ function MainUnOpenedPage() {
           },
         })
         .then((response) => {
-          console.log('response: ', response);
-          console.log('response.data.my_capsule_list: ', response.data.my_capsule_list);
           setMyCapsule(response.data.my_capsule_list);
           setJoinCapsule(response.data.capsule_list);
-          // if (is_open === true) {
-          //   setMyCapsule(response.data.my_capsule_list);
-          //   setJoinCapsule(response.data.capsule_list);
-          // } else {
-          //   setJoinCapsule(response.data.capsule_list);
-          // }
         });
     } catch (error) {
-      console.log('api 불러오기 실패');
-      console.log(error);
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 
@@ -89,7 +78,7 @@ function MainUnOpenedPage() {
             ))}
           </div>
           <div
-            className="flex self-end text-xl underline cursor-pointer absolute right-0 bottom-[21.75rem] mb-[1.2rem]"
+            className="flex self-end text-xl underline cursor-pointer absolute right-0 bottom-[18rem] mb-[1.2rem]"
             onClick={() => navigate(`/mygallery/${is_open}`)}
           >
             모두 보기
@@ -126,7 +115,7 @@ function MainUnOpenedPage() {
             ))}
           </div>
           <div
-            className="flex self-end text-xl underline cursor-pointer absolute right-0 bottom-0 mb-[1.2rem]"
+            className="flex self-end text-xl underline cursor-pointer absolute right-0 -bottom-2 mb-[1.2rem]"
             onClick={() => navigate(`/joingallery/${is_open}`)}
           >
             모두 보기

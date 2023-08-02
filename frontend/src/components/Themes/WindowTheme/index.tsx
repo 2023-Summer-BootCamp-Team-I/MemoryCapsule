@@ -11,7 +11,6 @@ import { OpenCapsuleType } from '../../../utils/types';
 
 function WindowTheme() {
   const [dummy_data, setDummyData] = useState<OpenCapsuleType[]>([]);
-  // const [pressedName, setPressedName] = useState<string>('');
 
   const [isButtonClicked, setButtonClicked] = useState(false);
   const [isDivClicked, setDivClicked] = useState(false);
@@ -62,26 +61,6 @@ function WindowTheme() {
     borderBottom: '2px solid black',
     borderRight: '2px solid black',
   };
-  // const pressedButtonStyle = {
-  //     borderTop: '2px solid black',
-  //     borderLeft: '2px solid black',
-  //     borderBottom: '2px solid white',
-  //     borderRight: '2px solid white',
-  // }
-
-  // function bottomButton(pressedName: string) {
-  //     if(pressedName === 'gallery' || pressedName === 'image'){
-  //         return(
-  //             <button className='' style={pressedButtonStyle}>
-  //                 {pressedName}
-  //             </button>
-  //         )
-  //     }
-  // }
-
-  // useEffect(() => {
-  //     bottomButton(pressedName);
-  // }, [pressedName])
 
   useEffect(() => {
     setDummyData(open_my_capsule());
@@ -152,7 +131,6 @@ function WindowTheme() {
               ></div>
               <div className="w-[0.1rem] rounded h-6 bg-[#92959B] -mt-[0.1rem]"></div>
             </div>
-            {/* <bottomButton pressedName='gallery'/> */}
           </div>
         </div>
       </div>

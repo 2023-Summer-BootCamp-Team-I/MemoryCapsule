@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import line1 from '../../../assets/images/PhotoTheme/line1.png';
 

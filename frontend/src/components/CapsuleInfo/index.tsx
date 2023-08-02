@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import axios from 'axios';
 import React, { useState, useRef } from 'react';
 import Modal from 'react-modal';
@@ -12,26 +11,26 @@ interface CapsuleInfoProps {
   capsule_id: string | undefined;
 }
 
-function CapsuleInfo({capsule_id} : CapsuleInfoProps) {
+function CapsuleInfo({ capsule_id }: CapsuleInfoProps) {
   const navigate = useNavigate();
   const token = useRecoilValue(TokenState);
   const [capsuleData, setCapsuleData] = useState<MyCapsuleListType>();
 
-  const handleDelete = async () => { 
+  const handleDelete = async () => {
     try {
-      await axios.delete(`/api/v1/capsules/users?jwt_token=${token}&capsule_id=${capsule_id}`,
-      ).then((response) => {
-          console.log('response: ', response)
-          alert(response.data.message)
+      await axios
+        .delete(`/api/v1/capsules/users?jwt_token=${token}&capsule_id=${capsule_id}`)
+        .then((response) => {
+          alert(response.data.message);
           navigate('/mainunopened');
-      });
-      } catch(error) {
-        const axiosError = error as AxiosErrorResponseType;
-        if (axiosError.response?.data.message) {
-          alert(axiosError.response.data.message);
-        } else {
-          alert('An unknown error occurred.');
-        }
+        });
+    } catch (error) {
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 
@@ -40,7 +39,7 @@ function CapsuleInfo({capsule_id} : CapsuleInfoProps) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const openModal = () => {
-    capsuleInfoAPI()
+    capsuleInfoAPI();
     setModalIsOpen(true);
   };
 
@@ -69,24 +68,19 @@ function CapsuleInfo({capsule_id} : CapsuleInfoProps) {
   };
 
   const capsuleInfoAPI = async () => {
-    console.log('capsule_id: ', capsule_id);
-    
     try {
-      await axios.get(`/api/v1/capsules/${capsule_id}?jwt_token=${token}`,
-      ).then((response) => {
-          console.log('response: ', response)
-          console.log('data: ', response.data.capsule_data)
-          setCapsuleData(response.data.capsule_data)
+      await axios.get(`/api/v1/capsules/${capsule_id}?jwt_token=${token}`).then((response) => {
+        setCapsuleData(response.data.capsule_data);
       });
-      } catch(error) {
-          const axiosError = error as AxiosErrorResponseType;
-          if (axiosError.response?.data.message) {
-            alert(axiosError.response.data.message);
-          } else {
-            alert('An unknown error occurred.');
-          }
+    } catch (error) {
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
-  }
+  };
 
   return (
     <>
@@ -158,7 +152,9 @@ function CapsuleInfo({capsule_id} : CapsuleInfoProps) {
           <div className="mt-8 font-Omu">
             <p className="mt-6 ml-12 mr-12 text-3xl">방장 : {capsuleData?.nickname}</p>
             {/* <p className="mt-6 ml-12 mr-12 text-3xl">인원 수 : {users.length}</p> */}
-            <p className="mt-6 ml-12 mr-12 text-3xl">개봉 날짜 : {capsuleData?.due_date.slice(0, 10)}</p>
+            <p className="mt-6 ml-12 mr-12 text-3xl">
+              개봉 날짜 : {capsuleData?.due_date.slice(0, 10)}
+            </p>
           </div>
         </div>
 

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useState } from 'react';
 import noteImg2 from '../../assets/images/note/note2.png';
 import SendLottie from '../SendLottie';
@@ -9,17 +8,18 @@ import axios from 'axios';
 import { useRecoilValue } from 'recoil';
 import { TokenState } from '../../utils/Recoil';
 import { useNavigate } from 'react-router-dom';
+import { AxiosErrorResponseType } from '../../utils/types';
 
 interface CreateCapsuleNoteProps {
-  onButtonClick: () => void;
+  // onButtonClick: () => void;
   themeName: string;
   themeId: number;
+  onApiSuccess: () => void;
 }
 
-function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleNoteProps) {
+function CreateCapsuleNote({ themeName, themeId, onApiSuccess }: CreateCapsuleNoteProps) {
   const token = useRecoilValue(TokenState);
 
-  // const [responseCapsule, setResponseCapsule] = useState('');
   const getCurrentDateTime = () => {
     const now = new Date();
     const year = now.getFullYear();
@@ -42,16 +42,11 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
       alert('입력되지 않은 사항이 있습니다.');
       return;
     }
-    onButtonClick();
     CapsuleUploadAPI(); // 괄호를 추가하여 함수 호출
-    console.log('테마 아이디', themeId);
-    // console.log(responseCapsule);
   };
 
   const handlePostFile = (data: string): void => {
-    // 나는 이 함수를 StoryInput이라는 파일에게 전달을 함으로써 값을 가져올 거야 맞지 바바
     setFile(data);
-    console.log('[StoryCreateContent] file: ', data);
   };
 
   const handleGetDate = (date: string) => {
@@ -59,25 +54,21 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // 비밀번호 입력값이 변경될 때마다 passward 상태를 업데이트
     setPassward(e.target.value);
   };
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // 비밀번호 입력값이 변경될 때마다 passward 상태를 업데이트
     setTitle(e.target.value);
   };
   const navigate = useNavigate();
-  //api
-  const CapsuleUploadAPI = async () => {
-    // e.preventDefault(); // 새로고침 없앰
 
+  const CapsuleUploadAPI = async () => {
     //form data 생성
     const formData = new FormData();
-    formData.append('jwt_token', token); //보류
+    formData.append('jwt_token', token);
     formData.append('capsule_name', title);
     formData.append('due_date', date);
-    formData.append('limit_count', '15'); // 보류
+    formData.append('limit_count', '30');
     formData.append('theme_id', String(themeId));
     formData.append('capsule_password', password);
     formData.append('img_file', file);
@@ -90,12 +81,19 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
             'Content-Type': 'multipart/form-data',
           },
         })
-        .then((response) => {
-          console.log(response);
-          navigate('/api/v1/capsules?count=-1&is_open=false&jwt_token=token');
+        .then(() => {
+          onApiSuccess();
+          setTimeout(() => {
+            navigate('/mainunopened'); // navigate after 4 seconds
+          }, 4000); // 4000 milliseconds = 4 seconds
         });
     } catch (error) {
-      console.error('API 요청 에러:', error);
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 

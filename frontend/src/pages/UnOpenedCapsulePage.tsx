@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import KakaoShare from '../components/common/KakaoShare';
@@ -18,9 +17,7 @@ export default function UnOpenedCapsulePage() {
     try {
       await axios
         .get(`/api/v1/capsules/users?capsule_id=${capsule_id}&jwt_token=${token}`)
-        .then((response) => {
-          console.log('response: ', response);
-        });
+        .then(() => {});
     } catch (error) {
       const axiosError = error as AxiosErrorResponseType;
       if (axiosError.response?.data.message === '캡슐에 포함되지 않은 유저입니다') {
@@ -37,7 +34,6 @@ export default function UnOpenedCapsulePage() {
 
   useEffect(() => {
     sessionStorage.removeItem('capsule_id');
-    console.log('token: ', token);
     checkIsMemberAPI();
   }, []);
 
