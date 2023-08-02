@@ -126,7 +126,6 @@ def random_video_url_maker(capsule, stories):
 
     if story_count < capsule.limit_count:
         for i in range(story_count):
-            for j in range(2):
                 video_image_list_ready.append(story_id_list[i])
     else:
         while len(video_image_list_ready) < capsule.limit_count:
@@ -140,7 +139,6 @@ def random_video_url_maker(capsule, stories):
     video_image_url_list = []
     for story_id in video_image_list_ready:
         story = Story.objects.get(story_id=story_id)
-        for j in range(2):
             # 비디오 제작에 넘길 이미지 url 배열
             video_image_url_list.append(story.story_img_url)
 
@@ -163,17 +161,11 @@ def default_video_maker(capsule_id, music_id):
 
         # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{capsule_id}_no{video_count})
         video_count = Video.objects.filter(capsule=capsule_id).count() + 1
-
-        # s3 업로드 용 함수
-        video_url = make_video(capsule_id, video_count, video_image_url_list_final, music_url)  # 회원 아이디, 회원 비디오 개수,
+        creator_id = capsule.creator.user_id
+        video_url = make_video(capsule_id, video_count, video_image_url_list_final, music_url, creator_id)  # 회원 아이디, 회원 비디오 개수,
 
         # 로그 남기기
         logger.info(f'Video creation complete for capsule {capsule_id} at {timezone.now()}')
-
-
-        creator_id = capsule.creator.user_id
-        video_url = make_video(capsule_id, video_count, video_image_url_list_final, music_url, creator_id)  # 회원 아이디, 회원 비디오 개수,
-        # s3 업로드 용 함수
 
 
     # 일반 메세지 전송

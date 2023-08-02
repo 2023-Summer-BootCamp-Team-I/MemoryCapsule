@@ -1,2 +1,0 @@
-Insert into theme (created_at, updated_at, theme_id, theme_name, theme_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '1', 'test', 'testemail.com');
-Insert into theme (created_at, updated_at, theme_id, theme_name, theme_img_url) values('2023-07-09 00:00:00', '2023-07-09 00:00:00', '2', 'test', 'testemail.com');
