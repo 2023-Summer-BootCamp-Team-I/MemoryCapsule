@@ -172,7 +172,17 @@ def default_video_maker(capsule_id, music_id):
     user_phone_number_list = [user_capsule.user.phone_number for user_capsule in user_capsules]
     logger.info(f'{user_phone_number_list}')
     title = f'드디어 {capsule.capsule_name}이 열렸어요!!'
-    text = f'드디어 {capsule.capsule_name}이 열렸어요!! 어서 확인하러 가봐요!! 확인하러 가기: 사이트 주소'
+    link = f'https://memorycapsule.co.kr/opened/{capsule.capsule_id}'
+    text = f'''
+    [Memory Capsule]
+    소중한 추억이 도착했습니다!
+    과거의 소중한 순간들을 기억하시나요? 함께 담아둔 특별한 추억들이 오늘을 기다려 왔습니다.🎁
+    
+    캡슐 속의 추억을 확인하려면 아래의 버튼을 클릭하세요!
+    🔗추억의 캡슐 열기 : {link}
+    
+    함께한 순간들을 떠올리며 오늘도 행복한 하루 보내시길 바랍니다.
+    '''
     send_normal_message(user_phone_number_list, title, text)
     logger.info(f'메세지 전송 완료! {capsule_id} at {timezone.now()}')
 
