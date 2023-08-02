@@ -72,7 +72,7 @@ function Login({ onSignUp, handleClick }: LoginProps) {
           <form method="post" action="서버의url" id="login-form" onSubmit={LoginAPI}>
             <TextInput
               label="ID"
-              placeholder="아이디를 입력해주세요"
+              placeholder="aa 아이디를 입력해주세요"
               title="login"
               type="text"
               name="id"
