@@ -12,7 +12,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./elk/logs/mysql_data:/var/var/log
+#      - ./elk/logs/mysql_data:/var/var/log
       - ./init/:/docker-entrypoint-initdb.d/
       - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
@@ -225,7 +225,7 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/django_back:/app
-      - ./elk/logs/gunicorn_data:/var/log
+#      - ./elk/logs/gunicorn_data:/var/log
     depends_on:
       - mysqldb
       - celery_worker
@@ -238,6 +238,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
+      - ./elk/logs/nginx_data:/var/log/nginx
       - ./backend/nginx/nginx_develop.conf:/etc/nginx/nginx.conf
       - ./backend/certbot/conf:/etc/letsencrypt
       - ./backend/certbot/www:/var/www/certbot
