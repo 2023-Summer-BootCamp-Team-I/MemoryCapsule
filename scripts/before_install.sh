@@ -2,8 +2,8 @@
 
 REPOSITORY=/home/ec2-user/MemoryCapsule
 #ZIP_FILE=/home/ec2-user/memory_capsule.zip
-COMPOSE_FILE=$REPOSITORY/docker-compose.deploy.yml
-ELK_COMPOSE_FILE=$REPOSITORY/docker-compose.elk.yml
+COMPOSE_FILE=docker-compose.deploy.yml
+ELK_COMPOSE_FILE=docker-compose.elk.yml
 APP_NAME=memory_capsule
 
 # Decompress the zip file to the repository directory
