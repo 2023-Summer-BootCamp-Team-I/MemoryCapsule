@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 
 import plusbutton from '../../../assets/images/plusbutton.png';
@@ -12,7 +11,12 @@ import StoryDetailContent from '../../StoryDetailContent';
 import ProfileButton from '../../ProfileButton';
 import CapsuleInfo from '../../CapsuleInfo';
 import story_dummy from '../../../assets/data/story_dummy';
-import { StoryListType, StoryListOneType } from '../../../utils/types';
+import {
+  StoryListType,
+  StoryListOneType,
+  AxiosErrorResponseType,
+  MyCapsuleListType,
+} from '../../../utils/types';
 import Checkbox from '../CheckBox';
 
 import axios from 'axios';
@@ -34,6 +38,7 @@ function StoryList({ capsule_id }: StoryListProps) {
 
   const token = useRecoilValue(TokenState);
   const [storyList, setStoryList] = useState<StoryListType[]>([]);
+  const [capsuleData, setCapsuleData] = useState<MyCapsuleListType>();
 
   const storyListAPI = async () => {
     try {
@@ -43,13 +48,36 @@ function StoryList({ capsule_id }: StoryListProps) {
         setStoryList(response.data.story_list);
       });
     } catch (error) {
-      console.log('api 불러오기 실패');
-      console.log(error);
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
+    }
+  };
+  const capsuleInfoAPI = async () => {
+    console.log('capsule_id: ', capsule_id);
+
+    try {
+      await axios.get(`/api/v1/capsules/${capsule_id}?jwt_token=${token}`).then((response) => {
+        console.log('response: ', response);
+        console.log('data: ', response.data.capsule_data);
+        setCapsuleData(response.data.capsule_data);
+      });
+    } catch (error) {
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 
   useEffect(() => {
     storyListAPI(); //페이지에 처음 접속했을때 capsule 목록을 보여주기 위해
+    capsuleInfoAPI();
   }, []);
 
   useEffect(() => {
@@ -65,7 +93,7 @@ function StoryList({ capsule_id }: StoryListProps) {
       }
       .title {
         position: absolute;
-        width:130px;
+        width:190px;
         top: 60%;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -242,8 +270,8 @@ function StoryList({ capsule_id }: StoryListProps) {
     <div className="plus-button-wrapper">
       <div className="title-wrapper">
         <img src={titlemark} alt="Title Mark" />
-        <div className="flex title">
-          제주도
+        <div className="flex title font-Omu">
+          {capsuleData?.capsule_name}
           <div>
             <CapsuleInfo capsule_id={capsule_id} />
           </div>
@@ -254,14 +282,14 @@ function StoryList({ capsule_id }: StoryListProps) {
         {/* 참여 유저 확인 모달 */}
         <div className="flex cursor-pointer">
           <ProfileButton capsule_id={capsule_id} />
-          <span className="mt-1 ml-2 mr-5">3</span>
+          <span className="mt-1 ml-2 mr-5 font-Omu">mate</span>
         </div>
 
         {/* 내 스토리만 보기 체크박스 */}
         <Checkbox checked={checked} onChecked={handleCheckedChange} />
       </div>
 
-      <hr className="my-4 border-gray-200" />
+      <hr className="my-4 border-gray-200 w-[rem]" />
 
       <div className="custom-scroll-container">
         <div className="custom-scroll-content">

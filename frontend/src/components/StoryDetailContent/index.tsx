@@ -1,5 +1,4 @@
 import { ChangeEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import pink from '../../assets/images/stickers/pink.png';
 import { StoryListOneType } from '../../utils/types';
 import axios from 'axios';
@@ -11,7 +10,7 @@ interface DetailProps {
 }
 
 function StoryDetailContent({ story_data }: DetailProps) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const token = useRecoilValue(TokenState);
   const [editMode, setEditMode] = useState(false);
   const [editTitle, setEditTitle] = useState(String(story_data && story_data.story_title));
@@ -28,16 +27,24 @@ function StoryDetailContent({ story_data }: DetailProps) {
     formData.append('filename', editImage);
 
     try {
-      await axios
-        .put(`/api/v1/stories/${story_data?.capsule_id}/${story_data?.story_id}`, formData, {
+      const response = await axios.put(
+        `/api/v1/stories/${story_data?.capsule_id}/${story_data?.story_id}`,
+        formData,
+        {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
-        })
-        .then((response) => {
-          console.log(response);
-          alert('수정이 완료되었습니다.');
-        });
+        }
+      );
+      console.log(response);
+
+      if (response.status == 200) {
+        alert('수정되었습니다.');
+        window.location.reload();
+      } else {
+        console.log('데이터 전송 실패ㅠ');
+        console.log('error message text: ', response.statusText);
+      }
     } catch (error) {
       console.error('에러 발생: ', error);
     }
@@ -49,13 +56,20 @@ function StoryDetailContent({ story_data }: DetailProps) {
       editStoryApi();
     }
   };
-
-  const handleDelete = () => {
-    if (window.confirm('정말 삭제하시겠습니까?')) {
-      // Add the code to actually delete the item
-      alert('삭제 완료되었습니다.');
-      navigate('/unopened');
-      window.location.reload();
+  const deleteStoryApi = async () => {
+    try {
+      await axios
+        .delete(
+          `/api/v1/stories/${story_data?.capsule_id}/${story_data?.story_id}?jwt_token=${token}`
+        )
+        .then((response) => {
+          console.log('response: ', response);
+          alert('삭제 완료되었습니다.');
+          window.location.reload();
+        });
+    } catch (error) {
+      console.log('api 불러오기 실패');
+      console.log(error);
     }
   };
 
@@ -141,7 +155,7 @@ function StoryDetailContent({ story_data }: DetailProps) {
         </button>
         <button
           className="fixed px-4 py-1 font-bold text-white bg-red-500 rounded hover:bg-red-700 bottom-7 right-12"
-          onClick={handleDelete}
+          onClick={deleteStoryApi}
         >
           삭제
         </button>

@@ -8,6 +8,7 @@ import axios from 'axios';
 
 import { useRecoilValue } from 'recoil';
 import { TokenState } from '../../utils/Recoil';
+import { useNavigate } from 'react-router-dom';
 
 interface CreateCapsuleNoteProps {
   onButtonClick: () => void;
@@ -32,11 +33,15 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
   };
 
   const [title, setTitle] = useState('');
-  const [passward, setPassward] = useState('');
+  const [password, setPassward] = useState('');
   const [file, setFile] = useState('');
   const [date, setDate] = useState(getCurrentDateTime());
 
   const handleClick = () => {
+    if (!file || !title || !password || !date) {
+      alert('입력되지 않은 사항이 있습니다.');
+      return;
+    }
     onButtonClick();
     CapsuleUploadAPI(); // 괄호를 추가하여 함수 호출
     console.log('테마 아이디', themeId);
@@ -62,7 +67,7 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
     // 비밀번호 입력값이 변경될 때마다 passward 상태를 업데이트
     setTitle(e.target.value);
   };
-
+  const navigate = useNavigate();
   //api
   const CapsuleUploadAPI = async () => {
     // e.preventDefault(); // 새로고침 없앰
@@ -74,18 +79,21 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
     formData.append('due_date', date);
     formData.append('limit_count', '15'); // 보류
     formData.append('theme_id', String(themeId));
-    formData.append('capsule_password', passward);
+    formData.append('capsule_password', password);
     formData.append('img_file', file);
 
     // api 요청 보내기
     try {
-      const response = await axios.post('/api/v1/capsules', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      console.log(response.data);
+      await axios
+        .post('/api/v1/capsules', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          navigate('/api/v1/capsules?count=-1&is_open=false&jwt_token=token');
+        });
     } catch (error) {
       console.error('API 요청 에러:', error);
     }
@@ -127,7 +135,7 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
               className="w-40 text-center bg-transparent outline-none focus:outline-none"
               type="text"
               id="passward"
-              value={passward}
+              value={password}
               placeholder="비밀번호를 입력하세요"
               onChange={handlePasswordChange}
             ></input>

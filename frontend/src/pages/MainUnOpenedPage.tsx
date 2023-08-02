@@ -26,14 +26,11 @@ function MainUnOpenedPage() {
   const capsuleListAPI = async (is_open: boolean) => {
     try {
       await axios
-        .get(
-          `http://localhost:8080/api/v1/capsules?count=5&is_open=${is_open}&jwt_token=${token}`,
-          {
-            headers: {
-              Accept: 'application/json',
-            },
-          }
-        )
+        .get(`/api/v1/capsules?count=5&is_open=${is_open}&jwt_token=${token}`, {
+          headers: {
+            Accept: 'application/json',
+          },
+        })
         .then((response) => {
           console.log('response: ', response);
           console.log('response.data.my_capsule_list: ', response.data.my_capsule_list);
@@ -56,11 +53,27 @@ function MainUnOpenedPage() {
     capsuleListAPI(is_open);
   }, []);
 
+  // useEffect(() => {
+  //   // 컴포넌트가 마운트될 때 현재 경로를 확인
+  //   const currentPath = location.pathname;
+
+  //   // 경고 알람을 띄우고 메인 페이지로 리다이렉트
+  //   const handleInvalidPath = () => {
+  //     alert('올바르지 않은 경로로 접근하셨습니다.');
+  //     navigate('/');
+  //   };
+
+  //   // 만약 캡슐 보기 페이지 경로가 아니라면 경고 알람 띄우고 메인 페이지로 리다이렉트
+  //   if (capsule.capsule_id =!) {
+  //     handleInvalidPath();
+  //   }
+  // }, [location, navigate]);
+
   return (
     <div className="h-[42rem] w-[75rem] font-Omu grid grid-rows-2 grid-flow-row-dense">
       <div className="mt-[3.5rem]">
         {/* 내가 만든 캡슐 */}
-        <div className="flex flex-col space-y-[1.3rem]">
+        <div className="flex flex-col space-y-[3.3rem]">
           <div className="">
             <HighLight color="blue" title="내가 만든 캡슐" />
           </div>
@@ -76,7 +89,7 @@ function MainUnOpenedPage() {
             ))}
           </div>
           <div
-            className="flex self-end text-xl underline cursor-pointer"
+            className="flex self-end text-xl underline cursor-pointer absolute right-0 bottom-[21.75rem] mb-[1.2rem]"
             onClick={() => navigate(`/mygallery/${is_open}`)}
           >
             모두 보기
@@ -94,9 +107,10 @@ function MainUnOpenedPage() {
             </svg>
           </div>
         </div>
-
+      </div>
+      <div>
         {/* 내가 참여한 캡슐 */}
-        <div className="flex flex-col space-y-[1.3rem]">
+        <div className="flex flex-col space-y-[1.3rem] mt-[3rem]">
           <div className="">
             <HighLight color="blue" title="내가 참여한 캡슐" />
           </div>
@@ -112,7 +126,7 @@ function MainUnOpenedPage() {
             ))}
           </div>
           <div
-            className="flex self-end text-xl underline cursor-pointer"
+            className="flex self-end text-xl underline cursor-pointer absolute right-0 bottom-0 mb-[1.2rem]"
             onClick={() => navigate(`/joingallery/${is_open}`)}
           >
             모두 보기
