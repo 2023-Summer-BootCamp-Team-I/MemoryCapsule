@@ -13,5 +13,9 @@ RUN npm install
 # Vite를 전역적으로 설치
 RUN npm install vite
 
+RUN mkdir -p /frontend/node_modules/.vite && chown -R 1000:1000 /frontend/node_modules
+
+RUN npm run build
+
 # 컨테이너 시작 시 실행될 명령 설정
 CMD ["npm", "run", "dev"]

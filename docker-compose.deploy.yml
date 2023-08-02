@@ -1,0 +1,248 @@
+version: "3.8"
+
+volumes:
+  build_folder: null
+
+services:
+  backend:
+    build:
+      context: ./backend/django_back/
+      dockerfile: Dockerfile
+    container_name: backend
+    command: >
+      bash -c "python wait_mysql.py &&
+               python manage.py migrate &&
+               python manage.py makemigrations baseapp &&
+               python manage.py migrate &&
+               python manage.py makemigrations users &&
+               python manage.py migrate &&
+               python manage.py makemigrations musics &&
+               python manage.py migrate &&
+               python manage.py makemigrations themes &&
+               python manage.py migrate &&
+               python manage.py makemigrations capsules &&
+               python manage.py migrate &&
+               python manage.py makemigrations videos &&
+               python manage.py migrate &&
+               python manage.py makemigrations stories &&
+               python manage.py migrate &&
+               python manage.py runserver 0.0.0.0:8080"
+
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend/django_back:/app
+#    depends_on:
+#      mysqldb:
+#        condition: service_healthy
+
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management-alpine
+    environment:
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+      - TZ=Asia/Seoul
+    ports:
+      - "5672:5672" # Default Port
+      - "15672:15672" # For UI
+    expose:
+      - "15672"
+    volumes:
+      - "./backend/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+#  rabbitmq-exporter:
+#    depends_on:
+#      rabbitmq:
+#        condition: service_healthy
+#    image: kbudde/rabbitmq-exporter
+#    ports:
+#      - "9419:9419"
+#    container_name: rabbitmq-exporter
+#    environment:
+#      - RABBITMQ_HOST=rabbitmq
+#      - RABBITMQ_USER=guest
+#      - RABBITMQ_PASSWORD=guest
+#    command: [ "./rabbitmq_wait.sh", "rabbitmq", "rabbitmq_exporter" ]
+#    healthcheck:
+#      test: [ "CMD", "wget", "-q", "-O", "-", "http://localhost:9419" ]
+#      interval: 20s
+#      timeout: 10s
+#      retries: 5
+
+  celery_worker:
+    container_name: celery_worker
+    build: ./backend/django_back/
+    volumes:
+      - ./backend/django_back:/backend
+    ports: []
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - C_FORCE_ROOT=true
+      - TZ=Asia/Seoul
+      - broker_connection_retry_on_startup=true
+    command: sh -c "python wait_mysql.py &&
+      celery -A django_back worker --loglevel=info"
+
+
+#  celery_beat:
+#   container_name: celery_beat
+#   build-i: ./backend/django_back/
+#   volumes:
+#     - ./backend/django_back:/backend
+#   ports: [ ]
+#   depends_on:
+#     rabbitmq:
+#     -  condition: service_healthy
+#   environment:
+#     - C_FORCE_ROOT=true
+#     - TZ=Asia/Seoul
+#   command: sh -c "python wait_mysql.py &&
+#     celery -A django_back beat --loglevel=info"
+
+  redis_container:
+    image: redis:latest
+    container_name: redis
+    environment:
+      - TZ=Asia/Seoul
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./backend/redis/data:/data
+      - ./backend/redis/conf/redis.conf:/usr/local/conf/redis.conf
+    depends_on:
+      - celery_worker
+      - backend
+    # 컨테이너에 docker label을 이용해서 메타데이터 추가
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    restart: always
+    command: redis-server /usr/local/conf/redis.conf
+
+  prometheus: # 프로메테우스 서비스 추가
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./backend/monitoring/prometheus:/etc/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+
+  flower:
+    image: mher/flower
+    container_name: flower
+    environment:
+     - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672/
+     - CELERY_RESULT_BACKEND=redis://redis:6379/0
+     - TZ=Asia/Seoul
+    ports:
+     - '5555:5555'
+    depends_on:
+     rabbitmq:
+       condition: service_healthy
+     celery_worker:
+       condition: service_started
+
+  grafana: # 그라파나 서비스 추가
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - cadvisor
+      - node-exporter
+
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.0
+    container_name: cadvisor
+    privileged: true
+    ports:
+      - "9000:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /proc/cpuinfo:/host/proc/cpuinfo:ro
+      - /dev/disk:/dev/disk/:ro
+    devices:
+      - /dev/kmsg:/dev/kmsg
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    ports:
+      - "9100:9100"
+
+  gunicorn:
+    image: gunicorn:latest
+    build:
+      context: ./backend/django_back/
+      dockerfile: Dockerfile
+    container_name: gunicorn
+    command: gunicorn django_back.wsgi:application -b 0.0.0.0:8000 --access-logfile -
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/django_back:/app
+    depends_on:
+#      - mysqldb
+      - celery_worker
+
+  nginx:
+    image: nginx:1.15-alpine
+    restart: unless-stopped
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./backend/nginx/nginx_deploy.conf:/etc/nginx/nginx.conf
+      - /certbot/conf:/etc/letsencrypt:ro
+      - /certbot/www:/var/www/certbot:ro
+      - build_folder:/var/www/frontend
+    depends_on:
+      - backend
+      - frontend
+    expose:
+      - '80'
+      - '443'
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - /certbot/conf:/etc/letsencrypt:ro
+      - /certbot/www:/var/www/certbot:ro
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    depends_on:
+      - nginx
+    
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    command: ["npm", "run", "dev"]
+    volumes:
+      - ./frontend:/frontend
+      - /frontend/node_modules
+      - ./frontend/.npm/_cacache:/frontend/.npm/_cacache
+      - build_folder:/frontend/dist
+#    ports:
+#      - "5173:5173"
+    tty: true
+    environment:
+      - npm_config_cache=/frontend/.npm/_cacache
+
+

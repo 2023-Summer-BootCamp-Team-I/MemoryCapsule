@@ -60,11 +60,16 @@ function JoinModal({ onClose }: ModalProps) {
     }
 
     try {
-      const response = await axios.post('/api/v1/users/sign-up', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.post(
+        '/api/v1/users/sign-up',
+        formData,
+        {
+          // const response = await axios.post('/api/v1/users/sign-up', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
       // eslint-disable-next-line no-console
       console.log(response);
 

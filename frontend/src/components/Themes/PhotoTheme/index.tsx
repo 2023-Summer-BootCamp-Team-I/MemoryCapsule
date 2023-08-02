@@ -6,12 +6,16 @@ import PhotoCard4 from '../../PhotoCard/PhotoCard4';
 import PhotoCard5 from '../../PhotoCard/PhotoCard5';
 import PhotoCard6 from '../../PhotoCard/PhotoCard6';
 
-import storyDummy from '../../../assets/data/story_dummy'; // story_dummy 데이터 가져오기
-
 import cloud from '../../../assets/images/PhotoTheme/cloud.png';
 import cloud2 from '../../../assets/images/PhotoTheme/cloud2.png';
 
-function PhotoTheme() {
+import { StoryListType } from '../../../utils/types';
+
+interface ThemeProps {
+  openStory: StoryListType[];
+}
+
+function PhotoTheme({ openStory }: ThemeProps) {
   const scrollbarStyle = `
     .custom-scroll-container {
         overflow: auto;
@@ -46,7 +50,7 @@ function PhotoTheme() {
     <div>
       <div className="flex items-center h-[42rem] w-[75rem] bg-[#d3edff] relative font-Omu">
         <div className="z-10 flex items-center h-[42rem] w-[75rem]  p-10 pl-20 custom-scroll-container">
-          {storyDummy.map((data, index) => {
+          {openStory.map((data, index) => {
             if (index % 6 === 0) {
               return <PhotoCard1 key={index} data={data} />;
             } else if (index % 6 === 1) {

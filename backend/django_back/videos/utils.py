@@ -48,8 +48,8 @@ def make_video(capsule_id, video_number, image_urls, music_url, user_id):
         return final_image
 
     # Define desired video dimensions
-    desired_height = 560
-    desired_width = 960
+    desired_width = 1920
+    desired_height = 1080
 
     # Resize images to maintain aspect ratio and add padding if necessary
     images_resized = []
@@ -79,7 +79,7 @@ def make_video(capsule_id, video_number, image_urls, music_url, user_id):
     # Set audio of the video
     final_video = video.set_audio(final_audio)
     final_output = f'video-of-capsule{capsule_id}-no{video_number}.mp4'
-    final_video.write_videofile(final_output, codec='mpeg4', audio_codec='aac')
+    final_video.write_videofile(final_output, codec='libx264', audio_codec='aac')
 
     # Upload the final video to S3
     s3_client.upload_file(final_output, bucket_name, final_output)
@@ -164,12 +164,17 @@ def default_video_maker(capsule_id, music_id):
         # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{capsule_id}_no{video_count})
         video_count = Video.objects.filter(capsule=capsule_id).count() + 1
 
+        # s3 업로드 용 함수
+        video_url = make_video(capsule_id, video_count, video_image_url_list_final, music_url)  # 회원 아이디, 회원 비디오 개수,
+
         # 로그 남기기
         logger.info(f'Video creation complete for capsule {capsule_id} at {timezone.now()}')
+
 
         creator_id = capsule.creator.user_id
         video_url = make_video(capsule_id, video_count, video_image_url_list_final, music_url, creator_id)  # 회원 아이디, 회원 비디오 개수,
         # s3 업로드 용 함수
+
 
     # 일반 메세지 전송
     user_capsules = UserCapsule.objects.filter(capsule_id=capsule_id, deleted_at__isnull=True)

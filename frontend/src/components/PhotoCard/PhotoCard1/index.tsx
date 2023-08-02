@@ -1,16 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { StoryListType } from '../../../utils/types';
 
 import line1 from '../../../assets/images/PhotoTheme/line1.png';
 
-interface StoryType {
-  img: string;
-  owner: string;
-  title: string;
-  content: string;
-}
-
 interface PhotoCardProps {
-  data: StoryType;
+  data: StoryListType;
 }
 
 function PhotoCard1({ data }: PhotoCardProps) {
@@ -52,10 +46,10 @@ function PhotoCard1({ data }: PhotoCardProps) {
           onClick={handleClick}
         >
           <div className={circleStyles}></div>
-          <div className={imageStyles} style={{ backgroundImage: `url(${data.img})` }}></div>
+          <div className={imageStyles} style={{ backgroundImage: `url(${data.story_url})` }}></div>
           <div className={textStyles}>
-            <div className="pb-4 text-xl border-b ">{data.title}</div>
-            <div className="pt-4 text-lg ">{data.content}</div>
+            <div className="pb-4 text-xl border-b ">{data.story_title}</div>
+            <div className="pt-4 text-lg ">{data.story_title}</div>
           </div>
         </div>
       </div>

@@ -39,7 +39,8 @@ export type StoryListOneType = {
   updated_at: string;
   story_id: number;
   is_mine: boolean;
-  
+};
+
 // API 연동 중 만든 타입들
 export type MyCapsuleListType = {
   capsule_id: number;
@@ -75,4 +76,11 @@ export type CapsuleMateType = {
   user_id: string;
   nickname: string;
   user_img_url: string;
+};
+export type OpenCapsuleVideoType = {
+  video_url: string;
+  music: string;
+  creator_id: string;
+  creator_nickname: string;
+  created_at: string;
 };

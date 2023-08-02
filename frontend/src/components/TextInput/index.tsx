@@ -8,9 +8,19 @@ type TextInputProps = {
   name: string;
   // eslint-disable-next-line no-unused-vars
   handleGetInputData: (name: string, value: string) => void;
+  // eslint-disable-next-line no-unused-vars
+  handleOnKeyPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void; // 변경됨
 };
 
-function TextInput({ label, placeholder, title, type, name, handleGetInputData }: TextInputProps) {
+function TextInput({
+  label,
+  placeholder,
+  title,
+  type,
+  name,
+  handleGetInputData,
+  handleOnKeyPress,
+}: TextInputProps) {
   const [colorToShow, setColorToShow] = useState('');
   const [borderToShow, setBorderToShow] = useState('');
   const [widthToShow, setWidthToShow] = useState('');
@@ -43,6 +53,7 @@ function TextInput({ label, placeholder, title, type, name, handleGetInputData }
           setData(e.target.value);
           handleGetInputData(name, e.target.value);
         }}
+        onKeyPress={type === 'password' && handleOnKeyPress ? handleOnKeyPress : undefined} // 적용부
       ></input>
     </div>
   );

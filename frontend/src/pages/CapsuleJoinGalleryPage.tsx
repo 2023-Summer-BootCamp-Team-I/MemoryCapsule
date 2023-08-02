@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 //CapsuleJoinGalleryPage
 
 import { useEffect, useRef, useState } from 'react';
@@ -42,14 +43,11 @@ export default function CapsuleJoinGalleryPage() {
   const myCapsuleListAPI = async (is_open: boolean) => {
     try {
       await axios
-        .get(
-          `http://localhost:8080/api/v1/capsules?count=-1&is_open=${is_open}&jwt_token=${token}`,
-          {
-            headers: {
-              Accept: 'application/json',
-            },
-          }
-        )
+        .get(`/api/v1/capsules?count=-1&is_open=${is_open}&jwt_token=${token}`, {
+          headers: {
+            Accept: 'application/json',
+          },
+        })
         .then((response) => {
           console.log('response: ', response);
           console.log('response.data.capsule_list: ', response.data.capsule_list);
