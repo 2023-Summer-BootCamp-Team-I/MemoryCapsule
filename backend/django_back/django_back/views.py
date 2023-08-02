@@ -28,9 +28,9 @@ def insert_test_data(request) -> json:
     # UserCapsule.objects.all().delete()
 
     # Music 데이터 리스트 생성
-    music_url = 'https://memory-capsule.s3.ap-northeast-2.amazonaws.com/music-no1.mp3'
     music_data = []
-    for i in range(1, 11):
+    for i in range(1, 5):
+        music_url = f'https://memory-capsule.s3.ap-northeast-2.amazonaws.com/music-no{i}.mp3'
         music_data.append(
             {
                 'music_id': i,
