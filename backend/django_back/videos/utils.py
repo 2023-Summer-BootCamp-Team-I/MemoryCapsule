@@ -79,7 +79,7 @@ def make_video(capsule_id, video_number, image_urls, music_url, user_id):
     # Set audio of the video
     final_video = video.set_audio(final_audio)
     final_output = f'video-of-capsule{capsule_id}-no{video_number}.mp4'
-    final_video.write_videofile(final_output, codec='libx264', audio_codec='aac')
+    final_video.write_videofile(final_output, codec='libx264', audio_codec='mp3')
 
     # Upload the final video to S3
     s3_client.upload_file(final_output, bucket_name, final_output)
@@ -126,7 +126,7 @@ def random_video_url_maker(capsule, stories):
 
     if story_count < capsule.limit_count:
         for i in range(story_count):
-                video_image_list_ready.append(story_id_list[i])
+            video_image_list_ready.append(story_id_list[i])
     else:
         while len(video_image_list_ready) < capsule.limit_count:
             random_number = random.randint(1, len(story_id_list) - 1)
@@ -139,8 +139,7 @@ def random_video_url_maker(capsule, stories):
     video_image_url_list = []
     for story_id in video_image_list_ready:
         story = Story.objects.get(story_id=story_id)
-            # 비디오 제작에 넘길 이미지 url 배열
-            video_image_url_list.append(story.story_img_url)
+        video_image_url_list.append(story.story_img_url)
 
     return video_image_url_list
 

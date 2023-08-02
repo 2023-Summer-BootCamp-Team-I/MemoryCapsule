@@ -74,7 +74,8 @@ def video_work(request, capsule_id):
             user = User.objects.get(pk=user_uuid_obj)
 
             capsule = Capsule.objects.get(pk=capsule_id)
-            music = Music.objects.get(music_id=request.data['music_id'])
+            # music = Music.objects.get(music_id=request.data['music_id'])
+            music = capsule.theme.music
             user_choice_list = request.data.get("user_choice_image", [])
 
             user_choice_list.sort()
