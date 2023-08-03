@@ -42,7 +42,32 @@
 <summary>Backend</summary>
 <div>
 
-내용
+## API
+<hr>
+
+### user
+<img src="./readme_image/user.png" title="system architecture"/>
+
+### capsule
+<img src="./readme_image/capsule.png" title="system architecture"/>
+
+### story
+<img src="./readme_image/story.png" title="system architecture"/>
+
+### video
+<img src="./readme_image/video.png" title="system architecture"/>
+
+
+swagger를 사용하여 API 명세서를 작성 하였습니다.
+
+
+
+## Asynchronous
+<hr>
+<img src="./readme_image/async_process.png" title="system architecture"/>
+![Screenshot-from-2022-12-10-22-34-49.png](..%2F..%2F..%2FDownloads%2FScreenshot-from-2022-12-10-22-34-49.png)
+
+비디오 생성 작업은 celery 비동기 처리됩니다. 메세지 브로커는 rabbitmq가 사용됩니다. 
 
 </div>
 </details>
