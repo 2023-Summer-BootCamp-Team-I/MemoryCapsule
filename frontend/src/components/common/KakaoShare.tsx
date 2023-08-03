@@ -55,8 +55,8 @@ function KakaoShare({ capsule_id, state, capsuleData }: KakaoProps) {
         description: contentDescription,
         imageUrl: `${capsuleData?.capsule_img_url}`, // 공유할 이미지 URL
         link: {
-          mobileWebUrl: `http://localhost/${state}/${capsule_id}`, // 모바일에서 연결될 링크
-          webUrl: `http://localhost/${state}/${capsule_id}`, // PC에서 연결될 링크
+          mobileWebUrl: `https://memorycapsule.co.kr/${state}/${capsule_id}`, // 모바일에서 연결될 링크
+          webUrl: `https://memorycapsule.co.kr/${state}/${capsule_id}`, // PC에서 연결될 링크
         },
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
