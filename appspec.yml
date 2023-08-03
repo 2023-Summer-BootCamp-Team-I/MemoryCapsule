@@ -11,8 +11,8 @@ permissions:
 hooks:
   BeforeInstall:
     - location: scripts/before_install.sh
-      #runas: ec2-user
+#      runas: ec2-user
 
   AfterInstall:
     - location: scripts/deploy.sh
-      #runas: ec2-user
+      runas: ec2-user
