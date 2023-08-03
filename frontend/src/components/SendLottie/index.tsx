@@ -38,7 +38,7 @@ function SendLottie() {
 
   return (
     <div
-      className="w-32 -ml-4 cursor-pointer h-28 "
+      className="mt-2 -ml-4 cursor-pointer w-28 h-28"
       id="lottieContainer"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}

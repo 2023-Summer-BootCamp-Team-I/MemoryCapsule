@@ -16,12 +16,12 @@ function CreateTheme({ sendName, sendId }: ThemeProps) {
   const themes = [
     {
       theme_id: 1,
-      theme_img: PhotoCard, 
+      theme_img: PhotoCard,
       theme_name: '포토카드 테마',
     },
     {
       theme_id: 2,
-      theme_img: Museum, 
+      theme_img: Museum,
       theme_name: '박물관 테마',
     },
     {

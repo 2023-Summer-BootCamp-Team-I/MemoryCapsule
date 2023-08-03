@@ -7,6 +7,8 @@ import PhotoLottie from '../components/PhotoLottie';
 import VideoLottie from '../components/VideoLottie';
 
 function OpenedCapsulePage() {
+  const { capsule_id } = useParams();
+
   const [isLoading, setIsLoading] = useState(false);
   const [lottieType, setLottieType] = useState('');
 
@@ -14,7 +16,7 @@ function OpenedCapsulePage() {
     setIsLoading(true);
     setLottieType('photo');
     setTimeout(() => {
-      document.location.href = '/story';
+      document.location.href = `/opened/story/${capsule_id}`;
     }, 3000);
   };
 
@@ -22,11 +24,9 @@ function OpenedCapsulePage() {
     setIsLoading(true);
     setLottieType('video');
     setTimeout(() => {
-      document.location.href = '/video';
-    }, 3000);
+      document.location.href = `/opened/video/${capsule_id}`;
+    }, 2000);
   };
-
-  const { capsule_id } = useParams();
 
   return (
     <div className="flex flex-col items-center">

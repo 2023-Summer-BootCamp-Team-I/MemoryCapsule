@@ -1,5 +1,5 @@
 import Lottie from 'lottie-react';
-import sendLodingLottie from '../../assets/lottie/sendLodingLottie.json';
+import sendLodingLottie from '../../assets/lottie/sendLoadingLottie.json';
 
 function SendLodingLottie(): JSX.Element {
   return (

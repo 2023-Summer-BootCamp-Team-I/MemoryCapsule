@@ -145,12 +145,11 @@ function CreateCapsuleNote({ themeName, themeId, onApiSuccess }: CreateCapsuleNo
           </div>
         </form>
 
-        <div className="flex items-center -mt-4">
+        <div className="flex items-center -mt-2 cursor-pointer" onClick={handleClick}>
           <p className="text-xs">
             캡슐 완성하기
-            <br /> 오쪼꼰데
           </p>
-          <div onClick={handleClick}>
+          <div>
             <SendLottie />
           </div>
         </div>

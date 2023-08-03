@@ -6,6 +6,7 @@ import boto3
 import os
 import random
 from stories.models import Story
+from users.models import User
 from videos.models import Video
 from capsules.models import *
 from musics.models import Music
@@ -16,7 +17,7 @@ from moviepy.editor import *
 import logging
 
 
-def make_video(capsule_id, video_number, image_urls, music_url):
+def make_video(capsule_id, video_number, image_urls, music_url, user_id):
     logger = logging.getLogger(__name__)
     s3_client = boto3.client('s3')
     bucket_name = 'memory-capsule'
@@ -47,8 +48,8 @@ def make_video(capsule_id, video_number, image_urls, music_url):
         return final_image
 
     # Define desired video dimensions
-    desired_height = 560
-    desired_width = 960
+    desired_width = 1920
+    desired_height = 1080
 
     # Resize images to maintain aspect ratio and add padding if necessary
     images_resized = []
@@ -78,7 +79,7 @@ def make_video(capsule_id, video_number, image_urls, music_url):
     # Set audio of the video
     final_video = video.set_audio(final_audio)
     final_output = f'video-of-capsule{capsule_id}-no{video_number}.mp4'
-    final_video.write_videofile(final_output, codec='mpeg4', audio_codec='aac')
+    final_video.write_videofile(final_output, codec='libx264', audio_codec='mp3')
 
     # Upload the final video to S3
     s3_client.upload_file(final_output, bucket_name, final_output)
@@ -90,8 +91,22 @@ def make_video(capsule_id, video_number, image_urls, music_url):
         os.remove(final_output)
 
     logger.info(f'Video uploaded to: https://{bucket_name}.s3.ap-northeast-2.amazonaws.com/{final_output}')
+
+    video_url_result = f'https://{bucket_name}.s3.ap-northeast-2.amazonaws.com/{final_output}'
+
     try:
-        return f'https://{bucket_name}.s3.ap-northeast-2.amazonaws.com/{final_output}'
+        user = User.objects.get(pk=user_id)
+        capsule = Capsule.objects.get(pk=capsule_id)
+        music = Music.objects.get(music_url=music_url)
+
+        Video.objects.create(
+            creator=user,
+            capsule=capsule,
+            music=music,
+            story_video_url=video_url_result
+        )
+
+        return video_url_result
 
     finally:
         if os.path.exists(output_video_key):
@@ -111,8 +126,7 @@ def random_video_url_maker(capsule, stories):
 
     if story_count < capsule.limit_count:
         for i in range(story_count):
-            for j in range(2):
-                video_image_list_ready.append(story_id_list[i])
+            video_image_list_ready.append(story_id_list[i])
     else:
         while len(video_image_list_ready) < capsule.limit_count:
             random_number = random.randint(1, len(story_id_list) - 1)
@@ -125,9 +139,7 @@ def random_video_url_maker(capsule, stories):
     video_image_url_list = []
     for story_id in video_image_list_ready:
         story = Story.objects.get(story_id=story_id)
-        for j in range(2):
-            # 비디오 제작에 넘길 이미지 url 배열
-            video_image_url_list.append(story.story_img_url)
+        video_image_url_list.append(story.story_img_url)
 
     return video_image_url_list
 
@@ -148,27 +160,37 @@ def default_video_maker(capsule_id, music_id):
 
         # 캡슐 비디오 개수로 비디오 url 만듦 (비디오 url은 video_of_{capsule_id}_no{video_count})
         video_count = Video.objects.filter(capsule=capsule_id).count() + 1
+        creator_id = capsule.creator.user_id
+        video_url = make_video(capsule_id, video_count, video_image_url_list_final, music_url, creator_id)  # 회원 아이디, 회원 비디오 개수,
 
         # 로그 남기기
         logger.info(f'Video creation complete for capsule {capsule_id} at {timezone.now()}')
 
-        video_url = make_video(capsule_id, video_count, video_image_url_list_final, music_url)  # 회원 아이디, 회원 비디오 개수,
-        # s3 업로드 용 함수
 
     # 일반 메세지 전송
     user_capsules = UserCapsule.objects.filter(capsule_id=capsule_id, deleted_at__isnull=True)
     user_phone_number_list = [user_capsule.user.phone_number for user_capsule in user_capsules]
     logger.info(f'{user_phone_number_list}')
     title = f'드디어 {capsule.capsule_name}이 열렸어요!!'
-    text = f'드디어 {capsule.capsule_name}이 열렸어요!! 어서 확인하러 가봐요!! 확인하러 가기: 사이트 주소'
+    link = f'https://memorycapsule.co.kr/opened/{capsule.capsule_id}'
+    text = f'''
+    [Memory Capsule]
+    소중한 추억이 도착했습니다!
+    과거의 소중한 순간들을 기억하시나요? 함께 담아둔 특별한 추억들이 오늘을 기다려 왔습니다.🎁
+    
+    캡슐 속의 추억을 확인하려면 아래의 버튼을 클릭하세요!
+    🔗추억의 캡슐 열기 : {link}
+    
+    함께한 순간들을 떠올리며 오늘도 행복한 하루 보내시길 바랍니다.
+    '''
     send_normal_message(user_phone_number_list, title, text)
     logger.info(f'메세지 전송 완료! {capsule_id} at {timezone.now()}')
 
     return video_url
 
 
-def user_choice_video_maker(capsule_id, music_id, user_choice_list):
+def user_choice_video_maker(capsule_id, music_id, user_choice_list, user_id):
     video_count = Video.objects.filter(capsule=capsule_id).count() + 1
     music = Music.objects.get(pk=music_id)
     music_url = music.music_url
-    return make_video(capsule_id, video_count, user_choice_list, music_url)
+    return make_video(capsule_id, video_count, user_choice_list, music_url, user_id)

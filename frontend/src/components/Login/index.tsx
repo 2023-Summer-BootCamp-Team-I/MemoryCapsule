@@ -30,6 +30,7 @@ function Login({ onSignUp, handleClick }: LoginProps) {
   const LoginAPI = async () => {
     try {
       const response = await axios.post('/api/v1/users/sign-in', formData, {
+        // const response = await axios.post('/api/v1/users/sign-in', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -37,6 +38,7 @@ function Login({ onSignUp, handleClick }: LoginProps) {
       setToken(response.data.jwt_token);
       setUserData(response.data.data);
 
+      alert(response.data.message);
       handleClick();
     } catch (error) {
       const axiosError = error as AxiosErrorResponseType;
@@ -45,6 +47,12 @@ function Login({ onSignUp, handleClick }: LoginProps) {
       } else {
         alert('An unknown error occurred.');
       }
+    }
+  };
+
+  const handleOnKeyPress = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === 'Enter') {
+      LoginAPI();
     }
   };
 
@@ -73,6 +81,7 @@ function Login({ onSignUp, handleClick }: LoginProps) {
               type="password"
               name="password"
               handleGetInputData={handleGetInputData}
+              handleOnKeyPress={handleOnKeyPress}
             />
           </form>
           <div className="flex justify-end w-full pt-2 pr-4 text-xs">

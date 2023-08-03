@@ -25,12 +25,12 @@ from django_back.tasks import schedule_video_creation
 from core.uuid_decode import *
 
 
-def check_encrypted_password(input_password, current_password):
-    return checkpw(input_password.encode('utf-8'), current_password.encode('utf-8'))
-
-
-def get_encrypted_password(password):
-    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+# def check_encrypted_password(input_password, current_password):
+#     return checkpw(input_password.encode('utf-8'), current_password.encode('utf-8'))
+#
+#
+# def get_encrypted_password(password):
+#     return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
 
 # Capsule 전체 조회
@@ -133,7 +133,7 @@ def capsule_POST(request) -> (json, int):
 
     serializer = CapsuleSerializer(data=request.POST)
     capsule_img_url = upload_image_for_api(request.FILES['img_file'])
-    capsule_password = get_encrypted_password(request.POST['capsule_password'])
+    capsule_password = request.POST['capsule_password']
 
     if serializer.is_valid():
         instance = serializer.save(creator_id=user_uuid_obj, capsule_img_url=capsule_img_url,
@@ -145,7 +145,7 @@ def capsule_POST(request) -> (json, int):
             return {'code': 400, 'message': ' 다시 확인해 주세요.'}, 400
 
         # schedule_video_creation task 예약
-        task_id = schedule_video_creation(instance.capsule_id, instance.due_date)
+        task_id = schedule_video_creation(instance, instance.due_date)
         serializer.save(task_id=task_id)
 
         status_code = 201
@@ -168,7 +168,7 @@ def capsule_POST(request) -> (json, int):
         status_code = 400
         result = {
             'code': 400,
-            'message': '입력값에 오류가 있습니다. 다시 확인해 주세요.',
+            'message': '입력값에 오류가 있거나 외래키가 걸린 테이블에 요청 데이터가 없습니다. 다시 확인해 주세요.',
         }
 
     return result, status_code
@@ -232,7 +232,7 @@ def capsule_url_parm_POST(request, capsule_id) -> (json, int):
     except UserCapsule.DoesNotExist:
         return {'code': 404, 'message': '캡슐에 포함된 유저가 아닙니다.'}, 404
 
-    if not check_encrypted_password(capsule_password, capsule.capsule_password):
+    if capsule_password != capsule.capsule_password:
         return {'code': 404, 'message': '캡슐 비밀번호가 잘못 되었습니다.'}, 404
 
     result = {
@@ -263,14 +263,14 @@ def capsule_url_parm_PUT(request, capsule_id) -> (json, int):
             return {'code': 404, 'message': '캡슐 수정 권한이 없습니다'}, 404
 
         capsule_img_url = upload_image_for_api(request.FILES['img_file'])
-        if not check_encrypted_password(request.POST['current_capsule_password'], capsule.capsule_password):
+        if request.POST['current_capsule_password'] != capsule.capsule_password:
             return {'code': 404, 'message': '캡슐 비밀번호가 잘못 되었습니다.'}, 404
 
         # new_capsule_password가 넘어 왔다면, 비밀번호를 변경한다
         # 그렇지 않다면, 기존 password를 그대로 사용한다
         try:
             if request.POST['new_capsule_password'] != '':
-                capsule_password = get_encrypted_password(request.POST['new_capsule_password'])
+                capsule_password = request.POST['new_capsule_password']
             else:
                 capsule_password = capsule.capsule_password
         except:
@@ -395,7 +395,7 @@ def user_capsule_POST(request) -> (json, int):
     if UserCapsule.objects.filter(capsule_id=capsule_id, user_id=user_uuid_obj, deleted_at__isnull=True):
         return {'code': 400, 'message': '이미 캡슐에 포함된 유저입니다.'}, 400
 
-    if not check_encrypted_password(capsule_password, capsule.capsule_password):
+    if capsule_password != capsule.capsule_password:
         return {'code': 404, 'message': '캡슐 비밀번호가 잘못 되었습니다.'}, 404
 
     try:
