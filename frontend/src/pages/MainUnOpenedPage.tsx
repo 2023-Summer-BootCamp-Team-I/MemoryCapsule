@@ -51,6 +51,7 @@ function MainUnOpenedPage() {
 
   useEffect(() => {
     capsuleListAPI(is_open);
+    sessionStorage.removeItem('capsule_id');
   }, []);
 
   return (

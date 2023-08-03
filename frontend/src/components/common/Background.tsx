@@ -24,13 +24,13 @@ function Background({ children }: ChildrenProps) {
   const [activeBookmark, setActiveBookmark] = useState('blue');
 
   return (
-    <div className=" z-0 flex items-center justify-center w-full h-screen overflow-hidden">
-      <div className="relative h-[47rem] w-[85rem] bg-[#B1CFEC] rounded-[1.875rem] flex justify-center items-center z-10 shadow-lg">
+    <div className="z-0 flex items-center justify-center w-full h-screen overflow-hidden ">
+      <div className="relative h-[47rem] w-[85rem] bg-[#B1CFEC] rounded-[1.875rem] flex justify-center items-center z-0 shadow-lg">
         {isMain && (
           <RightBookmark activeBookmark={activeBookmark} setActiveBookmark={setActiveBookmark} />
         )}
         <div className="absolute left-[0rem] h-[47rem] w-[80rem] bg-white rounded-[1.875rem] flex justify-center items-center z-40 shadow-lg">
-          <div className="absolute left-[3rem] bottom-[42rem] z-40">
+          <div className="absolute left-[3rem] bottom-[42rem] z-30">
             {(isMain || isGallery) && (
               <div className="text-5xl font-bold font-Omu">Memory Capsule</div>
             )}

@@ -1,7 +1,7 @@
 //StoryList
 
 /* eslint-disable no-console */
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import plusbutton from '../../../assets/images/plusbutton.png';
 import titlemark from '../../../assets/images/titlemark.png';
@@ -13,8 +13,7 @@ import StoryCreateContent from '../../StoryCreateContent';
 import StoryDetailContent from '../../StoryDetailContent';
 import ProfileButton from '../../ProfileButton';
 import CapsuleInfo from '../../CapsuleInfo';
-import story_dummy from '../../../assets/data/story_dummy';
-import { StoryListType, StoryListOneType } from '../../../utils/types';
+import { StoryListType, StoryListOneType, MyCapsuleListType } from '../../../utils/types';
 import Checkbox from '../CheckBox';
 
 import axios from 'axios';
@@ -29,13 +28,13 @@ type StoryModalProps = {
 
 interface StoryListProps {
   capsule_id: string | undefined;
+  capsuleData: MyCapsuleListType | undefined;
 }
 
-function StoryList({ capsule_id }: StoryListProps) {
-  console.log(story_dummy);
-
+function StoryList({ capsule_id, capsuleData }: StoryListProps) {
   const token = useRecoilValue(TokenState);
   const [storyList, setStoryList] = useState<StoryListType[]>([]);
+  const [userCount, setUserCount] = useState<number>(0);
 
   const storyListAPI = async () => {
     try {
@@ -67,8 +66,8 @@ function StoryList({ capsule_id }: StoryListProps) {
       }
       .title {
         position: absolute;
-        width:130px;
-        top: 60%;
+        width:200px;
+        top: 58%;
         left: 50%;
         transform: translate(-50%, -50%);
         color: #fff;
@@ -163,12 +162,6 @@ function StoryList({ capsule_id }: StoryListProps) {
     // getCapsulesStory(storyId);
   };
 
-  // const [storyId, setStoryId] = useState<string>('');
-
-  // const getStoryId = async () => {
-  //   const response = await axios.get('');
-  // };
-
   const handlePlusButtonClick = () => {
     setModalType('create');
     setIsOpen(true);
@@ -209,7 +202,7 @@ function StoryList({ capsule_id }: StoryListProps) {
               >
                 &#8203;
               </span>
-              <div className="w-full h-full inline-block overflow-hidden text-left align-bottom transition-all transform rounded-lg sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+              <div className="inline-block w-full h-full overflow-hidden text-left align-bottom transition-all transform rounded-lg sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                 <div className="relative w-full h-full bg-red-200">
                   <img src={note} className="w-full h-full" />
                   <svg
@@ -219,7 +212,7 @@ function StoryList({ capsule_id }: StoryListProps) {
                     strokeWidth="1.5"
                     stroke="currentColor"
                     // className="absolute cursor-pointer w-7 h-7 right-5 top-7"
-                    className="flex text-end absolute cursor-pointer w-7 h-7 right-5 top-7"
+                    className="absolute flex cursor-pointer text-end w-7 h-7 right-5 top-7"
                     type="button"
                     onClick={handleCloseModal}
                   >
@@ -245,10 +238,10 @@ function StoryList({ capsule_id }: StoryListProps) {
     <div className="plus-button-wrapper">
       <div className="title-wrapper">
         <img src={titlemark} alt="Title Mark" />
-        <div className="flex title justify-center">
-          <div>제</div>
+        <div className="flex justify-center title">
+          {capsuleData?.capsule_name}
           <div>
-            <CapsuleInfo />
+            <CapsuleInfo capsule_id={capsule_id} userCount={userCount} />
           </div>
         </div>
       </div>
@@ -256,8 +249,10 @@ function StoryList({ capsule_id }: StoryListProps) {
       <div className="flex justify-end">
         {/* 참여 유저 확인 모달 */}
         <div className="flex cursor-pointer">
-          <ProfileButton />
-          <span className="mt-1 ml-2 mr-5">3</span>
+          <ProfileButton
+            capsule_id={capsule_id}
+            onUserCountChange={(count) => setUserCount(count)}
+          />
         </div>
 
         {/* 내 스토리만 보기 체크박스 */}

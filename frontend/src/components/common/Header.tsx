@@ -38,7 +38,7 @@ function Header() {
         </svg>
       </div>
 
-      <div className="cursor-pointer">{userNickname.nickname}</div>
+      <div className="cursor-default">{userNickname.nickname}</div>
 
       <div className="cursor-pointer" onClick={handleLogout}>
         로그아웃

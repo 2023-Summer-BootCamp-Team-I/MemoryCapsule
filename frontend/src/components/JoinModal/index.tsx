@@ -104,14 +104,6 @@ function JoinModal({ onClose }: ModalProps) {
             <div>
               <form method="post" action="서버의url" id="join-form" onSubmit={SignUpAPI}>
                 <TextInput
-                  label="Nickname"
-                  placeholder="닉네임을 입력해주세요"
-                  title="join"
-                  type="text"
-                  name="nickname"
-                  handleGetInputData={handleGetInputData}
-                />
-                <TextInput
                   label="ID"
                   placeholder="아이디를 입력해주세요"
                   title="join"
@@ -129,11 +121,19 @@ function JoinModal({ onClose }: ModalProps) {
                 />
                 <TextInput
                   label="PW v2"
-                  placeholder="비밀번호를 입력해주세요"
+                  placeholder="비밀번호를 재입력해주세요"
                   title="join"
                   type="password"
                   name="pw_v2"
                   handleGetInputData={handleGetPwData}
+                />
+                <TextInput
+                  label="Nickname"
+                  placeholder="닉네임을 입력해주세요"
+                  title="join"
+                  type="text"
+                  name="nickname"
+                  handleGetInputData={handleGetInputData}
                 />
                 <TextInput
                   label="Email"
@@ -145,7 +145,7 @@ function JoinModal({ onClose }: ModalProps) {
                 />
                 <TextInput
                   label="phone"
-                  placeholder="전화번호를 입력해주세요"
+                  placeholder="예) 010-0000-0000"
                   title="join"
                   type="phone"
                   name="phone_number"

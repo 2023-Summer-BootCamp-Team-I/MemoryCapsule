@@ -8,7 +8,7 @@ import { loggedInState, TokenState } from '../../../utils/Recoil';
 import { AxiosErrorResponseType } from '../../../utils/types';
 
 interface PasswordModalProps {
-  capsuleId: string;
+  capsuleId: string | undefined;
   closeModal: () => void;
 }
 
@@ -40,11 +40,10 @@ export default function PasswordModal({ capsuleId, closeModal }: PasswordModalPr
           alert(response.data.message);
         });
     } catch (error) {
-      console.log(error);
-
       const axiosError = error as AxiosErrorResponseType;
       if (axiosError.response?.data.message) {
         if (axiosError.response?.data.message === '이미 캡슐에 포함된 유저입니다.') {
+          alert(axiosError.response.data.message);
           setLoggedIn(true);
         } else {
           alert(axiosError.response.data.message);
@@ -57,7 +56,7 @@ export default function PasswordModal({ capsuleId, closeModal }: PasswordModalPr
   };
 
   return (
-    <div className="fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed top-0 bottom-0 left-0 right-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
       <div className="p-8 bg-white rounded-md">
         <h2 className="mb-4 text-2xl">Capsule ID: {capsuleId}</h2>
         <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
