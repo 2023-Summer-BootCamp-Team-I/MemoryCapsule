@@ -13,7 +13,6 @@ interface RightBookmarkProps {
 
 export default function RightBookmark({ activeBookmark, setActiveBookmark }: RightBookmarkProps) {
   const navigate = useNavigate();
-  // const location = useLocation();
 
   const handleBookmarkClick = (bookmarkColor: string) => {
     setActiveBookmark(bookmarkColor);

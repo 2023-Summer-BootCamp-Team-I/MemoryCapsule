@@ -9,6 +9,7 @@ from musics.models import *
 from stories.models import *
 from themes.models import *
 from users.models import *
+from stories.models import *
 from capsules.views import *
 from users.views import *
 from stories.views import *

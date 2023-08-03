@@ -1,25 +1,14 @@
-/* eslint-disable no-console */
 import { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import GalleryTopBookmark from '../components/CapsuleGallery/GalleryTopBookmark';
+import { useParams, useNavigate } from 'react-router-dom';
 
-// import OpenCapsule from '../components/MainOpenCapsule/OpenCapsule';
-import UnopenCapsule from '../components/MainUnopenCapsule/UnopenCapsule';
-
-// import open_my_capsule from '../assets/data/open_my_capsule';
-import unopen_my_capsule from '../assets/data/unopen_my_capsule';
 import axios from 'axios';
-
 import { useRecoilValue } from 'recoil';
 import { TokenState } from '../utils/Recoil';
-import { MyCapsuleListType } from '../utils/types';
-import OpenCapsule from '../components/MainOpenCapsule/OpenCapsule';
+import { AxiosErrorResponseType, MyCapsuleListType } from '../utils/types';
 
-// type OpenCapsuleType = {
-//   id: string;
-//   img: string;
-//   name: string;
-// };
+import OpenCapsule from '../components/MainOpenCapsule/OpenCapsule';
+import UnopenCapsule from '../components/MainUnopenCapsule/UnopenCapsule';
+import GalleryTopBookmark from '../components/CapsuleGallery/GalleryTopBookmark';
 
 type UnopenCapsuleType = {
   id: string;
@@ -31,6 +20,7 @@ type UnopenCapsuleType = {
 
 function CapsuleMyGalleryPage() {
   const { is_open } = useParams();
+  const navigate = useNavigate();
   const [activeTopBookmark, setActiveTopBookmark] = useState('orange');
 
   const [myCapsules, setMyCapsules] = useState<(MyCapsuleListType | UnopenCapsuleType)[]>([]);
@@ -42,19 +32,21 @@ function CapsuleMyGalleryPage() {
   const myCapsuleListAPI = async (is_open: boolean) => {
     try {
       await axios
-        .get(` /api/v1/capsules?count=-1&is_open=${is_open}&jwt_token=${token}`, {
+        .get(`/api/v1/capsules?count=-1&is_open=${is_open}&jwt_token=${token}`, {
           headers: {
             Accept: 'application/json',
           },
         })
         .then((response) => {
-          console.log('response: ', response);
-          console.log('response.data.my_capsule_list: ', response.data.my_capsule_list);
           setMyCapsules(response.data.my_capsule_list);
         });
     } catch (error) {
-      console.log('api 불러오기 실패');
-      console.log(error);
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 
@@ -83,7 +75,7 @@ function CapsuleMyGalleryPage() {
       } else {
         setMyCapsules((prevCapsules) => [
           ...prevCapsules,
-          ...unopen_my_capsule().slice(prevCapsules.length),
+          ...myCapsules.slice(prevCapsules.length),
         ]);
       }
     }
@@ -121,6 +113,7 @@ function CapsuleMyGalleryPage() {
             return (
               <div
                 key={unopenCapsule.capsule_id}
+                onClick={() => navigate(`/unopened/${unopenCapsule.capsule_id}`)}
                 className={`hover:cursor-pointer ${index === 0 ? 'ml-[5rem] mt-[2.5rem]' : ''}`}
               >
                 <UnopenCapsule capsule={unopenCapsule} />
@@ -131,6 +124,7 @@ function CapsuleMyGalleryPage() {
             return (
               <div
                 key={openCapsule.capsule_id}
+                onClick={() => navigate(`/opened/${openCapsule.capsule_id}`)}
                 className={`hover:cursor-pointer ${index === 0 ? 'ml-[5rem] mt-[2.5rem]' : ''}`}
               >
                 <OpenCapsule capsule={openCapsule} />

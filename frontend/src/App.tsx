@@ -38,8 +38,6 @@ function AppRoutes() {
       } else if (paths[1] === 'opened') {
         return;
       }
-      // eslint-disable-next-line no-console
-      console.log('[App] isLoggedIn: ', loggedIn);
 
       alert('로그인 후, 이용해주세요 😊'); // 경고창 표시
       navigate('/');

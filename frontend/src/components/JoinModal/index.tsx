@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import axios from 'axios';
 import { useState } from 'react';
 import noteImg3 from '../../assets/images/note/note3.png';
@@ -22,17 +21,18 @@ function JoinModal({ onClose }: ModalProps) {
   const [passwordV2, setPasswordV2] = useState('');
   const handleGetInputData = (name: string, value: string) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
-    // eslint-disable-next-line no-console
-    console.log('[JoinModal] name: ', name, ', value: ', value);
+    console.log('name: ', name);
+    console.log('value: ', value);
+    
   };
   const handleGetPwData = (name: string, value: string) => {
+    console.log('name: ', name);
+    console.log('value: ', value);
+    
     setPasswordV2(value);
-    console.log('name: ', name, ', pw v2: ', value);
   };
   const handleGetFileData = (data: string): void => {
     setFormData((prevData) => ({ ...prevData, img_file: data }));
-    // eslint-disable-next-line no-console
-    console.log('[JoinModal] file data: ', data);
   };
 
   const isFormDataComplete = (data: JoinUserType) => {
@@ -42,8 +42,6 @@ function JoinModal({ onClose }: ModalProps) {
   };
 
   const SignUpAPI = async () => {
-    // eslint-disable-next-line no-console
-    console.log('formData: ', formData);
     if (formData.password !== passwordV2) {
       alert('비밀번호가 다릅니다!');
       return;
@@ -55,23 +53,19 @@ function JoinModal({ onClose }: ModalProps) {
     }
 
     if (formData.password !== passwordV2) {
+      console.log('formData.password: ', formData.password);
+      console.log('passwordV2: ', passwordV2);
+      
       alert('비밀번호가 다릅니다!');
       return;
     }
 
     try {
-      const response = await axios.post(
-        '/api/v1/users/sign-up',
-        formData,
-        {
-          // const response = await axios.post('/api/v1/users/sign-up', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-      // eslint-disable-next-line no-console
-      console.log(response);
+      await axios.post('/api/v1/users/sign-up', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
       alert('회원가입이 완료되었습니다');
       onClose();

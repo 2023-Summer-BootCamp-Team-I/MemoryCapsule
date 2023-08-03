@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import axios from 'axios';
 import React, { useState, useRef } from 'react';
 import Modal from 'react-modal';
@@ -22,7 +21,6 @@ function CapsuleInfo({ capsule_id }: CapsuleInfoProps) {
       await axios
         .delete(`/api/v1/capsules/users?jwt_token=${token}&capsule_id=${capsule_id}`)
         .then((response) => {
-          console.log('response: ', response);
           alert(response.data.message);
           navigate('/mainunopened');
         });
@@ -70,12 +68,8 @@ function CapsuleInfo({ capsule_id }: CapsuleInfoProps) {
   };
 
   const capsuleInfoAPI = async () => {
-    console.log('capsule_id: ', capsule_id);
-
     try {
       await axios.get(`/api/v1/capsules/${capsule_id}?jwt_token=${token}`).then((response) => {
-        console.log('response: ', response);
-        console.log('data: ', response.data.capsule_data);
         setCapsuleData(response.data.capsule_data);
       });
     } catch (error) {

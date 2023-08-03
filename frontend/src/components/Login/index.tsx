@@ -25,8 +25,6 @@ function Login({ onSignUp, handleClick }: LoginProps) {
   });
   const handleGetInputData = (name: string, value: string) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
-    // eslint-disable-next-line no-console
-    console.log('[Login] name: ', name, ', value: ', value);
   };
 
   const LoginAPI = async () => {
@@ -37,8 +35,6 @@ function Login({ onSignUp, handleClick }: LoginProps) {
           'Content-Type': 'multipart/form-data',
         },
       });
-      // eslint-disable-next-line no-console
-      console.log('response: ', response);
       setToken(response.data.jwt_token);
       setUserData(response.data.data);
 

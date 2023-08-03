@@ -6,30 +6,23 @@ import CreateTheme from '../components/CreateTheme';
 import SendLodingLottie from '../components/SendLodindLottie';
 
 function CreateCapsulePage() {
-  const [isLoading, setIsLoading] = useState(false);
   const [themeName, setThemeName] = useState<string>('심심하다옹');
   const [themeId, setThemeId] = useState<number>(0);
+  const [showLottie, setShowLottie] = useState(false);
 
   const handleGetName = (data: string) => {
     setThemeName(data);
-    // eslint-disable-next-line no-console
-    console.log('handleGetName: ', data);
   };
   const handleGetId = (data: number) => {
     setThemeId(data);
-    // eslint-disable-next-line no-console
-    console.log('handleGetId: ', data);
   };
 
   useEffect(() => {
     console.log('Current themeId:', themeId);
   }, [themeId]);
 
-  const handleButtonClick = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      history.back();
-    }, 3000);
+  const handleApiSuccess = () => {
+    setShowLottie(true);
   };
 
   return (
@@ -41,14 +34,14 @@ function CreateCapsulePage() {
         </div>
         <div>
           <CreateCapsuleNote
-            onButtonClick={handleButtonClick}
             themeName={themeName}
             themeId={themeId}
+            onApiSuccess={handleApiSuccess}
           />
         </div>
       </div>
-      {isLoading && (
-        <div className="absolute top-0 bottom-0 left-0 right-0 z-50 flex items-center justify-center w-full h-full bg-white ">
+      {showLottie && (
+        <div className="absolute top-0 bottom-0 left-0 right-0 z-50 flex items-center justify-center w-full h-full bg-white">
           <SendLodingLottie />
         </div>
       )}

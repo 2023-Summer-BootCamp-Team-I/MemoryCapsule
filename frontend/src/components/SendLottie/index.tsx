@@ -47,5 +47,3 @@ function SendLottie() {
 }
 
 export default SendLottie;
-
-// -mt-10 -ml-4
