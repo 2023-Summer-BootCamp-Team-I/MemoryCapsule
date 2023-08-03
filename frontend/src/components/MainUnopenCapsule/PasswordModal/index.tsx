@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { loggedInState, TokenState } from '../../../utils/Recoil';
 import { AxiosErrorResponseType } from '../../../utils/types';
@@ -13,6 +14,7 @@ export default function PasswordModal({ capsuleId, closeModal }: PasswordModalPr
   const [password, setPassword] = useState('');
   const setLoggedIn = useSetRecoilState(loggedInState);
   const token = useRecoilValue(TokenState);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,11 +30,10 @@ export default function PasswordModal({ capsuleId, closeModal }: PasswordModalPr
           capsule_password: password,
         })
         .then((response) => {
-          // eslint-disable-next-line no-console
-          console.log(response);
 
           setLoggedIn(true);
           alert(response.data.message);
+          navigate(`/unopened/${capsuleId}`);
         });
     } catch (error) {
       const axiosError = error as AxiosErrorResponseType;

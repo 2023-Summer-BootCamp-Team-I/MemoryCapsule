@@ -44,7 +44,7 @@ function StoryList({ capsule_id, capsuleData }: StoryListProps) {
   const storyListAPI = async () => {
     try {
       await axios
-        .get(`https://memorycapsule.co.kr/api/v1/stories/${capsule_id}?jwt_token=${token}`)
+        .get(`/api/v1/stories/${capsule_id}?jwt_token=${token}`)
         .then((response) => {
           setStoryList(response.data.story_list);
         });
@@ -175,7 +175,7 @@ function StoryList({ capsule_id, capsuleData }: StoryListProps) {
     try {
       await axios
         .get(
-          `https://memorycapsule.co.kr/api/v1/stories/${capsule_id}/${story_id}?jwt_token=${token}`
+          `/api/v1/stories/${capsule_id}/${story_id}?jwt_token=${token}`
         )
         .then((response) => {
           setStoryOne(response.data);
@@ -214,6 +214,10 @@ function StoryList({ capsule_id, capsuleData }: StoryListProps) {
     setSelectedImageIndex(null);
     setModalType(null);
     setIsOpen(false);
+  };
+
+  const trimTitle = (title: string) => {
+    return title.length > 5 ? title.slice(0, 5) + '...' : title;
   };
 
   // 체크 박스
@@ -343,7 +347,7 @@ function StoryList({ capsule_id, capsuleData }: StoryListProps) {
                     fontSize: 20,
                   }}
                 >
-                  {story.story_title}
+                  {trimTitle(story.story_title)}
                 </p>
                 <img
                   src={story.is_mine === true ? story.story_url : letter}

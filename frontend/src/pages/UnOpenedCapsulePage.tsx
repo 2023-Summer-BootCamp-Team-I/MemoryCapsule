@@ -65,16 +65,7 @@ export default function UnOpenedCapsulePage() {
           setCapsuleData(response.data.capsule_data);
         });
     } catch (error) {
-      const axiosError = error as AxiosErrorResponseType;
-      if (axiosError.response?.data.message) {
-        if (axiosError.response?.data.message === '캡슐에 포함되지 않은 유저입니다.') {
-          setShowConfirmation(true);
-        } else {
-          alert(axiosError.response.data.message);
-        }
-      } else {
-        alert('An unknown error occurred.');
-      }
+      error
     }
   };
 
@@ -89,7 +80,8 @@ export default function UnOpenedCapsulePage() {
       const axiosError = error as AxiosErrorResponseType;
       if (axiosError.response?.data.message === '캡슐에 포함되지 않은 유저입니다') {
         alert('캡슐에 포함되지 않은 유저입니다');
-        navigate('/mainunopened');
+        setShowConfirmation(true);
+        
       } else {
         {
           axiosError.response && alert(axiosError.response.data.message);
@@ -109,7 +101,8 @@ export default function UnOpenedCapsulePage() {
     <div>
       {showConfirmation && (
         <ConfirmationModal
-          message="이 캡슐에 들어가시겠습니까?"
+          message={`당신은 캡슐에 포함되지 않은 유저입니다.
+          이 캡슐에 들어가시겠습니까?`}
           onConfirm={handleConfirmation}
           onCancel={handleCancelConfirmation}
         />
