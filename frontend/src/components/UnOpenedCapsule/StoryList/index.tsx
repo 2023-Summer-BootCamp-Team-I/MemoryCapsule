@@ -71,7 +71,10 @@ function StoryList({ capsule_id }: StoryListProps) {
 
   function calculateDday(targetDateString: string) {
     const now = new Date();
-    const targetDate = new Date(targetDateString.split(' ')[0]); // 시간 부분 제거
+    now.setHours(0, 0, 0, 0);  // 현재 날짜의 시간, 분, 초, 밀리초를 0으로 설정
+
+    const targetDate = new Date(targetDateString.split(' ')[0]);  // 시간 부분 제거
+    targetDate.setHours(0, 0, 0, 0);  // 목표 날짜의 시간, 분, 초, 밀리초를 0으로 설정
 
     const diff = targetDate.getTime() - now.getTime();
     const diffDays = Math.ceil(diff / (1000 * 60 * 60 * 24));
@@ -83,7 +86,7 @@ function StoryList({ capsule_id }: StoryListProps) {
     } else {
       return `D+${Math.abs(diffDays)}`;
     }
-  }
+}
 
   useEffect(() => {
     if (capsuleData?.due_date) {
@@ -94,7 +97,7 @@ function StoryList({ capsule_id }: StoryListProps) {
         navigate(`/opened/${capsule_id}`);
       }
     }
-  }, [capsuleData]);
+  }, [capsuleData?.due_date]);
 
   useEffect(() => {
     storyListAPI(); //페이지에 처음 접속했을때 capsule 목록을 보여주기 위해
