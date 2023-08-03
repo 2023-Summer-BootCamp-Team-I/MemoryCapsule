@@ -34,11 +34,6 @@ function ProfileButton({ capsule_id, onUserCountChange }: ProfileProps) {
   const groupedUsers: CapsuleMateType[][] = [];
   const totalUsers = (capsuleMateHost ? 1 : 0) + (capsuleMateMember ? capsuleMateMember.length : 0);
 
-  useEffect(() => {
-    CapsuleMateAPI();
-    onUserCountChange(totalUsers);
-  }, [totalUsers]);
-
   if (capsuleMateHost) {
     // capsuleMateHost를 배열 형식으로 추가
     groupedUsers.push([capsuleMateHost]);
@@ -53,7 +48,9 @@ function ProfileButton({ capsule_id, onUserCountChange }: ProfileProps) {
   const CapsuleMateAPI = async () => {
     try {
       await axios
-        .get(`/api/v1/capsules/users?capsule_id=${capsule_id}&jwt_token=${token}`)
+        .get(
+          `https://memorycapsule.co.kr/api/v1/capsules/users?capsule_id=${capsule_id}&jwt_token=${token}`
+        )
         .then((response) => {
           setCapsuleMateHost(response.data.host_user);
           setCapsuleMateMember(response.data.user);
@@ -67,6 +64,11 @@ function ProfileButton({ capsule_id, onUserCountChange }: ProfileProps) {
       }
     }
   };
+
+  useEffect(() => {
+    CapsuleMateAPI();
+    onUserCountChange(totalUsers);
+  }, [totalUsers]);
 
   return (
     <>

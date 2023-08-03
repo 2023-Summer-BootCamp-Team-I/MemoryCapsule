@@ -21,14 +21,8 @@ function JoinModal({ onClose }: ModalProps) {
   const [passwordV2, setPasswordV2] = useState('');
   const handleGetInputData = (name: string, value: string) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
-    console.log('name: ', name);
-    console.log('value: ', value);
-    
   };
   const handleGetPwData = (name: string, value: string) => {
-    console.log('name: ', name);
-    console.log('value: ', value);
-    
     setPasswordV2(value);
   };
   const handleGetFileData = (data: string): void => {
@@ -53,15 +47,12 @@ function JoinModal({ onClose }: ModalProps) {
     }
 
     if (formData.password !== passwordV2) {
-      console.log('formData.password: ', formData.password);
-      console.log('passwordV2: ', passwordV2);
-      
       alert('비밀번호가 다릅니다!');
       return;
     }
 
     try {
-      await axios.post('/api/v1/users/sign-up', formData, {
+      await axios.post('https://memorycapsule.co.kr/api/v1/users/sign-up', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

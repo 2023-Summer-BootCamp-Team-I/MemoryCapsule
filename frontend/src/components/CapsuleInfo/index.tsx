@@ -20,7 +20,7 @@ function CapsuleInfo({capsule_id, userCount} : CapsuleInfoProps) {
   const handleDelete = async () => {
     try {
       await axios
-        .delete(`/api/v1/capsules/users?jwt_token=${token}&capsule_id=${capsule_id}`)
+        .delete(`https://memorycapsule.co.kr/api/v1/capsules/users?jwt_token=${token}&capsule_id=${capsule_id}`)
         .then((response) => {
           alert(response.data.message);
           navigate('/mainunopened');
@@ -70,7 +70,7 @@ function CapsuleInfo({capsule_id, userCount} : CapsuleInfoProps) {
 
   const capsuleInfoAPI = async () => {
     try {
-      await axios.get(`/api/v1/capsules/${capsule_id}?jwt_token=${token}`).then((response) => {
+      await axios.get(`https://memorycapsule.co.kr/api/v1/capsules/${capsule_id}?jwt_token=${token}`).then((response) => {
         setCapsuleData(response.data.capsule_data);
       });
     } catch (error) {

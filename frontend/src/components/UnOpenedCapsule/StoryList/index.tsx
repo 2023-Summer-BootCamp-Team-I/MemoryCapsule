@@ -43,9 +43,11 @@ function StoryList({ capsule_id, capsuleData }: StoryListProps) {
 
   const storyListAPI = async () => {
     try {
-      await axios.get(`/api/v1/stories/${capsule_id}?jwt_token=${token}`).then((response) => {
-        setStoryList(response.data.story_list);
-      });
+      await axios
+        .get(`https://memorycapsule.co.kr/api/v1/stories/${capsule_id}?jwt_token=${token}`)
+        .then((response) => {
+          setStoryList(response.data.story_list);
+        });
     } catch (error) {
       const axiosError = error as AxiosErrorResponseType;
       if (axiosError.response?.data.message) {
@@ -58,10 +60,10 @@ function StoryList({ capsule_id, capsuleData }: StoryListProps) {
 
   function calculateDday(targetDateString: string) {
     const now = new Date();
-    now.setHours(0, 0, 0, 0);  // 현재 날짜의 시간, 분, 초, 밀리초를 0으로 설정
+    now.setHours(0, 0, 0, 0); // 현재 날짜의 시간, 분, 초, 밀리초를 0으로 설정
 
-    const targetDate = new Date(targetDateString.split(' ')[0]);  // 시간 부분 제거
-    targetDate.setHours(0, 0, 0, 0);  // 목표 날짜의 시간, 분, 초, 밀리초를 0으로 설정
+    const targetDate = new Date(targetDateString.split(' ')[0]); // 시간 부분 제거
+    targetDate.setHours(0, 0, 0, 0); // 목표 날짜의 시간, 분, 초, 밀리초를 0으로 설정
 
     const diff = targetDate.getTime() - now.getTime();
     const diffDays = Math.ceil(diff / (1000 * 60 * 60 * 24));
@@ -73,7 +75,7 @@ function StoryList({ capsule_id, capsuleData }: StoryListProps) {
     } else {
       return `D+${Math.abs(diffDays)}`;
     }
-}
+  }
 
   useEffect(() => {
     if (capsuleData?.due_date) {
@@ -172,7 +174,9 @@ function StoryList({ capsule_id, capsuleData }: StoryListProps) {
   const storyListOneAPI = async (story_id: number) => {
     try {
       await axios
-        .get(`/api/v1/stories/${capsule_id}/${story_id}?jwt_token=${token}`)
+        .get(
+          `https://memorycapsule.co.kr/api/v1/stories/${capsule_id}/${story_id}?jwt_token=${token}`
+        )
         .then((response) => {
           setStoryOne(response.data);
           // console.log('[storyListOneAPI] response: ', response.data);

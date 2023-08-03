@@ -2,8 +2,6 @@ import lottie from 'lottie-web';
 import { useEffect, useRef } from 'react';
 
 function StepTwo() {
-  // const [isLoading, setIsLoading] = useState(true);
-
   const LoadingLottie = () => {
     const getAnimationData = async () => {
       const data = await import('../../../../assets/lottie/makevideo.json');

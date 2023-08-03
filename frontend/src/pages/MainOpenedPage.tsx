@@ -20,11 +20,14 @@ function MainOpenedPage() {
   const capsuleListAPI = async (is_open: boolean) => {
     try {
       await axios
-        .get(`/api/v1/capsules?count=5&is_open=${is_open}&jwt_token=${token}`, {
-          headers: {
-            Accept: 'application/json',
-          },
-        })
+        .get(
+          `https://memorycapsule.co.kr/api/v1/capsules?count=5&is_open=${is_open}&jwt_token=${token}`,
+          {
+            headers: {
+              Accept: 'application/json',
+            },
+          }
+        )
         .then((response) => {
           setOpenMyCapsule(response.data.my_capsule_list);
           setOpenJoinCapsule(response.data.capsule_list);

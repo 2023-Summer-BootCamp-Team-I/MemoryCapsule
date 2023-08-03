@@ -59,9 +59,11 @@ export default function UnOpenedCapsulePage() {
 
   const capsuleInfoAPI = async () => {
     try {
-      await axios.get(`/api/v1/capsules/${capsule_id}?jwt_token=${token}`).then((response) => {
-        setCapsuleData(response.data.capsule_data);
-      });
+      await axios
+        .get(`https://memorycapsule.co.kr/api/v1/capsules/${capsule_id}?jwt_token=${token}`)
+        .then((response) => {
+          setCapsuleData(response.data.capsule_data);
+        });
     } catch (error) {
       const axiosError = error as AxiosErrorResponseType;
       if (axiosError.response?.data.message) {
@@ -79,7 +81,9 @@ export default function UnOpenedCapsulePage() {
   const checkIsMemberAPI = async () => {
     try {
       await axios
-        .get(`/api/v1/capsules/users?capsule_id=${capsule_id}&jwt_token=${token}`)
+        .get(
+          `https://memorycapsule.co.kr/api/v1/capsules/users?capsule_id=${capsule_id}&jwt_token=${token}`
+        )
         .then(() => {});
     } catch (error) {
       const axiosError = error as AxiosErrorResponseType;

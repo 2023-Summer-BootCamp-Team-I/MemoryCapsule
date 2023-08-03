@@ -19,11 +19,14 @@ function MainUnOpenedPage() {
   const capsuleListAPI = async (is_open: boolean) => {
     try {
       await axios
-        .get(`/api/v1/capsules?count=5&is_open=${is_open}&jwt_token=${token}`, {
-          headers: {
-            Accept: 'application/json',
-          },
-        })
+        .get(
+          `https://memorycapsule.co.kr/api/v1/capsules?count=5&is_open=${is_open}&jwt_token=${token}`,
+          {
+            headers: {
+              Accept: 'application/json',
+            },
+          }
+        )
         .then((response) => {
           setMyCapsule(response.data.my_capsule_list);
           setJoinCapsule(response.data.capsule_list);
@@ -42,22 +45,6 @@ function MainUnOpenedPage() {
     capsuleListAPI(is_open);
     sessionStorage.removeItem('capsule_id');
   }, []);
-
-  // useEffect(() => {
-  //   // 컴포넌트가 마운트될 때 현재 경로를 확인
-  //   const currentPath = location.pathname;
-
-  //   // 경고 알람을 띄우고 메인 페이지로 리다이렉트
-  //   const handleInvalidPath = () => {
-  //     alert('올바르지 않은 경로로 접근하셨습니다.');
-  //     navigate('/');
-  //   };
-
-  //   // 만약 캡슐 보기 페이지 경로가 아니라면 경고 알람 띄우고 메인 페이지로 리다이렉트
-  //   if (capsule.capsule_id =!) {
-  //     handleInvalidPath();
-  //   }
-  // }, [location, navigate]);
 
   return (
     <div className="h-[42rem] w-[75rem] font-Omu grid grid-rows-2 grid-flow-row-dense">

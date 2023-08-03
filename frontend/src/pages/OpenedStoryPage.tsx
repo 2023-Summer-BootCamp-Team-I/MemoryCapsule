@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -15,22 +14,27 @@ const OpenedStoryPage = () => {
 
   const openStoryAPI = async () => {
     try {
-      await axios.get(`/api/v1/stories/${capsule_id}`).then((response) => {
-        console.log('response: ', response);
-        console.log(response.data.story_list);
-        setOpenStory(response.data.story_list);
-      });
+      await axios
+        .get(`https://memorycapsule.co.kr/api/v1/stories/${capsule_id}`)
+        .then((response) => {
+          setOpenStory(response.data.story_list);
+        });
     } catch (error) {
-      console.log('api 불러오기 실패');
-      console.log(error);
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
   const storyInfoAPI = async () => {
     try {
-      await axios.get(`/api/v1/capsules/${capsule_id}`).then((response) => {
-        console.log('theme_id: ', response.data.capsule_data.theme_id);
-        setThemeId(response.data.capsule_data.theme_id);
-      });
+      await axios
+        .get(`https://memorycapsule.co.kr/api/v1/capsules/${capsule_id}`)
+        .then((response) => {
+          setThemeId(response.data.capsule_data.theme_id);
+        });
     } catch (error) {
       const axiosError = error as AxiosErrorResponseType;
       if (axiosError.response?.data.message) {
@@ -49,7 +53,9 @@ const OpenedStoryPage = () => {
   return (
     <div>
       <div
-        className={`${(themeId === 1 || themeId === 3) ? 'top-[-2rem] left-[-1rem]' : 'top-[13.9rem] left-[-1rem]'} absolute  cursor-pointer  z-10`}
+        className={`${
+          themeId === 1 || themeId === 3 ? 'top-[-2rem] left-[-1rem]' : 'top-[13.9rem] left-[-1rem]'
+        } absolute  cursor-pointer  z-10`}
         onClick={() => navigate(`/opened/${capsule_id}`)}
       >
         <svg

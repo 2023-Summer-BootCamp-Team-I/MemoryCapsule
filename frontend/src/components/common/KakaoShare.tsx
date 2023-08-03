@@ -19,17 +19,21 @@ interface KakaoProps {
 function KakaoShare({ capsule_id, state, capsuleData }: KakaoProps) {
   const userData = useRecoilValue(UesrDataState);
   // 기본 제목 값 설정 함수
-  const contentTitle = (function() {
+  const contentTitle = (function () {
     return state === 'opened'
-      ? `${userData?.nickname || 'MemoryCapsule 유저'}님이 ${capsuleData?.capsule_name || '캡슐 이름'}에서의 특별한 추억을 공유하셨어요!`
-      : `${userData?.nickname || 'MemoryCapsule 유저'}님이 ${capsuleData?.capsule_name || '캡슐 이름'}에서의 특별한 추억을 함께 만들자고 초대하셨어요!`;
+      ? `${userData?.nickname || 'MemoryCapsule 유저'}님이 ${
+          capsuleData?.capsule_name || '캡슐 이름'
+        }에서의 특별한 추억을 공유하셨어요!`
+      : `${userData?.nickname || 'MemoryCapsule 유저'}님이 ${
+          capsuleData?.capsule_name || '캡슐 이름'
+        }에서의 특별한 추억을 함께 만들자고 초대하셨어요!`;
   })();
 
   // 기본 설명 값 설정 함수
-  const contentDescription = (function() {
+  const contentDescription = (function () {
     return state === 'opened'
       ? '추억을 보러 가요!'
-      : `추억을 함께 만들어요! \n🔒비번: ${capsuleData?.capsule_password|| '캡슐 비번'}`;
+      : `추억을 함께 만들어요! \n🔒비번: ${capsuleData?.capsule_password || '캡슐 비번'}`;
   })();
 
   useEffect(() => {
@@ -44,8 +48,6 @@ function KakaoShare({ capsule_id, state, capsuleData }: KakaoProps) {
   }, []);
 
   function shareKakao() {
-    console.log('contentTitle: ', contentTitle);
-    console.log('contentDescription: ', contentDescription);
     window.Kakao.Link.sendDefault({
       objectType: 'feed',
       content: {

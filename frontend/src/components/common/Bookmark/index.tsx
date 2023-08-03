@@ -26,7 +26,6 @@ export default function Bookmark({
     >
       <div
         className={`h-20 hover:cursor-pointer ${activeState ? 'z-50' : 'z-30 hover:z-50'}`}
-        // ${activeState ? 'z-50' : 'z-30 hover:z-50'}
         onClick={() => {
           setActiveState();
         }}

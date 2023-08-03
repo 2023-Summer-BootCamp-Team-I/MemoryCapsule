@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRecoilValue } from 'recoil';
@@ -18,11 +17,15 @@ function StepOne({ capsule_id, setCurrentStep }: StepOneProps) {
 
   const openStoryAPI = async () => {
     try {
-      const response = await axios.get(`/api/v1/stories/${capsule_id}`);
+      const response = await axios.get(`https://memorycapsule.co.kr/api/v1/stories/${capsule_id}`);
       setOpenStory(response.data.story_list);
-      console.log('response: ', response.data);
     } catch (error) {
-      console.error('API fetch failed', error);
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 
@@ -39,14 +42,12 @@ function StepOne({ capsule_id, setCurrentStep }: StepOneProps) {
 
     try {
       await axios
-        .post(`/api/v1/videos/${capsule_id}`, {
+        .post(`https://memorycapsule.co.kr/api/v1/videos/${capsule_id}`, {
           jwt_token: token,
           music_id: 1,
           user_choice_image: selectedStories,
         })
-        .then((response) => {
-          // eslint-disable-next-line no-console
-          console.log(response);
+        .then(() => {
           setCurrentStep(2);
         });
     } catch (error) {
@@ -62,7 +63,6 @@ function StepOne({ capsule_id, setCurrentStep }: StepOneProps) {
 
   useEffect(() => {
     openStoryAPI();
-    console.log(selectedStories);
   }, [token, capsule_id, selectedStories]);
 
   return (

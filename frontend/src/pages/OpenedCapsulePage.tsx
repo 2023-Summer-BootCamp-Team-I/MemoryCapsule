@@ -34,9 +34,11 @@ function OpenedCapsulePage() {
 
   const capsuleInfoAPI = async () => {
     try {
-      await axios.get(`/api/v1/capsules/${capsule_id}`).then((response) => {
-        setCapsuleData(response.data.capsule_data);
-      });
+      await axios
+        .get(`https://memorycapsule.co.kr/api/v1/capsules/${capsule_id}`)
+        .then((response) => {
+          setCapsuleData(response.data.capsule_data);
+        });
     } catch (error) {
       const axiosError = error as AxiosErrorResponseType;
       if (axiosError.response?.data.message) {
@@ -48,8 +50,8 @@ function OpenedCapsulePage() {
   };
 
   useEffect(() => {
-    capsuleInfoAPI()
-  }, [])
+    capsuleInfoAPI();
+  }, []);
 
   return (
     <div className="flex flex-col items-center">
@@ -66,7 +68,9 @@ function OpenedCapsulePage() {
           {lottieType === 'photo' ? <PhotoLottie /> : <VideoLottie />}
         </div>
       )}
-      {capsule_id && <KakaoShare capsule_id={capsule_id} state={'opened'} capsuleData={capsuleData} />}
+      {capsule_id && (
+        <KakaoShare capsule_id={capsule_id} state={'opened'} capsuleData={capsuleData} />
+      )}
     </div>
   );
 }

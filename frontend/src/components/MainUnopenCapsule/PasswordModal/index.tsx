@@ -22,7 +22,7 @@ export default function PasswordModal({ capsuleId, closeModal }: PasswordModalPr
 
     try {
       await axios
-        .post('http://localhost:80/api/v1/capsules/users', {
+        .post('https://memorycapsule.co.kr/api/v1/capsules/users', {
           jwt_token: token,
           capsule_id: Number(capsuleId),
           capsule_password: password,

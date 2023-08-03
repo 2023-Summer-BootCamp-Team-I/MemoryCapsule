@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import pink from '../../assets/images/stickers/pink.png';
 import { AxiosErrorResponseType, StoryListOneType } from '../../utils/types';
 import axios from 'axios';
@@ -28,7 +28,7 @@ function StoryDetailContent({ story_data }: DetailProps) {
 
     try {
       const response = await axios.put(
-        `/api/v1/stories/${story_data?.capsule_id}/${story_data?.story_id}`,
+        `https://memorycapsule.co.kr/api/v1/stories/${story_data?.capsule_id}/${story_data?.story_id}`,
         formData,
         {
           headers: {
@@ -67,7 +67,7 @@ function StoryDetailContent({ story_data }: DetailProps) {
     try {
       await axios
         .delete(
-          `/api/v1/stories/${story_data?.capsule_id}/${story_data?.story_id}?jwt_token=${token}`
+          `https://memorycapsule.co.kr/api/v1/stories/${story_data?.capsule_id}/${story_data?.story_id}?jwt_token=${token}`
         )
         .then(() => {
           alert('삭제 완료되었습니다.');
@@ -90,32 +90,32 @@ function StoryDetailContent({ story_data }: DetailProps) {
 
       setEditImage(file);
       setSelectedImage(URL.createObjectURL(file));
-      // console.log('handleImageChange: ', file);
-      // console.log('URL.createObjectURL(file): ', URL.createObjectURL(file));
     }
   };
+
+  useEffect(() => {
+    setSelectedImage(String(story_data && story_data.story_img_url));
+  }, []);
 
   return (
     <div>
       {/* Detail */}
       <img src={pink} className="fixed h-20 left-14 top-11" alt="Pink" />
-      <div className="flex justify-center h-56 w-96">
-        {editMode ? (
-          <div>
-            <label htmlFor="image-input">
-              <img
-                src={selectedImage}
-                className="object-cover w-full h-full cursor-pointer"
-                alt="Story Image"
-              />
-            </label>
-          </div>
-        ) : (
-          <div className="flex justify-center h-56 w-96">
-            <img src={editImage} className="object-cover w-full h-full" alt="Story Image" />
-          </div>
-        )}
-      </div>
+      {editMode ? (
+        <div className="flex justify-center h-56 w-96">
+          <label htmlFor="image-input">
+            <img
+              src={selectedImage}
+              className="object-cover w-full h-full cursor-pointer"
+              alt="Story Image"
+            />
+          </label>
+        </div>
+      ) : (
+        <div className="flex justify-center h-56 w-96">
+          <img src={editImage} className="object-cover w-full h-full" alt="Story Image" />
+        </div>
+      )}
       <input
         type="file"
         accept="image/*"
