@@ -36,17 +36,13 @@ function Background({ children }: ChildrenProps) {
             )}
           </div>
           {location.pathname !== '/' && loggedIn === true && (
-            <div className="absolute top-[3rem] z-50 right-[7rem]">
+            <div className="absolute top-[0.5rem] z-50 right-[7rem]">
               <Header />
             </div>
           )}
           <div className="relative z-40">{children}</div>
         </div>
       </div>
-
-      {/* <div className="absolute left-[8rem] top-[6rem] z-40">
-        {(isMain || isGallery) && <div className="text-5xl font-bold font-Omu">Memory Capsule</div>}
-      </div> */}
     </div>
   );
 }

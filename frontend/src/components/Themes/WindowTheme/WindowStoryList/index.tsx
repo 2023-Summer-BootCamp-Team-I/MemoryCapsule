@@ -1,4 +1,4 @@
-import { OpenCapsuleType } from '../../../../utils/types';
+import { StoryListType } from '../../../../utils/types';
 
 const outsideDivStyle = {
   borderTop: '2px solid white',
@@ -22,25 +22,28 @@ const listDivStyle = {
 };
 
 type StoryListProps = {
-  dummy_data: OpenCapsuleType[];
+  openStory: StoryListType[];
   // eslint-disable-next-line @typescript-eslint/ban-types
   handleClickStory: Function;
 };
 
-function WindowStoryList({ dummy_data, handleClickStory }: StoryListProps) {
+function WindowStoryList({ openStory, handleClickStory }: StoryListProps) {
   return (
-    <div className="h-[56%] w-[57%] m-5 justify-center items-center fixed" style={outsideDivStyle}>
+    <div
+      className="h-[79%] w-[67%] m-5 justify-center items-center absolute"
+      style={outsideDivStyle}
+    >
       <div
-        className={`h-[51%] w-[54%] w-[${
-          dummy_data.length <= 6 ? '54%' : 'calc(54% - 20px)'
-        }] overflow-auto m-5 p-5 flex flex-wrap justify-center items-start fixed bg-white`}
+        className={`h-[92%] w-[95%] w-[${
+          openStory.length <= 6 ? '54%' : 'calc(54% - 20px)'
+        }] overflow-auto m-5 p-5 flex flex-wrap justify-center items-start absolute bg-white`}
         style={insideDivStyle}
       >
         <div className="w-[83%] h-full">
           <div className="grid grid-cols-6 gap-2">
-            {dummy_data.map((data, index) => (
+            {openStory.map((data, index) => (
               <div
-                key={data.id}
+                key={data.story_id}
                 className={`w-24 h-24 ${index >= 6 && 'mt-1'}`}
                 style={listDivStyle}
               >
@@ -48,7 +51,7 @@ function WindowStoryList({ dummy_data, handleClickStory }: StoryListProps) {
                   className="w-20 h-20 mx-[0.33rem] my-[0.35rem] cursor-pointer"
                   onClick={() => handleClickStory(index)}
                 >
-                  <img src={data.img} className="object-cover w-full h-full" alt="" />
+                  <img src={data.story_url} className="object-cover w-full h-full" alt="" />
                 </div>
               </div>
             ))}

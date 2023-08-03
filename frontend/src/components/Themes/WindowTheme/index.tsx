@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { StoryListType } from '../../../utils/types';
 
 import start_logo from '../../../assets/images/window_theme/start_logo.png';
 import four_menu from '../../../assets/images/window_theme/four_menu.png';
@@ -6,18 +7,16 @@ import document from '../../../assets/images/window_theme/document.png';
 import WindowStoryList from './WindowStoryList';
 import WindowStoryDetail from './WindowStoryDetail';
 
-import open_my_capsule from '../../../assets/data/open_my_capsule';
-import { OpenCapsuleType } from '../../../utils/types';
+interface ThemeProps {
+  openStory: StoryListType[];
+}
 
-function WindowTheme() {
-  const [dummy_data, setDummyData] = useState<OpenCapsuleType[]>([]);
-  // const [pressedName, setPressedName] = useState<string>('');
-
+function WindowTheme({ openStory }: ThemeProps) {
   const [isButtonClicked, setButtonClicked] = useState(false);
   const [isDivClicked, setDivClicked] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
 
-  const [isModalButtonClicked, setIsModalButtonClicked] = useState(false);
+  const [isModalButtonClicked, setIsModalButtonClicked] = useState(true);
 
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
   const closeStoryModal = () => {
@@ -62,30 +61,6 @@ function WindowTheme() {
     borderBottom: '2px solid black',
     borderRight: '2px solid black',
   };
-  // const pressedButtonStyle = {
-  //     borderTop: '2px solid black',
-  //     borderLeft: '2px solid black',
-  //     borderBottom: '2px solid white',
-  //     borderRight: '2px solid white',
-  // }
-
-  // function bottomButton(pressedName: string) {
-  //     if(pressedName === 'gallery' || pressedName === 'image'){
-  //         return(
-  //             <button className='' style={pressedButtonStyle}>
-  //                 {pressedName}
-  //             </button>
-  //         )
-  //     }
-  // }
-
-  // useEffect(() => {
-  //     bottomButton(pressedName);
-  // }, [pressedName])
-
-  useEffect(() => {
-    setDummyData(open_my_capsule());
-  }, []);
 
   return (
     <div className="relative h-[42rem] w-[75rem] border bg-[#008080]">
@@ -111,8 +86,8 @@ function WindowTheme() {
           </span>
         </div>
       </div>
-      <div className="fixed bottom-24 w-[74.89rem] h-10 bg-gray-300">
-        <div className="relative z-10 w-[74.89rem]  h-[0.2rem] border bg-white">
+      <div className="absolute bottom-0 w-[74.95rem] h-10 bg-gray-300">
+        <div className="relative w-[74.89rem]  h-[0.2rem] border bg-white">
           <div className="flex items-center justify-start">
             <button
               className={`flex mt-1 font-neodgm px-2 py-[0.2rem] ml-2 transform translate-y-1/5 bg-[#C0C0C0] ${
@@ -152,14 +127,13 @@ function WindowTheme() {
               ></div>
               <div className="w-[0.1rem] rounded h-6 bg-[#92959B] -mt-[0.1rem]"></div>
             </div>
-            {/* <bottomButton pressedName='gallery'/> */}
           </div>
         </div>
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center font-neodgm">
-          <div className="p-[0.1rem] bg-[#C6C6C6] border-[#E8EEEE] border-2 h-[65%] w-[60%]">
+        <div className="absolute inset-0 flex items-center justify-center font-neodgm">
+          <div className="p-[0.1rem] bg-[#C6C6C6] border-[#E8EEEE] border-2 h-[90%] w-[71%]">
             <div
               className={`${
                 !isStoryModalOpen
@@ -203,14 +177,14 @@ function WindowTheme() {
                 </button>
               </div>
             </div>
-            <WindowStoryList dummy_data={dummy_data} handleClickStory={handleClickStory} />
+            <WindowStoryList openStory={openStory} handleClickStory={handleClickStory} />
           </div>
         </div>
       )}
 
       {isStoryModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center font-neodgm">
-          <div className="p-[0.1rem] bg-[#C6C6C6] border-[#E8EEEE] border-2 h-[55%] w-[50%]">
+        <div className="absolute inset-0 flex items-center justify-center font-neodgm">
+          <div className="p-[0.1rem] bg-[#C6C6C6] border-[#E8EEEE] border-2 h-[71%] w-[61%]">
             <div className="bg-gradient-to-r from-[#16188F] via-[#11017B] to-[#297ECD] h-8 flex items-center justify-between">
               <span className="ml-2 font-bold text-white">Gallery</span>
               <div className="flex">

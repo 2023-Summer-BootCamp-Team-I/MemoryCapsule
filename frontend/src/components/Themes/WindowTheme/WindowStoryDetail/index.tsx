@@ -29,7 +29,6 @@ function WindowStoryDetail({ storyId }: StoryDetailProps) {
 
   return (
     <div>
-      {/* {storyId&& dummy_data[storyId].img && <div style={insideDivStyle} className='w-[28rem] h-[24rem] object-cover m-3'><img src={dummy_data[storyId].img} className='w-[28rem] h-[24rem] object-cover'/></div>} */}
       {storyId !== undefined && dummy_data[storyId] && dummy_data[storyId].img && (
         <div className="flex">
           <div style={insideDivStyle} className="w-[28rem] h-[26rem] object-cover m-3">
