@@ -39,27 +39,12 @@ function StoryList({ capsule_id, capsuleData }: StoryListProps) {
   const token = useRecoilValue(TokenState);
   const [storyList, setStoryList] = useState<StoryListType[]>([]);
   const [userCount, setUserCount] = useState<number>(0);
-  const [capsuleData, setCapsuleData] = useState<MyCapsuleListType>();
   const [ddayString, setDdayString] = useState<string | null>(null);
 
   const storyListAPI = async () => {
     try {
       await axios.get(`/api/v1/stories/${capsule_id}?jwt_token=${token}`).then((response) => {
         setStoryList(response.data.story_list);
-      });
-    } catch (error) {
-      const axiosError = error as AxiosErrorResponseType;
-      if (axiosError.response?.data.message) {
-        alert(axiosError.response.data.message);
-      } else {
-        alert('An unknown error occurred.');
-      }
-    }
-  };
-  const capsuleInfoAPI = async () => {
-    try {
-      await axios.get(`/api/v1/capsules/${capsule_id}?jwt_token=${token}`).then((response) => {
-        setCapsuleData(response.data.capsule_data);
       });
     } catch (error) {
       const axiosError = error as AxiosErrorResponseType;
@@ -103,7 +88,6 @@ function StoryList({ capsule_id, capsuleData }: StoryListProps) {
 
   useEffect(() => {
     storyListAPI(); //페이지에 처음 접속했을때 capsule 목록을 보여주기 위해
-    capsuleInfoAPI();
   }, []);
 
   useEffect(() => {

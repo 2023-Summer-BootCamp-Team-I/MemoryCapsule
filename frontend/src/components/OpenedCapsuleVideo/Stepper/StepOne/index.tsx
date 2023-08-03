@@ -56,6 +56,7 @@ function StepOne({ capsule_id, setCurrentStep }: StepOneProps) {
       } else {
         alert('An unknown error occurred.');
       }
+      setCurrentStep(0);
     }
   };
 

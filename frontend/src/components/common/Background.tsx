@@ -36,7 +36,7 @@ function Background({ children }: ChildrenProps) {
             )}
           </div>
           {location.pathname !== '/' && loggedIn === true && (
-            <div className="absolute top-[0.5rem] z-50 right-[7rem]">
+            <div className="absolute top-[0.5rem] z-40 right-[7rem]">
               <Header />
             </div>
           )}

@@ -11,7 +11,7 @@ const OpenedStoryPage = () => {
   const { capsule_id } = useParams();
   const navigate = useNavigate();
   const [openStory, setOpenStory] = useState<StoryListType[]>([]);
-  const [themeId, setThemeId] = useState<number>(0);
+  const [themeId, setThemeId] = useState<number>(1);
 
   const openStoryAPI = async () => {
     try {
@@ -49,7 +49,7 @@ const OpenedStoryPage = () => {
   return (
     <div>
       <div
-        className="absolute top-[-1.9rem] cursor-pointer left-[1rem] z-10"
+        className={`${(themeId === 1 || themeId === 3) ? 'top-[-2rem] left-[-1rem]' : 'top-[13.9rem] left-[-1rem]'} absolute  cursor-pointer  z-10`}
         onClick={() => navigate(`/opened/${capsule_id}`)}
       >
         <svg

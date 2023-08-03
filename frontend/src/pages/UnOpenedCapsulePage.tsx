@@ -18,7 +18,6 @@ interface ConfirmationModalProps {
 export default function UnOpenedCapsulePage() {
   const navigate = useNavigate();
   const { capsule_id } = useParams();
-  const navigate = useNavigate();
   const token = useRecoilValue(TokenState);
   const [capsuleData, setCapsuleData] = useState<MyCapsuleListType>();
   const [passwdOpen, setPasswdOpen] = useState<boolean>(false);
@@ -62,7 +61,6 @@ export default function UnOpenedCapsulePage() {
     try {
       await axios.get(`/api/v1/capsules/${capsule_id}?jwt_token=${token}`).then((response) => {
         setCapsuleData(response.data.capsule_data);
-        console.log(response.data.capsule_data);
       });
     } catch (error) {
       const axiosError = error as AxiosErrorResponseType;

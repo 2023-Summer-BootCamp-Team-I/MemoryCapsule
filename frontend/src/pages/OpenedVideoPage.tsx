@@ -23,6 +23,7 @@ export default function OpenedVideoPage() {
   };
   const onCreateClose = () => {
     setIsCreateOpen(false);
+    window.location.reload();
   };
 
   const selectVideo = (selectedVideo: OpenCapsuleVideoType) => {
@@ -155,7 +156,7 @@ export default function OpenedVideoPage() {
   return (
     <div>
       <div
-        className="fixed top-[4rem] cursor-pointer left-[8rem]"
+        className="absolute top-[-7.2rem] cursor-pointer left-[-7rem] z-10"
         onClick={() => navigate(`/opened/${capsule_id}`)}
       >
         <svg
