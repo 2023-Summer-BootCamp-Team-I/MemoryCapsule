@@ -19,7 +19,7 @@ from rest_framework.parsers import JSONParser
 
 @swagger_auto_schema(
     methods=['POST'],
-    tags=["User 생성"],
+    operation_summary="User 생성",
     consumes=['multipart/form-data'],
     manual_parameters=[
         openapi.Parameter(
@@ -120,31 +120,9 @@ def sign_up(request):
         except Exception as e:
             JsonResponse({"message" : "에러 확인 불가"})
 
-
-# @swagger_auto_schema(
-#     methods=['POST'],
-#     tags=["User 로그인"],
-#     consumes=['multipart/form-data'],
-#     manual_parameters=[
-#         openapi.Parameter(
-#             name="id",
-#             in_=openapi.IN_FORM,
-#             type=openapi.TYPE_STRING,
-#             description="id 입력",
-#         ),
-#
-#     openapi.Parameter(
-#             name="password",
-#             in_=openapi.IN_FORM,
-#             type=openapi.TYPE_STRING,
-#             description="패스워드 입력",
-#         )]
-#
-# )
-
 @swagger_auto_schema(
     method='post',
-    tags=["User 로그인"],
+    operation_summary="User 로그인",
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={

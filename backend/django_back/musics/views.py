@@ -14,7 +14,7 @@ from drf_yasg import openapi
 
 @swagger_auto_schema(
     methods=['POST'],
-    tags=["음악 파일 전송"],
+    operation_summary="음악 파일 s3에 전송",
     consumes=['multipart/form-data'],
     manual_parameters=[
     openapi.Parameter(

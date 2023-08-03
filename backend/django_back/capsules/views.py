@@ -9,7 +9,7 @@ from drf_yasg import openapi
 
 @swagger_auto_schema(
     methods=['GET'],
-    tags=["Capsule 전체 조회"],
+    operation_summary="Capsule 전체 조회",
     manual_parameters=[
         openapi.Parameter(
             name="jwt_token",
@@ -33,7 +33,7 @@ from drf_yasg import openapi
 )
 @swagger_auto_schema(
     methods=['POST'],
-    tags=["Capsule 생성"],
+    operation_summary="Capsule 생성",
     consumes=['multipart/form-data'],
     manual_parameters=[
         openapi.Parameter(
@@ -101,7 +101,7 @@ def capsule_func(request) -> json:
 
 @swagger_auto_schema(
     methods=['GET'],
-    tags=["Capsule 단일 정보 조회"],
+    operation_summary="Capsule 단일 정보 조회",
     manual_parameters=[
         openapi.Parameter(
             name="jwt_token",
@@ -113,8 +113,7 @@ def capsule_func(request) -> json:
 )
 @swagger_auto_schema(
     methods=['POST'],
-    tags=["캡슐 비밀번호 확인 (아마 사용 안 할 예정)"],
-
+    operation_summary="캡슐 비밀번호 확인 (아마 사용 안 할 예정)",
     manual_parameters=[
         openapi.Parameter(
             name="jwt_token",
@@ -133,7 +132,7 @@ def capsule_func(request) -> json:
 
 @swagger_auto_schema(
     methods=['PUT'],
-    tags=["Capsule 수정"],
+    operation_summary="Capsule 수정",
     consumes=['multipart/form-data'],
     manual_parameters=[
         openapi.Parameter(
@@ -191,7 +190,7 @@ def capsule_func(request) -> json:
 )
 @swagger_auto_schema(
     methods=['DELETE'],
-    tags=["Capsule 삭제"],
+    operation_summary="Capsule 삭제",
     manual_parameters=[
         openapi.Parameter(
             name="jwt_token",
@@ -227,7 +226,7 @@ def capsule_url_parm_func(request, capsule_id):
 
 @swagger_auto_schema(
     methods=['GET'],
-    tags=["Capsule에 포함된 모든 유저 출력 (host user 는 분리되어 출력됨)"],
+    operation_summary="Capsule에 포함된 모든 유저 출력 (host user 는 분리되어 출력됨)",
     manual_parameters=[
         openapi.Parameter(
             name="jwt_token",
@@ -245,7 +244,7 @@ def capsule_url_parm_func(request, capsule_id):
 )
 @swagger_auto_schema(
     methods=['POST'],
-    tags=["캡슐에 유저 참여"],
+    operation_summary='캡슐에 유저 참여',
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
@@ -259,7 +258,7 @@ def capsule_url_parm_func(request, capsule_id):
 
 @swagger_auto_schema(
     methods=['DELETE'],
-    tags=["캡슐에서 유저 나가기"],
+    operation_summary="캡슐에서 유저 나가기",
     manual_parameters=[
         openapi.Parameter(
             name="jwt_token",

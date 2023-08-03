@@ -13,7 +13,7 @@ RUN npm install
 # Vite를 전역적으로 설치
 RUN npm install vite
 
-RUN mkdir -p /frontend/node_modules/.vite && chown -R 1000:1000 /frontend/node_modules
+#RUN mkdir -p /frontend/node_modules/.vite && chown -R 1000:1000 /frontend/node_modules
 
 RUN npm run build
 

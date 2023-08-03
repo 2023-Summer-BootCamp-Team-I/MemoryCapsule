@@ -17,7 +17,7 @@ from drf_yasg import openapi
 
 @swagger_auto_schema(
     methods=['GET'],
-    tags=["Story 전체 조회"],
+    operation_summary="Story 전체 조회",
     manual_parameters=[
         openapi.Parameter(
             name="jwt_token",
@@ -29,7 +29,7 @@ from drf_yasg import openapi
 )
 @swagger_auto_schema(
     methods=['POST'],
-    tags=["Story 생성"],
+    operation_summary="Story 생성",
     consumes=['multipart/form-data'],
     manual_parameters=[
         openapi.Parameter(
@@ -145,7 +145,7 @@ def story_capsule_func(request, capsule_id):
 
 @swagger_auto_schema(
     methods=['GET'],
-    tags=["Story 조회"],
+    operation_summary="Story 조회",
     manual_parameters=[
         openapi.Parameter(
             name="jwt_token",
@@ -157,7 +157,7 @@ def story_capsule_func(request, capsule_id):
 )
 @swagger_auto_schema(
     methods=['PUT'],
-    tags=["Story 수정"],
+    operation_summary="Story 수정",
     consumes=['multipart/form-data'],
     manual_parameters=[
         openapi.Parameter(
@@ -188,7 +188,7 @@ def story_capsule_func(request, capsule_id):
 )
 @swagger_auto_schema(
     methods=['DELETE'],
-    tags=["Story 삭제"],
+    operation_summary="Story 삭제",
     manual_parameters=[
         openapi.Parameter(
             name="jwt_token",
