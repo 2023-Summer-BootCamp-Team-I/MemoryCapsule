@@ -1,24 +1,16 @@
-/* eslint-disable no-console */
-//MainOpenedPage
-
 import { useNavigate } from 'react-router-dom';
 import HighLight from '../components/common/HightLight';
 import OpenCapsule from '../components/MainOpenCapsule/OpenCapsule';
 
-// import open_join_capsule from '../assets/data/open_join_capsule';
-// import open_my_capsule from '../assets/data/open_my_capsule';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { TokenState } from '../utils/Recoil';
-import { MyCapsuleListType } from '../utils/types';
+import { AxiosErrorResponseType, MyCapsuleListType } from '../utils/types';
 
 function MainOpenedPage() {
   const navigate = useNavigate();
   const is_open = true;
-
-  // const OpenMyCapsule = open_my_capsule();
-  // const openJoinCapsule = open_join_capsule();
 
   const token = useRecoilValue(TokenState);
 
@@ -34,21 +26,16 @@ function MainOpenedPage() {
           },
         })
         .then((response) => {
-          console.log('response: ', response);
-          console.log('response.data.my_capsule_list: ', response.data.my_capsule_list);
-          console.log('response.data.capsule_list: ', response.data.capsule_list);
           setOpenMyCapsule(response.data.my_capsule_list);
           setOpenJoinCapsule(response.data.capsule_list);
-          // if (is_open === true) {
-          //   setOpenMyCapsule(response.data.my_capsule_list);
-          //   setOpenJoinCapsule(response.data.capsule_list);
-          // } else {
-          //   setOpenJoinCapsule(response.data.capsule_list);
-          // }
         });
     } catch (error) {
-      console.log('api 불러오기 실패');
-      console.log(error);
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 
@@ -60,7 +47,7 @@ function MainOpenedPage() {
     <div className="h-[42rem] w-[75rem] font-Omu grid grid-rows-2 grid-flow-row-dense">
       <div className="mt-[3.5rem]">
         {/* 내가 만든 캡슐 */}
-        <div className="flex flex-col space-y-[1.3rem]">
+        <div className="flex flex-col space-y-[3.3rem]">
           <div className="">
             <HighLight color="blue" title="내가 만든 캡슐" />
           </div>
@@ -76,7 +63,7 @@ function MainOpenedPage() {
             ))}
           </div>
           <div
-            className="flex self-end text-xl underline cursor-pointer"
+            className="flex self-end text-xl underline cursor-pointer absolute right-0 bottom-[18rem] mb-[1.2rem]"
             onClick={() => navigate(`/mygallery/${is_open}`)}
           >
             모두 보기
@@ -94,9 +81,10 @@ function MainOpenedPage() {
             </svg>
           </div>
         </div>
-
+      </div>
+      <div>
         {/* 내가 참여한 캡슐 */}
-        <div className="flex flex-col space-y-[1.3rem]">
+        <div className="flex flex-col space-y-[1.3rem] mt-[3rem]">
           <div className="">
             <HighLight color="blue" title="내가 참여한 캡슐" />
           </div>
@@ -112,7 +100,7 @@ function MainOpenedPage() {
             ))}
           </div>
           <div
-            className="flex self-end text-xl underline cursor-pointer"
+            className="absolute right-0 flex self-end text-xl underline cursor-pointer -bottom-2"
             onClick={() => navigate(`/joingallery/${is_open}`)}
           >
             모두 보기

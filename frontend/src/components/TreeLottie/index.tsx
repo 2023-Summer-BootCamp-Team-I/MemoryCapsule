@@ -1,4 +1,3 @@
-import React from 'react';
 import Lottie from 'lottie-react';
 import treeAnimation from '../../assets/lottie/treeLottie.json';
 

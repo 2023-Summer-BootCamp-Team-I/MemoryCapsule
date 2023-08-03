@@ -1,7 +1,6 @@
 import { ChangeEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import pink from '../../assets/images/stickers/pink.png';
-import { StoryListOneType } from '../../utils/types';
+import { AxiosErrorResponseType, StoryListOneType } from '../../utils/types';
 import axios from 'axios';
 import { useRecoilValue } from 'recoil';
 import { TokenState } from '../../utils/Recoil';
@@ -11,7 +10,7 @@ interface DetailProps {
 }
 
 function StoryDetailContent({ story_data }: DetailProps) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const token = useRecoilValue(TokenState);
   const [editMode, setEditMode] = useState(false);
   const [editTitle, setEditTitle] = useState(String(story_data && story_data.story_title));
@@ -28,34 +27,59 @@ function StoryDetailContent({ story_data }: DetailProps) {
     formData.append('filename', editImage);
 
     try {
-      await axios
-        .put(`/api/v1/stories/${story_data?.capsule_id}/${story_data?.story_id}`, formData, {
+      const response = await axios.put(
+        `/api/v1/stories/${story_data?.capsule_id}/${story_data?.story_id}`,
+        formData,
+        {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
-        })
-        .then((response) => {
-          console.log(response);
-          alert('수정이 완료되었습니다.');
-        });
+        }
+      );
+
+      if (response.status == 200) {
+        setEditImage(response.data.story_img_url);
+
+        setEditMode(!editMode);
+        alert('수정되었습니다.');
+      }
+      // console.log('[editStoryAPi] response: ', response);
     } catch (error) {
-      console.error('에러 발생: ', error);
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 
   const handleEdit = () => {
-    setEditMode(!editMode);
+    if (!editMode) {
+      setEditMode(!editMode);
+    }
     if (editMode) {
       editStoryApi();
     }
   };
 
-  const handleDelete = () => {
-    if (window.confirm('정말 삭제하시겠습니까?')) {
-      // Add the code to actually delete the item
-      alert('삭제 완료되었습니다.');
-      navigate('/unopened');
-      window.location.reload();
+  const deleteStoryApi = async () => {
+    try {
+      await axios
+        .delete(
+          `/api/v1/stories/${story_data?.capsule_id}/${story_data?.story_id}?jwt_token=${token}`
+        )
+        .then(() => {
+          alert('삭제 완료되었습니다.');
+          window.location.reload();
+        });
+    } catch (error) {
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 
@@ -64,18 +88,10 @@ function StoryDetailContent({ story_data }: DetailProps) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const file: any = e.target.files instanceof FileList ? e.target.files[0] : null;
 
-      // const reader = new FileReader();
-      // reader.onload = (event) => {
-      //   const newImage = event.target?.result as string;
-      //   console.log(newImage);
-      //   setEditImage(newImage);
-      // };
       setEditImage(file);
       setSelectedImage(URL.createObjectURL(file));
-      console.log(file);
-      console.log(URL.createObjectURL(file));
-
-      // reader.readAsDataURL(file);
+      // console.log('handleImageChange: ', file);
+      // console.log('URL.createObjectURL(file): ', URL.createObjectURL(file));
     }
   };
 
@@ -95,7 +111,9 @@ function StoryDetailContent({ story_data }: DetailProps) {
             </label>
           </div>
         ) : (
-          <img src={editImage} className="object-cover w-full h-full" alt="Story Image" />
+          <div className="flex justify-center h-56 w-96">
+            <img src={editImage} className="object-cover w-full h-full" alt="Story Image" />
+          </div>
         )}
       </div>
       <input
@@ -140,8 +158,8 @@ function StoryDetailContent({ story_data }: DetailProps) {
           {editMode ? '수정완료' : '수정'}
         </button>
         <button
-          className="fixed px-4 py-1 font-bold text-white bg-red-500 rounded hover:bg-red-700 bottom-7 right-12"
-          onClick={handleDelete}
+          className="fixed px-4 py-1 font-bold text-white rounded bg-rose-500 hover:bg-rose-700 bottom-7 right-12"
+          onClick={deleteStoryApi}
         >
           삭제
         </button>

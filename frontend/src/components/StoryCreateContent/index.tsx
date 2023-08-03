@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { ChangeEvent, useState } from 'react';
 import pink from '../../assets/images/stickers/pink.png';
 import StoryInput from '../common/StoryInput';
@@ -6,6 +5,7 @@ import StoryInput from '../common/StoryInput';
 import axios from 'axios';
 import { useRecoilValue } from 'recoil';
 import { TokenState } from '../../utils/Recoil';
+import { AxiosErrorResponseType } from '../../utils/types';
 
 interface StoryCreateProps {
   capsule_id: string | undefined;
@@ -26,7 +26,6 @@ function StoryCreateContent({ capsule_id }: StoryCreateProps) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const file: any = e.target.files instanceof FileList ? e.target.files[0] : null;
       setPreviousImage(selectedImage);
-      console.log('filename: ', file);
 
       setSelectedFile(file); //api를 사용하기 위해서 사용하는 변수
       setSelectedImage(URL.createObjectURL(file)); //보여주기 위한 변수 preview
@@ -36,8 +35,6 @@ function StoryCreateContent({ capsule_id }: StoryCreateProps) {
   };
 
   const createStoryApi = async () => {
-    console.log('capsule Id: ', capsule_id);
-
     if (selectedImage) {
       const formData = new FormData();
 
@@ -52,17 +49,17 @@ function StoryCreateContent({ capsule_id }: StoryCreateProps) {
             'Content-Type': 'multipart/form-data',
           },
         });
-        console.log(response);
-
         if (response.status == 200) {
           alert('업로드되었습니다.');
           window.location.reload();
-        } else {
-          console.log('데이터 전송 실패ㅠ');
-          console.log('error message text: ', response.statusText);
         }
       } catch (error) {
-        console.error('에러 발생: ', error);
+        const axiosError = error as AxiosErrorResponseType;
+        if (axiosError.response?.data.message) {
+          alert(axiosError.response.data.message);
+        } else {
+          alert('An unknown error occurred.');
+        }
       }
     }
   };
@@ -79,15 +76,12 @@ function StoryCreateContent({ capsule_id }: StoryCreateProps) {
       alert('사진, 제목, 내용을 입력해주세요.');
       return;
     }
-    // alert('업로드되었습니다.');
-    // window.location.reload();
     createStoryApi();
   };
 
   const handleGetTitle = (data: string) => {
     // 나는 이 함수를 StoryInput이라는 파일에게 전달을 함으로써 값을 가져올 거야
     setTitle(data);
-    console.log('[StoryCreateContent] title: ', data);
   };
 
   return (

@@ -25,7 +25,7 @@ function OpenedCapsulePage() {
     setLottieType('video');
     setTimeout(() => {
       document.location.href = `/opened/video/${capsule_id}`;
-    }, 3000);
+    }, 2000);
   };
 
   return (

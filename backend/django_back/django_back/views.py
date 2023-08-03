@@ -9,29 +9,31 @@ from musics.models import *
 from stories.models import *
 from themes.models import *
 from users.models import *
+from stories.models import *
 from capsules.views import *
 from users.views import *
+from stories.views import *
 from core.uuid_decode import *
 from django.test import RequestFactory
 from django.core.files.uploadedfile import SimpleUploadedFile
-
-
 
 # /api/v1/test-data/
 @api_view(['GET'])
 def insert_test_data(request) -> json:
     # 기존 데이터 전부 삭제
     Music.objects.all().delete()
-    Capsule.objects.all().delete()
     Theme.objects.all().delete()
-    Story.objects.all().delete()
-    User.objects.all().delete()
-    UserCapsule.objects.all().delete()
+    # Capsule.objects.all().delete()
+    # Story.objects.all().delete()
+    # User.objects.all().delete()
+    # UserCapsule.objects.all().delete()
 
     # Music 데이터 리스트 생성
-    music_url = 'https://memory-capsule.s3.ap-northeast-2.amazonaws.com/music-no1.mp3'
     music_data = []
-    for i in range(1, 11):
+    theme_img_url = 'https://memory-capsule.s3.ap-northeast-2.amazonaws.com/1f21d5a1-42ca-4513-b6df-588c945c07e9'
+
+    for i in range(1, 5):
+        music_url = f'https://memory-capsule.s3.ap-northeast-2.amazonaws.com/music-no{i}.mp3'
         music_data.append(
             {
                 'music_id': i,
@@ -41,21 +43,21 @@ def insert_test_data(request) -> json:
             }
         )
 
+    themes_data = []
+    i = 0
     for data in music_data:
         music = Music.objects.create(**data)
-
-    # Theme 데이터 리스트 생성
-    theme_img_url = 'https://memory-capsule.s3.ap-northeast-2.amazonaws.com/1f21d5a1-42ca-4513-b6df-588c945c07e9'
-    themes_data = []
-    for i in range(1, 11):
+        i += 1
         themes_data.append(
             {
                 'theme_id': i,
+                'music': music,
                 'theme_name': f'theme test {i}',
                 'theme_img_url': theme_img_url,
             }
         )
 
+    # Theme 데이터 리스트 생성
     for theme_data in themes_data:
         theme = Theme.objects.create(**theme_data)
 

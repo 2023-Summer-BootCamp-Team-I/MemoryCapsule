@@ -69,7 +69,8 @@ def story_capsule_func(request, capsule_id):
             capsule = Capsule.objects.get(capsule_id=capsule_id)
         except Capsule.DoesNotExist:
             return JsonResponse({"code": 404, "message": "캡슐이 존재하지 않습니다."}, status=404)
-
+        if timezone.now() > capsule.due_date:
+            return JsonResponse({"code" : 404, "message" : 닫힌 })
         user_uuid_obj = get_user_uuid_obj_from_jwt(request.POST['jwt_token'])
         user = User.objects.get(pk=user_uuid_obj)
 
@@ -240,9 +241,19 @@ def story_func(request, capsule_id, story_id) :
 
         authenticated_user_id = user.user_id
         if story.creator_id == authenticated_user_id:
-            story.story_title = request.data.get('story_title')
-            story.story_content = request.data.get('story_content')
-            story.story_img_url = upload_image_for_api(request.FILES['filename'])
+            story_title = request.data.get('story_title')
+            story_content = request.data.get('story_content')
+            story_img = request.FILES.get('filename')
+
+            # Update the fields based on their presence in the request data
+            if story_title is not None:
+                story.story_title = story_title
+            if story_content is not None:
+                story.story_content = story_content
+            if story_img:
+                story.story_img_url = upload_image_for_api(story_img)
+
+
             story.updated_at = request.data.get('updated_at')
             story.save()
 

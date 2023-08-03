@@ -1,7 +1,6 @@
-/* eslint-disable no-console */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 
 import flowerImg1 from '../assets/images/login/flower1.png';
 import flowerImg2 from '../assets/images/login/flower2.png';
@@ -20,7 +19,7 @@ function FirstPage() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [passwdOpen, setPasswdOpen] = useState<boolean>(false);
 
-  const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
+  const setLoggedIn = useSetRecoilState(loggedInState);
   const navigate = useNavigate();
   const [capsuleId, setCapsuleId] = useState<string>('');
 
@@ -43,12 +42,8 @@ function FirstPage() {
     if (storedCapsuleId) {
       setCapsuleId(storedCapsuleId);
       setPasswdOpen(true);
-      // eslint-disable-next-line no-console
-      console.log('isLoggedIn: ', loggedIn);
     } else {
       setLoggedIn(true);
-      // eslint-disable-next-line no-console
-      console.log('isLoggedIn: ', loggedIn);
       navigate('/mainunopened');
     }
   };

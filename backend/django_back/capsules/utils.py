@@ -145,7 +145,7 @@ def capsule_POST(request) -> (json, int):
             return {'code': 400, 'message': ' 다시 확인해 주세요.'}, 400
 
         # schedule_video_creation task 예약
-        task_id = schedule_video_creation(instance.capsule_id, instance.due_date)
+        task_id = schedule_video_creation(instance, instance.due_date)
         serializer.save(task_id=task_id)
 
         status_code = 201

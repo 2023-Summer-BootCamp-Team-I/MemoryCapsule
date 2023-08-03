@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-// PasswordModal.js
-
 import axios from 'axios';
 import { useState } from 'react';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
@@ -19,8 +16,6 @@ export default function PasswordModal({ capsuleId, closeModal }: PasswordModalPr
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // eslint-disable-next-line no-console
-    console.log(`Capsule ID: ${capsuleId}, Password: ${password}`);
     const formData = new FormData();
     formData.append('jwt_token', token);
     formData.append('capsule_password', password);

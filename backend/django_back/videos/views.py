@@ -1,9 +1,4 @@
-import datetime
-import random
-import json
-from rest_framework.parsers import JSONParser
 from django.utils import timezone
-from rest_framework.decorators import api_view
 from .tasks import create_user_choice_video
 from django.http import Http404, JsonResponse
 from videos.models import Video
@@ -16,7 +11,6 @@ from core.uuid_decode import *
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view
-from drf_yasg.openapi import Schema, TYPE_INTEGER, TYPE_ARRAY
 
 
 @swagger_auto_schema(
@@ -31,12 +25,16 @@ from drf_yasg.openapi import Schema, TYPE_INTEGER, TYPE_ARRAY
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
-            'jwt_token': openapi.Schema(type=openapi.TYPE_STRING, description="jwt token 입력",),
+            'jwt_token': openapi.Schema(type=openapi.TYPE_STRING, description="jwt token 입력", ),
             'music_id': openapi.Schema(type=openapi.TYPE_INTEGER, description='음악 아이디'),
-            'user_choice_image': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_INTEGER), description='비디오 리스트'),
+            'user_choice_image': openapi.Schema(type=openapi.TYPE_ARRAY,
+                                                items=openapi.Schema(type=openapi.TYPE_INTEGER), description='비디오 리스트'),
         }
     )
 )
+
+
+
 @api_view(['get', 'post'])
 def video_work(request, capsule_id):
     if request.method == 'GET':
@@ -76,34 +74,19 @@ def video_work(request, capsule_id):
             user = User.objects.get(pk=user_uuid_obj)
 
             capsule = Capsule.objects.get(pk=capsule_id)
-            music = Music.objects.get(music_id=request.data['music_id'])
+            # music = Music.objects.get(music_id=request.data['music_id'])
+            music = capsule.theme.music
             user_choice_list = request.data.get("user_choice_image", [])
 
+            user_choice_list.sort()
             user_choice_url_list = []
             for story_id in user_choice_list:
                 story_image = Story.objects.get(pk=story_id).story_img_url
-                for i in range(2):
-                    user_choice_url_list.append(story_image)
-            user_choice_url_list.sort()
+                user_choice_url_list.append(story_image)
 
-            async_video_url = create_user_choice_video.delay(capsule.capsule_id, music.music_id, user_choice_url_list)
+            async_video_url = create_user_choice_video.delay(capsule.capsule_id, music.music_id, user_choice_url_list, user.user_id)
             video_url = async_video_url.wait()
-
-
-
-            video = Video.objects.create(
-                creator=user,
-                capsule=capsule,
-                music=music,
-                story_video_url=video_url
-            )
-
-            # story_video 테이블 생성용
-            for story_id in user_choice_list:
-                StoryVideo.objects.create(
-                    story=Story.objects.get(pk=story_id),
-                    video=video
-                )
+            video = Video.objects.get(story_video_url=video_url)
 
             return JsonResponse({
                 'code': 201,
@@ -114,4 +97,3 @@ def video_work(request, capsule_id):
         except Exception as e:
             error_message = str(e)
             return JsonResponse({'code': 500, 'message': error_message, 'time': timezone.now()})
-

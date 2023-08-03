@@ -16,6 +16,7 @@ interface ConfirmationModalProps {
 }
 
 export default function UnOpenedCapsulePage() {
+  const navigate = useNavigate();
   const { capsule_id } = useParams();
   const navigate = useNavigate();
   const token = useRecoilValue(TokenState);
@@ -77,9 +78,29 @@ export default function UnOpenedCapsulePage() {
     }
   };
 
+  const checkIsMemberAPI = async () => {
+    try {
+      await axios
+        .get(`/api/v1/capsules/users?capsule_id=${capsule_id}&jwt_token=${token}`)
+        .then(() => {});
+    } catch (error) {
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message === '캡슐에 포함되지 않은 유저입니다') {
+        alert('캡슐에 포함되지 않은 유저입니다');
+        navigate('/mainunopened');
+      } else {
+        {
+          axiosError.response && alert(axiosError.response.data.message);
+        }
+        navigate('/mainunopened');
+      }
+    }
+  };
+
   useEffect(() => {
     sessionStorage.removeItem('capsule_id');
     capsuleInfoAPI();
+    checkIsMemberAPI();
   }, []);
 
   return (

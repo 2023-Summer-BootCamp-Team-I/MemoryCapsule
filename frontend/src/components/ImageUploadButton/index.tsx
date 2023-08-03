@@ -52,20 +52,7 @@ function ImageUploadButton({ type, handlePostFile }: typeProps) {
     const newFile = event.target.files instanceof FileList ? event.target.files[0] : null;
     handlePostFile(newFile);
   };
-  // handleUpload라는 함수를 정의. 파일 업로드 시 호출.
-  // event.target.files와 event.target.files[0]이 존재하는 경우, FileReader 객체를 생성
-  // reader.onload 콜백 함수를 정의하여 FileReader의 결과를 처리
-  // e.target.result가 존재하는 경우, 파일 상태 변수인 file을 해당 결과로 설정
 
-  // @@@@@@@@@@ 사진삭제 @@@@@@@@@@@@@
-  // const handleRemove = () => {
-  //   // 사진 삭제
-  //   setFile(null); // 널값으로 셋
-  // };
-  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-  // handleRemove라는 함수를 정의. 이미지 제거 버튼을 클릭 시 호출
-  // file 상태 변수를 null로 설정하여 이미지를 제거
   return (
     <div
       style={{
@@ -124,15 +111,4 @@ function ImageUploadButton({ type, handlePostFile }: typeProps) {
   );
 }
 
-// @@@@@@@@@@@@@@사진 삭제 @@@@@@@@@@@@@@@@@@@@@@@@@@@@
-//{file && (
-//   <button className="flex justify-start w-6 h-6 cursor-pointer" onClick={handleRemove}>
-//   &times;
-// </button>
-// )}
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-// ImageUploadButton이라는 컴포넌트를 정의
-// 화면에 이미지를 업로드할 수 있는 버튼을 나타냄
 export default ImageUploadButton;
-// ImageUploadButton 컴포넌트를 외부에서 사용할 수 있도록 내보냄

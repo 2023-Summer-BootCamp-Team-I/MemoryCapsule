@@ -15,4 +15,9 @@ venv
 migrations
 *.ini
 .DS_Store
+*.key
+*.pem
+backend/certbot/*
 backend/monitoring/alertmanager.yml
+*.crt
+elk/logs

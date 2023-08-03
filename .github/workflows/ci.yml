@@ -42,9 +42,13 @@ jobs:
       run: |
         echo "${{ secrets.API_ENV_FILE }}" > ./backend/django_back/api/.env
 
-    - name: 'Create api config file'
+    - name: 'Create api config ini'
       run: |
         echo "${{ secrets.API_CONFIG_INI_FILE }}" > ./backend/django_back/api/lib/config.ini
+
+    - name: 'Create kakao api env'
+      run: |
+        echo "${{ secrets.KAKAO_API_KEY }}" > ./frontend/.env
     
 
 #    # Install Docker Compose

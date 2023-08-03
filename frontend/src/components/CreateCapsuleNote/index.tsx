@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useState } from 'react';
 import noteImg2 from '../../assets/images/note/note2.png';
 import SendLottie from '../SendLottie';
@@ -8,17 +7,19 @@ import axios from 'axios';
 
 import { useRecoilValue } from 'recoil';
 import { TokenState } from '../../utils/Recoil';
+import { useNavigate } from 'react-router-dom';
+import { AxiosErrorResponseType } from '../../utils/types';
 
 interface CreateCapsuleNoteProps {
-  onButtonClick: () => void;
+  // onButtonClick: () => void;
   themeName: string;
   themeId: number;
+  onApiSuccess: () => void;
 }
 
-function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleNoteProps) {
+function CreateCapsuleNote({ themeName, themeId, onApiSuccess }: CreateCapsuleNoteProps) {
   const token = useRecoilValue(TokenState);
 
-  // const [responseCapsule, setResponseCapsule] = useState('');
   const getCurrentDateTime = () => {
     const now = new Date();
     const year = now.getFullYear();
@@ -32,21 +33,20 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
   };
 
   const [title, setTitle] = useState('');
-  const [passward, setPassward] = useState('');
+  const [password, setPassward] = useState('');
   const [file, setFile] = useState('');
   const [date, setDate] = useState(getCurrentDateTime());
 
   const handleClick = () => {
-    onButtonClick();
+    if (!file || !title || !password || !date) {
+      alert('입력되지 않은 사항이 있습니다.');
+      return;
+    }
     CapsuleUploadAPI(); // 괄호를 추가하여 함수 호출
-    console.log('테마 아이디', themeId);
-    // console.log(responseCapsule);
   };
 
   const handlePostFile = (data: string): void => {
-    // 나는 이 함수를 StoryInput이라는 파일에게 전달을 함으로써 값을 가져올 거야 맞지 바바
     setFile(data);
-    console.log('[StoryCreateContent] file: ', data);
   };
 
   const handleGetDate = (date: string) => {
@@ -54,40 +54,46 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // 비밀번호 입력값이 변경될 때마다 passward 상태를 업데이트
     setPassward(e.target.value);
   };
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // 비밀번호 입력값이 변경될 때마다 passward 상태를 업데이트
     setTitle(e.target.value);
   };
+  const navigate = useNavigate();
 
-  //api
   const CapsuleUploadAPI = async () => {
-    // e.preventDefault(); // 새로고침 없앰
-
     //form data 생성
     const formData = new FormData();
-    formData.append('jwt_token', token); //보류
+    formData.append('jwt_token', token);
     formData.append('capsule_name', title);
     formData.append('due_date', date);
-    formData.append('limit_count', '15'); // 보류
+    formData.append('limit_count', '30');
     formData.append('theme_id', String(themeId));
-    formData.append('capsule_password', passward);
+    formData.append('capsule_password', password);
     formData.append('img_file', file);
 
     // api 요청 보내기
     try {
-      const response = await axios.post('/api/v1/capsules', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      console.log(response.data);
+      await axios
+        .post('/api/v1/capsules', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then(() => {
+          onApiSuccess();
+          setTimeout(() => {
+            navigate('/mainunopened'); // navigate after 4 seconds
+          }, 4000); // 4000 milliseconds = 4 seconds
+        });
     } catch (error) {
-      console.error('API 요청 에러:', error);
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 
@@ -127,7 +133,7 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
               className="w-40 text-center bg-transparent outline-none focus:outline-none"
               type="text"
               id="passward"
-              value={passward}
+              value={password}
               placeholder="비밀번호를 입력하세요"
               onChange={handlePasswordChange}
             ></input>
@@ -139,12 +145,11 @@ function CreateCapsuleNote({ onButtonClick, themeName, themeId }: CreateCapsuleN
           </div>
         </form>
 
-        <div className="flex items-center -mt-4">
+        <div className="flex items-center -mt-2 cursor-pointer" onClick={handleClick}>
           <p className="text-xs">
             캡슐 완성하기
-            <br /> 오쪼꼰데
           </p>
-          <div onClick={handleClick}>
+          <div>
             <SendLottie />
           </div>
         </div>

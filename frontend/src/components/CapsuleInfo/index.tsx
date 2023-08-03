@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import axios from 'axios';
 import React, { useState, useRef } from 'react';
 import Modal from 'react-modal';
@@ -18,21 +17,21 @@ function CapsuleInfo({capsule_id, userCount} : CapsuleInfoProps) {
   const token = useRecoilValue(TokenState);
   const [capsuleData, setCapsuleData] = useState<MyCapsuleListType>();
 
-  const handleDelete = async () => { 
+  const handleDelete = async () => {
     try {
-      await axios.delete(`/api/v1/capsules/users?jwt_token=${token}&capsule_id=${capsule_id}`,
-      ).then((response) => {
-          console.log('response: ', response)
-          alert(response.data.message)
+      await axios
+        .delete(`/api/v1/capsules/users?jwt_token=${token}&capsule_id=${capsule_id}`)
+        .then((response) => {
+          alert(response.data.message);
           navigate('/mainunopened');
-      });
-      } catch(error) {
-        const axiosError = error as AxiosErrorResponseType;
-        if (axiosError.response?.data.message) {
-          alert(axiosError.response.data.message);
-        } else {
-          alert('An unknown error occurred.');
-        }
+        });
+    } catch (error) {
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 
@@ -41,7 +40,7 @@ function CapsuleInfo({capsule_id, userCount} : CapsuleInfoProps) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const openModal = () => {
-    capsuleInfoAPI()
+    capsuleInfoAPI();
     setModalIsOpen(true);
   };
 
@@ -70,24 +69,19 @@ function CapsuleInfo({capsule_id, userCount} : CapsuleInfoProps) {
   };
 
   const capsuleInfoAPI = async () => {
-    console.log('capsule_id: ', capsule_id);
-    
     try {
-      await axios.get(`/api/v1/capsules/${capsule_id}?jwt_token=${token}`,
-      ).then((response) => {
-          console.log('response: ', response)
-          console.log('data: ', response.data.capsule_data)
-          setCapsuleData(response.data.capsule_data)
+      await axios.get(`/api/v1/capsules/${capsule_id}?jwt_token=${token}`).then((response) => {
+        setCapsuleData(response.data.capsule_data);
       });
-      } catch(error) {
-          const axiosError = error as AxiosErrorResponseType;
-          if (axiosError.response?.data.message) {
-            alert(axiosError.response.data.message);
-          } else {
-            alert('An unknown error occurred.');
-          }
+    } catch (error) {
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
-  }
+  };
 
   return (
     <>

@@ -33,10 +33,6 @@ function UnopenCapsule({ capsule }: OpenCapsuleProps) {
           className="absolute inset-0 flex flex-col items-center justify-center text-white"
           style={{ zIndex: '1' }}
         >
-          {/* <div className="flex ">
-            <FontAwesomeIcon icon={faUser} />
-            <div className="flex pl-1">{capsule.num}]</div>
-          </div> */}
           <FontAwesomeIcon className="pt-1 pb-3" size="2x" icon={faLock} />
           <div>개봉일: {capsule.due_date.slice(0, 10)}</div>
         </div>

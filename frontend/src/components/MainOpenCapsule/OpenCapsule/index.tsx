@@ -1,12 +1,6 @@
 import capsuleLabel from '../../../assets/images/stickers/pink2.png';
 import { MyCapsuleListType } from '../../../utils/types';
 
-// interface Capsule {
-//   id: string;
-//   img: string;
-//   name: string;
-// }
-
 interface OpenCapsuleProps {
   capsule: MyCapsuleListType;
 }

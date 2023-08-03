@@ -1,26 +1,15 @@
-/* eslint-disable no-console */
-//CapsuleJoinGalleryPage
-
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import GalleryTopBookmark from '../components/CapsuleGallery/GalleryTopBookmark';
 
-// import open_join_capsule from '../assets/data/open_join_capsule';
 import unopen_join_capsule from '../assets/data/unopen_join_capsule';
 
 import OpenCapsule from '../components/MainOpenCapsule/OpenCapsule';
-import { MyCapsuleListType } from '../utils/types';
+import { AxiosErrorResponseType, MyCapsuleListType } from '../utils/types';
 import axios from 'axios';
 import { TokenState } from '../utils/Recoil';
 import { useRecoilValue } from 'recoil';
 import UnopenCapsule from '../components/MainUnopenCapsule/UnopenCapsule';
-// import UnopenCapsule from '../components/MainUnopenCapsule/UnopenCapsule';
-
-// type OpenCapsuleType = {
-//   id: string;
-//   img: string;
-//   name: string;
-// };
 
 type UnopenCapsuleType = {
   id: string;
@@ -49,13 +38,15 @@ export default function CapsuleJoinGalleryPage() {
           },
         })
         .then((response) => {
-          console.log('response: ', response);
-          console.log('response.data.capsule_list: ', response.data.capsule_list);
           setJoinCapsules(response.data.capsule_list);
         });
     } catch (error) {
-      console.log('api 불러오기 실패');
-      console.log(error);
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 

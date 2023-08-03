@@ -9,7 +9,7 @@ class Story(BaseModel):
     capsule = models.ForeignKey(Capsule, on_delete=models.CASCADE)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     story_title = models.CharField(max_length=60)
-    story_content = models.CharField(max_length=60)
+    story_content = models.CharField(max_length=1000)
     story_img_url = models.CharField(max_length=255)
 
     class Meta:
