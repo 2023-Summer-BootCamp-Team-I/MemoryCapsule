@@ -221,7 +221,7 @@ function WindowTheme({ openStory }: ThemeProps) {
                 </button>
               </div>
             </div>
-            <WindowStoryDetail storyId={storyId} />
+            <WindowStoryDetail storyId={storyId} openStory={openStory} />
           </div>
         </div>
       )}

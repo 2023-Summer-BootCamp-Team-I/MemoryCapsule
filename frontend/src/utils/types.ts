@@ -20,7 +20,7 @@ export type StoryType = {
 };
 
 export type StoryListType = {
-  creator: string;
+  story_content: string;
   is_mine: boolean;
   story_id: number;
   story_title: string;
