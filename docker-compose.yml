@@ -238,7 +238,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./elk/logs/nginx_data:/var/log/nginx
+#      - ./elk/logs/nginx_data:/var/log/nginx
       - ./backend/nginx/nginx_develop.conf:/etc/nginx/nginx.conf
       - ./backend/certbot/conf:/etc/letsencrypt
       - ./backend/certbot/www:/var/www/certbot
