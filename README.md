@@ -21,7 +21,8 @@ Medium:
 #### Create Capsule
 <img src="./readme_image/ezgif.com-video-to-gif.gif" title=""/>
 메인 페이지에서 캡슐을 생성할 수 있습니다.
-<br/>
+
+<br>
 
 ## Unopened Capsule
 개봉일이 지나지 않은 캡슐에서는 스토리를 추가하여 추억을 저장할 수 있습니다.
