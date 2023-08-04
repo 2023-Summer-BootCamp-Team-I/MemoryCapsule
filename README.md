@@ -122,15 +122,12 @@ slack으로 알림을 보내 실시간으로 처리할 수 있게 하였습니�
 <hr>
 
 ### Django
-![IMG_6269.PNG](..%2F..%2F..%2FDownloads%2FIMG_6269.PNG)
 <img src="./readme_image/django.png" title=""/>
 
 ### Node exporter
-![nodeexporter.PNG](..%2F..%2F..%2FDownloads%2Fnodeexporter.PNG)
 <img src="./readme_image/node_exporter.png" title=""/>
 
 ### ELK
-![elk.PNG](..%2F..%2F..%2FDownloads%2Felk.PNG)
 <img src="./readme_image/elk.png" title=""/>
 
 <hr>
