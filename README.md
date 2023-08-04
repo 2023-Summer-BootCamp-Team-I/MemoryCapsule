@@ -55,7 +55,7 @@ Medium:
 <br/>
 
 ## 💻 System Architecture
-<img src="./readme_image/architecture.png" title=""/>
+<img src="./readme_image/system.png" title=""/>
 <hr>
 <br>
 <br>
