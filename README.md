@@ -17,10 +17,12 @@ Medium:
 ## Login
 <img src="./readme_image/readme-login.gif" title=""/>
 
+<br>
 ## Main Page
 #### Create Capsule
 <img src="./readme_image/ezgif.com-video-to-gif.gif" title=""/>
 메인 페이지에서 캡슐을 생성할 수 있습니다.
+
 <br/>
 
 ## Unopened Capsule
