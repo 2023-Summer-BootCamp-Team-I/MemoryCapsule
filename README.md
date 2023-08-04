@@ -24,7 +24,7 @@ Medium:
 <img src="./readme_image/ezgif.com-video-to-gif.gif" title=""/>
 메인 페이지에서 캡슐을 생성할 수 있습니다.
 
-<br/>
+<br>
 
 ## Unopened Capsule
 개봉일이 지나지 않은 캡슐에서는 스토리를 추가하여 추억을 저장할 수 있습니다.
@@ -35,7 +35,7 @@ Medium:
 <img src="./readme_image/ezgif.com-video-to-gif (1).gif" title=""/>
 
 <hr>
-<br/>
+<br>
 
 
 #### Invitation
@@ -44,7 +44,7 @@ Medium:
 
 <img src="./readme_image/ezgif.com-video-to-gif (3).gif" title=""/>
 
-<br/>
+<br>
 
 ## Opened Capsule
 
@@ -52,13 +52,13 @@ Medium:
 
 사진 페이지는 캡슐 생성 때 선택한 테마에서 스토리들을 확인할 수 있습니다.<br/>
 영상 페이지에서는 스토리의 사진으로 제작된 비디오를 확인할 수 있습니다. 이후에 스토리를 선택하여 추가 비디오 제작이 가능합니다
-<br/>
+<br>
 
 <img src="./readme_image/ezgif.com-video-to-gif (4).gif" title=""/>
 
 <hr>
-<br/>
-<br/>
+<br>
+<br>
 
 ## 💻 System Architecture
 <img src="./readme_image/system.png" title=""/>
