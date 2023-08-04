@@ -4,7 +4,7 @@
 
 <br>
 Medium:
-
+ 
 <hr style="border: none; border-top: 3px solid grey;">
 <br>
 
