@@ -1,0 +1,38 @@
+/* .normal-day {
+  background: white !important;
+  color: black !important;
+  width: 28px;
+  height: 28px;
+  line-height: 1.8;
+  text-align: center;
+  padding: 2px !important;
+} */
+
+.selected-day {
+  background: #f7887c !important;
+  color: white !important;
+  border-radius: 50% !important;
+  font-weight: 700;
+}
+
+/* .customHeader {
+  background: #f7887c;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+.customHeaderButton {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.customHeaderText {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+} */

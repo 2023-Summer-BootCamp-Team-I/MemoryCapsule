@@ -1,0 +1,100 @@
+name: Docker Compose CI
+
+
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+env:
+  PROJECT_NAME: MemoryCapsule
+  BUCKET_NAME: memory-capsule-deploy
+  CODE_DEPLOY_APP_NAME: memory-capsule-application
+  DEPLOYMENT_GROUP_NAME: memory-capsule-deploy-group
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    # Set up Python
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: 'Create db env file'
+      run: |
+        echo "${{ secrets.DB_ENV_FILE }}" > ./backend/db/.env
+
+    - name: 'Create django env file'
+      run: |
+        echo "${{ secrets.DJANGO_ENV_FILE }}" > ./backend/django_back/django_back/.env
+
+    - name: 'Create api env file'
+      run: |
+        echo "${{ secrets.API_ENV_FILE }}" > ./backend/django_back/api/.env
+
+    - name: 'Create api config ini'
+      run: |
+        echo "${{ secrets.API_CONFIG_INI_FILE }}" > ./backend/django_back/api/lib/config.ini
+
+    - name: 'Create kakao api env'
+      run: |
+        echo "${{ secrets.KAKAO_API_KEY }}" > ./frontend/.env
+    
+
+#    # Install Docker Compose
+#    - name: Install Docker Compose
+#      run: |
+#        sudo apt-get update
+#        sudo apt-get install -y docker-compose
+#
+#    # Docker Compose 실행
+#    - name: Start containers
+#      run: docker-compose up -d
+        
+    # 테스트 수행
+#    - name: Run unit tests
+#      run: |
+#        python -m pip install --upgrade pip
+#        python -m pip install -r requirements.txt
+#        python manage.py test
+
+
+#    - name: process 로그 출력
+#      run: docker ps -a
+
+    # ... (컨테이너 실행 후 테스트 또는 빌드 등 다른 작업을 진행)
+
+#    # Docker Compose 중지
+#    - name: Stop containers
+#      run: docker-compose down
+
+    - name: Make Zip File
+      run: sudo zip -qq -r ./$GITHUB_SHA.zip .
+      shell: bash
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_DEPLOY_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_DEPLOY_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-2
+
+    - name: Upload to S3
+      run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
+
+    - name: Code Deploy
+      run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
+
+
+
+

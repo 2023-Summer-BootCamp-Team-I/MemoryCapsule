@@ -15,11 +15,11 @@ Medium:
 
 
 ## Login
-![readme-login.gif](..%2F..%2F..%2FDownloads%2Freadme-login.gif)
+<img src="./readme_image/readme-login.gif" title=""/>
 
 ## Main Page
 #### Create Capsule
-![ezgif.com-video-to-gif.gif](..%2F..%2F..%2FDownloads%2Fezgif.com-video-to-gif.gif)
+<img src="./readme_image/ezgif.com-video-to-gif.gif" title=""/>
 메인 페이지에서 캡슐을 생성할 수 있습니다.
 <br/>
 
@@ -28,15 +28,18 @@ Medium:
 캡슐에는 친구를 추가하여 스토리를 나눌 수 있습니다. 단 개봉일 전까지는 자신이 올린 스토리의 내용만 확인 가능합니다.
 
 #### Create Story
-![ezgif.com-video-to-gif (1).gif](..%2F..%2F..%2FDownloads%2Fezgif.com-video-to-gif%20%281%29.gif)
+
+<img src="./readme_image/ezgif.com-video-to-gif (1).gif" title=""/>
+
 <hr>
 <br/>
 
 
 #### Invitation
-![ezgif.com-video-to-gif (2).gif](..%2F..%2F..%2FDownloads%2Fezgif.com-video-to-gif%20%282%29.gif)
 
-![ezgif.com-video-to-gif (3).gif](..%2F..%2F..%2FDownloads%2Fezgif.com-video-to-gif%20%283%29.gif)
+<img src="./readme_image/ezgif.com-video-to-gif (2).gif" title=""/>
+
+<img src="./readme_image/ezgif.com-video-to-gif (3).gif" title=""/>
 
 <br/>
 
@@ -48,14 +51,15 @@ Medium:
 영상 페이지에서는 스토리의 사진으로 제작된 비디오를 확인할 수 있습니다. 이후에 스토리를 선택하여 추가 비디오 제작이 가능합니다
 <br/>
 
+<img src="./readme_image/ezgif.com-video-to-gif (4).gif" title=""/>
 
-![ezgif.com-video-to-gif (4).gif](..%2F..%2F..%2FDownloads%2Fezgif.com-video-to-gif%20%284%29.gif)
 <hr>
 <br/>
 <br/>
 
 ## 💻 System Architecture
-![스크린샷 2023-08-05 오전 1.19.38.png](..%2F..%2F..%2FDownloads%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-08-05%20%EC%98%A4%EC%A0%84%201.19.38.png)
+<img src="./readme_image/system.png" title=""/>
+
 <hr>
 <br>
 <br>
@@ -74,7 +78,8 @@ Medium:
 <br>
 
 ## 💽 ERD
-![스크린샷 2023-08-03 오후 7.39.10.png](..%2F..%2F..%2FDesktop%2FScreenshot%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-08-03%20%EC%98%A4%ED%9B%84%207.39.10.png)
+<img src="./readme_image/erd.png" title=""/>Z
+
 <hr>
 <br>
 <br>
@@ -84,16 +89,17 @@ swagger를 사용하여 API 명세서를 작성 하였습니다.
 <hr>
 
 ### user
-![user.png](..%2F..%2F..%2FDownloads%2Fuser.png)
+<img src="./readme_image/user.png" title=""/>
 
 ### capsule
-![capsule.png](..%2F..%2F..%2FDownloads%2Fcapsule.png)
+<img src="./readme_image/capsule.png" title=""/>
 
 ### story
-![story.png](..%2F..%2F..%2FDownloads%2Fstory.png)
+<img src="./readme_image/story.png" title=""/>
 
 ### video
-![video.png](..%2F..%2F..%2FDownloads%2Fvideo.png)
+<img src="./readme_image/video.png" title=""/>
+
 <hr>
 
 
@@ -103,7 +109,8 @@ swagger를 사용하여 API 명세서를 작성 하였습니다.
 ## 📚 Asynchronous
 비교적 시간이 많이 걸리는 비디오 생성 작업은 Celery를 활용하여 비동기 처리됩니다. <br/>
 
-![async_process.png](..%2F..%2F..%2FDownloads%2Fasync_process.png)
+<img src="./readme_image/celery.png" title=""/>
+
 
 <br>
 <br>
@@ -122,13 +129,14 @@ slack으로 알림을 보내 실시간으로 처리할 수 있게 하였습니�
 <hr>
 
 ### Django
-![IMG_6269.PNG](..%2F..%2F..%2FDownloads%2FIMG_6269.PNG)
+
+<img src="./readme_image/django.png" title=""/>
 
 ### Node exporter
-![nodeexporter.PNG](..%2F..%2F..%2FDownloads%2Fnodeexporter.PNG)
+<img src="./readme_image/node_exporter.png" title=""/>
 
 ### ELK
-![elk.PNG](..%2F..%2F..%2FDownloads%2Felk.PNG)
+<img src="./readme_image/elk.png" title=""/>
 
 <hr>
 <br>
@@ -139,7 +147,7 @@ slack으로 알림을 보내 실시간으로 처리할 수 있게 하였습니�
 
 <hr>
 
-![스크린샷 2023-08-04 오후 6.10.22.png](..%2F..%2F..%2FDesktop%2FScreenshot%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-08-04%20%EC%98%A4%ED%9B%84%206.10.22.png)
+<img src="./readme_image/video_make.png" title=""/>
 <br> 
 
 캡슐이 개봉되면 유저가 추가한 이미지는 opencv가 다운로드 받습니다. 다운로드 받아진 이미지들은 numpy를 통해 이미지를 균일하게 resize하고, 색상 처리 작업을 진행합니다. 이후 처리 완료된 

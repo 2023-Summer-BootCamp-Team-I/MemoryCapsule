@@ -1,0 +1,37 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@font-face {
+  font-family: 'Yeongdeok';
+  src: url('./assets/fonts/Yeongdeok_Sea.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'cachildren_kkum';
+  src: url('./assets/fonts/cachildren_kkum.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Omu';
+  src: url('./assets/fonts/Omu.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'neodgm';
+  src: url('./assets/fonts/neo/neodgm.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'neo_pro';
+  src: url('./assets/fonts/neo/NeoDunggeunmoPro-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Museum';
+  src: url('./assets/fonts/Museum.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
