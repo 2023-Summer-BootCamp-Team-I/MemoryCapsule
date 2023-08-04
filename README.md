@@ -4,7 +4,7 @@
 
 <br>
 Medium:
- 
+
 <hr style="border: none; border-top: 3px solid grey;">
 <br>
 
@@ -28,7 +28,9 @@ Medium:
 캡슐에는 친구를 추가하여 스토리를 나눌 수 있습니다. 단 개봉일 전까지는 자신이 올린 스토리의 내용만 확인 가능합니다.
 
 #### Create Story
+
 <img src="./readme_image/ezgif.com-video-to-gif (1).gif" title=""/>
+
 <hr>
 <br/>
 
@@ -50,12 +52,14 @@ Medium:
 <br/>
 
 <img src="./readme_image/ezgif.com-video-to-gif (4).gif" title=""/>
+
 <hr>
 <br/>
 <br/>
 
 ## 💻 System Architecture
 <img src="./readme_image/system.png" title=""/>
+
 <hr>
 <br>
 <br>
@@ -75,6 +79,7 @@ Medium:
 
 ## 💽 ERD
 <img src="./readme_image/erd.png" title=""/>Z
+
 <hr>
 <br>
 <br>
@@ -94,6 +99,7 @@ swagger를 사용하여 API 명세서를 작성 하였습니다.
 
 ### video
 <img src="./readme_image/video.png" title=""/>
+
 <hr>
 
 
@@ -104,6 +110,7 @@ swagger를 사용하여 API 명세서를 작성 하였습니다.
 비교적 시간이 많이 걸리는 비디오 생성 작업은 Celery를 활용하여 비동기 처리됩니다. <br/>
 
 <img src="./readme_image/celery.png" title=""/>
+
 
 <br>
 <br>
@@ -122,6 +129,7 @@ slack으로 알림을 보내 실시간으로 처리할 수 있게 하였습니�
 <hr>
 
 ### Django
+
 <img src="./readme_image/django.png" title=""/>
 
 ### Node exporter
@@ -138,8 +146,8 @@ slack으로 알림을 보내 실시간으로 처리할 수 있게 하였습니�
 비디오 제작에는 OpenCV, NumPy, MoviePy가 사용 됩니다.
 
 <hr>
-<img src="./readme_image/video_make.png" title=""/>
 
+<img src="./readme_image/video_make.png" title=""/>
 <br> 
 
 캡슐이 개봉되면 유저가 추가한 이미지는 opencv가 다운로드 받습니다. 다운로드 받아진 이미지들은 numpy를 통해 이미지를 균일하게 resize하고, 색상 처리 작업을 진행합니다. 이후 처리 완료된 
