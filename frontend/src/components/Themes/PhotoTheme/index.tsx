@@ -11,6 +11,8 @@ import cloud2 from '../../../assets/images/PhotoTheme/cloud2.png';
 
 import { StoryListType } from '../../../utils/types';
 
+import wrapTextEveryNCharacters from '../../../assets/data/newline';
+
 interface ThemeProps {
   openStory: StoryListType[];
 }
@@ -52,17 +54,53 @@ function PhotoTheme({ openStory }: ThemeProps) {
         <div className="z-10 flex items-center h-[42rem] w-[75rem]  p-10 pl-20 custom-scroll-container">
           {openStory.map((data, index) => {
             if (index % 6 === 0) {
-              return <PhotoCard1 key={index} data={data} />;
+              return (
+                <PhotoCard1
+                  key={index}
+                  data={data}
+                  wrapTextEveryNCharacters={wrapTextEveryNCharacters}
+                />
+              );
             } else if (index % 6 === 1) {
-              return <PhotoCard2 key={index} data={data} />;
+              return (
+                <PhotoCard2
+                  key={index}
+                  data={data}
+                  wrapTextEveryNCharacters={wrapTextEveryNCharacters}
+                />
+              );
             } else if (index % 6 === 2) {
-              return <PhotoCard3 key={index} data={data} />;
+              return (
+                <PhotoCard3
+                  key={index}
+                  data={data}
+                  wrapTextEveryNCharacters={wrapTextEveryNCharacters}
+                />
+              );
             } else if (index % 6 === 3) {
-              return <PhotoCard4 key={index} data={data} />;
+              return (
+                <PhotoCard4
+                  key={index}
+                  data={data}
+                  wrapTextEveryNCharacters={wrapTextEveryNCharacters}
+                />
+              );
             } else if (index % 6 === 4) {
-              return <PhotoCard5 key={index} data={data} />;
+              return (
+                <PhotoCard5
+                  key={index}
+                  data={data}
+                  wrapTextEveryNCharacters={wrapTextEveryNCharacters}
+                />
+              );
             } else if (index % 6 === 5) {
-              return <PhotoCard6 key={index} data={data} />;
+              return (
+                <PhotoCard6
+                  key={index}
+                  data={data}
+                  wrapTextEveryNCharacters={wrapTextEveryNCharacters}
+                />
+              );
             } else {
               return null;
             }

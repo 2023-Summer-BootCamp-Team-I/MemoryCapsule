@@ -1,16 +1,20 @@
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import KakaoShare from '../components/common/KakaoShare';
 
 import OpenButton from '../components/OpenButton';
 import PhotoLottie from '../components/PhotoLottie';
 import VideoLottie from '../components/VideoLottie';
+import { AxiosErrorResponseType, MyCapsuleListType } from '../utils/types';
 
 function OpenedCapsulePage() {
   const { capsule_id } = useParams();
 
   const [isLoading, setIsLoading] = useState(false);
   const [lottieType, setLottieType] = useState('');
+
+  const [capsuleData, setCapsuleData] = useState<MyCapsuleListType>();
 
   const clickPhoto = () => {
     setIsLoading(true);
@@ -28,6 +32,27 @@ function OpenedCapsulePage() {
     }, 2000);
   };
 
+  const capsuleInfoAPI = async () => {
+    try {
+      await axios
+        .get(`https://memorycapsule.co.kr/api/v1/capsules/${capsule_id}`)
+        .then((response) => {
+          setCapsuleData(response.data.capsule_data);
+        });
+    } catch (error) {
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
+    }
+  };
+
+  useEffect(() => {
+    capsuleInfoAPI();
+  }, []);
+
   return (
     <div className="flex flex-col items-center">
       <div className="flex items-center justify-around relative h-[42rem] w-[50rem]">
@@ -43,7 +68,9 @@ function OpenedCapsulePage() {
           {lottieType === 'photo' ? <PhotoLottie /> : <VideoLottie />}
         </div>
       )}
-      {capsule_id && <KakaoShare capsule_id={capsule_id} state={'opened'} />}
+      {capsule_id && (
+        <KakaoShare capsule_id={capsule_id} state={'opened'} capsuleData={capsuleData} />
+      )}
     </div>
   );
 }

@@ -1,37 +1,61 @@
-/* eslint-disable no-console */
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-// import MuseumTheme from '../components/Themes/MuseumTheme';
+import MuseumTheme from '../components/Themes/MuseumTheme';
 import PhotoTheme from '../components/Themes/PhotoTheme';
-import { StoryListType } from '../utils/types';
+import WindowTheme from '../components/Themes/WindowTheme';
+import { AxiosErrorResponseType, StoryListType } from '../utils/types';
 
 const OpenedStoryPage = () => {
   const { capsule_id } = useParams();
   const navigate = useNavigate();
   const [openStory, setOpenStory] = useState<StoryListType[]>([]);
+  const [themeId, setThemeId] = useState<number>(1);
 
   const openStoryAPI = async () => {
     try {
-      await axios.get(`/api/v1/stories/${capsule_id}`).then((response) => {
-        console.log('response: ', response);
-        console.log(response.data.story_list);
-        setOpenStory(response.data.story_list);
-      });
+      await axios
+        .get(`https://memorycapsule.co.kr/api/v1/stories/${capsule_id}`)
+        .then((response) => {
+          setOpenStory(response.data.story_list);
+        });
     } catch (error) {
-      console.log('api 불러오기 실패');
-      console.log(error);
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
+    }
+  };
+  const storyInfoAPI = async () => {
+    try {
+      await axios
+        .get(`https://memorycapsule.co.kr/api/v1/capsules/${capsule_id}`)
+        .then((response) => {
+          setThemeId(response.data.capsule_data.theme_id);
+        });
+    } catch (error) {
+      const axiosError = error as AxiosErrorResponseType;
+      if (axiosError.response?.data.message) {
+        alert(axiosError.response.data.message);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 
   useEffect(() => {
     openStoryAPI();
+    storyInfoAPI();
   }, []);
 
   return (
     <div>
       <div
-        className="fixed top-[4rem] cursor-pointer left-[8rem]"
+        className={`${
+          themeId === 1 || themeId === 3 ? 'top-[-2rem] left-[-1rem]' : 'top-[13.9rem] left-[-1rem]'
+        } absolute  cursor-pointer  z-10`}
         onClick={() => navigate(`/opened/${capsule_id}`)}
       >
         <svg
@@ -49,8 +73,13 @@ const OpenedStoryPage = () => {
           />
         </svg>
       </div>
-      <PhotoTheme openStory={openStory} />
-      {/* <MuseumTheme openStory={openStory}/> */}
+      {themeId === 1 ? (
+        <PhotoTheme openStory={openStory} />
+      ) : themeId === 2 ? (
+        <MuseumTheme openStory={openStory} />
+      ) : themeId === 3 ? (
+        <WindowTheme openStory={openStory} />
+      ) : null}
     </div>
   );
 };

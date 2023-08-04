@@ -36,7 +36,7 @@ function TextInput({
     } else if (title === 'join') {
       setColorToShow('placeholder-neutral-300');
       setBorderToShow('');
-      setWidthToShow('w-30');
+      setWidthToShow('w-44');
       setLabelToShow('w-20 font-bold');
     }
   }, [title]);
@@ -45,7 +45,7 @@ function TextInput({
     <div className={`flex items-center justify-center ${borderToShow} h-10 bg-transparent`}>
       <label className={`${labelToShow} text-sm text-left p-4`}>{label}</label>
       <input
-        className={`${widthToShow}text-sm text-center ${colorToShow} outline=none focus:outline-none bg-transparent`}
+        className={`${widthToShow} text-center ${colorToShow} outline=none focus:outline-none bg-transparent`}
         type={type}
         value={data}
         placeholder={placeholder}

@@ -76,7 +76,7 @@ function CreateCapsuleNote({ themeName, themeId, onApiSuccess }: CreateCapsuleNo
     // api 요청 보내기
     try {
       await axios
-        .post('/api/v1/capsules', formData, {
+        .post('https://memorycapsule.co.kr/api/v1/capsules', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -146,9 +146,7 @@ function CreateCapsuleNote({ themeName, themeId, onApiSuccess }: CreateCapsuleNo
         </form>
 
         <div className="flex items-center -mt-2 cursor-pointer" onClick={handleClick}>
-          <p className="text-xs">
-            캡슐 완성하기
-          </p>
+          <p className="text-xs">캡슐 완성하기</p>
           <div>
             <SendLottie />
           </div>

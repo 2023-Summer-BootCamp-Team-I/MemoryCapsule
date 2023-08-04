@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -23,6 +22,7 @@ export default function OpenedVideoPage() {
   };
   const onCreateClose = () => {
     setIsCreateOpen(false);
+    window.location.reload();
   };
 
   const selectVideo = (selectedVideo: OpenCapsuleVideoType) => {
@@ -32,16 +32,12 @@ export default function OpenedVideoPage() {
 
   const openVideoAPI = async () => {
     try {
-      await axios.get(`/api/v1/videos/${capsule_id}`).then((response) => {
-        // console.log('response: ', response);
-        console.log(
-          'response.data.data.default_video.video_url: ',
-          response.data.data.default_video
-        );
-        console.log('response.data.data.added_video: ', response.data.data.added_video);
-        setDefaultVideo(response.data.data.default_video);
-        setExtraVideo(response.data.data.added_video);
-      });
+      await axios
+        .get(`https://memorycapsule.co.kr/api/v1/videos/${capsule_id}`)
+        .then((response) => {
+          setDefaultVideo(response.data.data.default_video);
+          setExtraVideo(response.data.data.added_video);
+        });
     } catch (error) {
       const axiosError = error as AxiosErrorResponseType;
       if (axiosError.response?.data.message) {
@@ -149,13 +145,12 @@ export default function OpenedVideoPage() {
 
   useEffect(() => {
     openVideoAPI();
-    console.log('video: ', video);
   }, [video]);
 
   return (
     <div>
       <div
-        className="fixed top-[4rem] cursor-pointer left-[8rem]"
+        className="absolute top-[-7.2rem] cursor-pointer left-[-7rem] z-10"
         onClick={() => navigate(`/opened/${capsule_id}`)}
       >
         <svg

@@ -21,14 +21,8 @@ function JoinModal({ onClose }: ModalProps) {
   const [passwordV2, setPasswordV2] = useState('');
   const handleGetInputData = (name: string, value: string) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
-    console.log('name: ', name);
-    console.log('value: ', value);
-    
   };
   const handleGetPwData = (name: string, value: string) => {
-    console.log('name: ', name);
-    console.log('value: ', value);
-    
     setPasswordV2(value);
   };
   const handleGetFileData = (data: string): void => {
@@ -53,15 +47,12 @@ function JoinModal({ onClose }: ModalProps) {
     }
 
     if (formData.password !== passwordV2) {
-      console.log('formData.password: ', formData.password);
-      console.log('passwordV2: ', passwordV2);
-      
       alert('비밀번호가 다릅니다!');
       return;
     }
 
     try {
-      await axios.post('/api/v1/users/sign-up', formData, {
+      await axios.post('https://memorycapsule.co.kr/api/v1/users/sign-up', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -103,14 +94,6 @@ function JoinModal({ onClose }: ModalProps) {
             <div>
               <form method="post" action="서버의url" id="join-form" onSubmit={SignUpAPI}>
                 <TextInput
-                  label="Nickname"
-                  placeholder="닉네임을 입력해주세요"
-                  title="join"
-                  type="text"
-                  name="nickname"
-                  handleGetInputData={handleGetInputData}
-                />
-                <TextInput
                   label="ID"
                   placeholder="아이디를 입력해주세요"
                   title="join"
@@ -128,11 +111,19 @@ function JoinModal({ onClose }: ModalProps) {
                 />
                 <TextInput
                   label="PW v2"
-                  placeholder="비밀번호를 입력해주세요"
+                  placeholder="비밀번호를 재입력해주세요"
                   title="join"
                   type="password"
                   name="pw_v2"
                   handleGetInputData={handleGetPwData}
+                />
+                <TextInput
+                  label="Nickname"
+                  placeholder="닉네임을 입력해주세요"
+                  title="join"
+                  type="text"
+                  name="nickname"
+                  handleGetInputData={handleGetInputData}
                 />
                 <TextInput
                   label="Email"
@@ -144,7 +135,7 @@ function JoinModal({ onClose }: ModalProps) {
                 />
                 <TextInput
                   label="phone"
-                  placeholder="전화번호를 입력해주세요"
+                  placeholder="예) 010-0000-0000"
                   title="join"
                   type="phone"
                   name="phone_number"

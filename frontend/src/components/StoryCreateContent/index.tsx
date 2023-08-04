@@ -44,11 +44,15 @@ function StoryCreateContent({ capsule_id }: StoryCreateProps) {
       formData.append('filename', selectedFile);
 
       try {
-        const response = await axios.post(`/api/v1/stories/${capsule_id}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        const response = await axios.post(
+          `https://memorycapsule.co.kr/api/v1/stories/${capsule_id}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
         if (response.status == 200) {
           alert('업로드되었습니다.');
           window.location.reload();

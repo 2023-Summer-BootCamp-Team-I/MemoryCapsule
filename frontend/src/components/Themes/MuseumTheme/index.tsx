@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
 import MuseumBg from '../../../assets/images/MuseumBg.png';
 import MuseumAlbum from '../../../assets/images/MuseumAlbum.png';
-// import story_dummy from '../../../assets/data/story_dummy';
+
+import wrapTextEveryNCharacters from '../../../assets/data/newline';
 
 import { StoryListType } from '../../../utils/types';
 interface ThemeProps {
@@ -99,7 +100,9 @@ function MuseumTheme({ openStory }: ThemeProps) {
                   }}
                 />
                 <h3 className="mt-3 mb-2 text-3xl font-Yeongdeok">{story.story_title}</h3>
-                <p className="text-xl font-Yeongdeok">{story.story_title}</p>
+                <p className="text-xl whitespace-pre-line font-Yeongdeok">
+                  {wrapTextEveryNCharacters(story.story_content, 23)}
+                </p>
               </div>
             ))}
           </div>

@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { loggedInState, TokenState } from '../../../utils/Recoil';
 import { AxiosErrorResponseType } from '../../../utils/types';
 
 interface PasswordModalProps {
-  capsuleId: string;
+  capsuleId: string | undefined;
   closeModal: () => void;
 }
 
@@ -13,6 +14,7 @@ export default function PasswordModal({ capsuleId, closeModal }: PasswordModalPr
   const [password, setPassword] = useState('');
   const setLoggedIn = useSetRecoilState(loggedInState);
   const token = useRecoilValue(TokenState);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,22 +24,22 @@ export default function PasswordModal({ capsuleId, closeModal }: PasswordModalPr
 
     try {
       await axios
-        .post('http://localhost:80/api/v1/capsules/users', {
+        .post('https://memorycapsule.co.kr/api/v1/capsules/users', {
           jwt_token: token,
           capsule_id: Number(capsuleId),
           capsule_password: password,
         })
         .then((response) => {
-          // eslint-disable-next-line no-console
-          console.log(response);
 
           setLoggedIn(true);
           alert(response.data.message);
+          navigate(`/unopened/${capsuleId}`);
         });
     } catch (error) {
       const axiosError = error as AxiosErrorResponseType;
       if (axiosError.response?.data.message) {
         if (axiosError.response?.data.message === '이미 캡슐에 포함된 유저입니다.') {
+          alert(axiosError.response.data.message);
           setLoggedIn(true);
         } else {
           alert(axiosError.response.data.message);
@@ -50,7 +52,7 @@ export default function PasswordModal({ capsuleId, closeModal }: PasswordModalPr
   };
 
   return (
-    <div className="fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed top-0 bottom-0 left-0 right-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
       <div className="p-8 bg-white rounded-md">
         <h2 className="mb-4 text-2xl">Capsule ID: {capsuleId}</h2>
         <form onSubmit={handleSubmit} className="flex flex-col space-y-4">

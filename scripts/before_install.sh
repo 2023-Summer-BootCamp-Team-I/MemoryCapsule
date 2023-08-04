@@ -15,5 +15,7 @@ cd $REPOSITORY
 
 docker-compose -f $COMPOSE_FILE down -v --rmi "all"
 docker-compose -f $ELK_COMPOSE_FILE down -v --rmi "all"
+yes | docker system prune -a
+
 
 

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { TokenState } from '../../utils/Recoil';
 import { AxiosErrorResponseType, CapsuleMateType } from '../../utils/types';
@@ -8,9 +8,11 @@ import Modal from 'react-modal';
 
 interface ProfileProps {
   capsule_id: string | undefined;
+  // eslint-disable-next-line no-unused-vars
+  onUserCountChange: (count: number) => void; // 추가
 }
 
-function ProfileButton({ capsule_id }: ProfileProps) {
+function ProfileButton({ capsule_id, onUserCountChange }: ProfileProps) {
   const token = useRecoilValue(TokenState);
   const [capsuleMateHost, setCapsuleMateHost] = useState<CapsuleMateType>();
   const [capsuleMateMember, setCapsuleMateMember] = useState<CapsuleMateType[]>();
@@ -30,6 +32,7 @@ function ProfileButton({ capsule_id }: ProfileProps) {
 
   // 사용자 배열을 2명씩 묶어서 나열
   const groupedUsers: CapsuleMateType[][] = [];
+  const totalUsers = (capsuleMateHost ? 1 : 0) + (capsuleMateMember ? capsuleMateMember.length : 0);
 
   if (capsuleMateHost) {
     // capsuleMateHost를 배열 형식으로 추가
@@ -45,7 +48,9 @@ function ProfileButton({ capsule_id }: ProfileProps) {
   const CapsuleMateAPI = async () => {
     try {
       await axios
-        .get(`/api/v1/capsules/users?capsule_id=${capsule_id}&jwt_token=${token}`)
+        .get(
+          `https://memorycapsule.co.kr/api/v1/capsules/users?capsule_id=${capsule_id}&jwt_token=${token}`
+        )
         .then((response) => {
           setCapsuleMateHost(response.data.host_user);
           setCapsuleMateMember(response.data.user);
@@ -60,15 +65,19 @@ function ProfileButton({ capsule_id }: ProfileProps) {
     }
   };
 
+  useEffect(() => {
+    CapsuleMateAPI();
+    onUserCountChange(totalUsers);
+  }, [totalUsers]);
+
   return (
     <>
-      <div className="w-7 h-7 mb-[-8rem] mr-[-0.4rem] overflow-hidden rounded-full">
+      <div className="h-7 mb-[-8rem] -ml-[5rem] flex items-center mt-1" onClick={openModal}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          onClick={openModal}
           viewBox="0 0 24 24"
           fill="currentColor"
-          className="w-6 h-6 mt-1"
+          className="w-6 h-6"
         >
           <path
             fillRule="evenodd"
@@ -77,6 +86,7 @@ function ProfileButton({ capsule_id }: ProfileProps) {
           />
           <path d="M5.082 14.254a8.287 8.287 0 00-1.308 5.135 9.687 9.687 0 01-1.764-.44l-.115-.04a.563.563 0 01-.373-.487l-.01-.121a3.75 3.75 0 013.57-4.047zM20.226 19.389a8.287 8.287 0 00-1.308-5.135 3.75 3.75 0 013.57 4.047l-.01.121a.563.563 0 01-.373.486l-.115.04c-.567.2-1.156.349-1.764.441z" />
         </svg>
+        <span className="ml-2">{totalUsers}</span>
       </div>
       <Modal
         ariaHideApp={false}
@@ -94,32 +104,48 @@ function ProfileButton({ capsule_id }: ProfileProps) {
       >
         <div className="text-center text-7xl font-Omu">Capsule Mate</div>
         <hr className="w-4/5 mx-auto my-5 border-2 border-gray-600" />
-        {/* flex justify-center 유저 1명일 때 가운데 정렬 */}
-        <div
-          className={groupedUsers.length === 1 ? 'flex justify-center mr-[10rem]' : 'w-800 h-350'}
-        >
-          {groupedUsers.map((mate, rowIndex) => (
-            <div className="flex items-center" key={rowIndex}>
-              {mate &&
-                mate.map((member: CapsuleMateType, userIndex: number) => (
-                  <div className="flex items-center mt-5 mb-4 ml-48 mr-" key={userIndex}>
+
+        <div className="flex justify-center">
+          <div
+            className="grid items-start grid-cols-2 ml-32 overflow-y-auto gap-y-2"
+            style={{ maxHeight: '450px', width: '700px' }}
+          >
+            {groupedUsers.map((mateGroup, groupIndex) =>
+              mateGroup.map((mate, mateIndex) => (
+                <div
+                  className="flex justify-start w-full mt-5 mb-4"
+                  key={`${groupIndex}-${mateIndex}`}
+                >
+                  <div className="flex items-center">
                     <div className="mr-4 overflow-hidden rounded-full w-28 h-28">
                       <img
-                        src={member.user_img_url}
+                        src={mate.user_img_url}
                         className="object-cover w-full h-full"
                         alt="User Image"
                       />
                     </div>
                     <div>
                       <div className="text-2xl text-left font-Omu">
-                        {rowIndex === 0 && userIndex === 0 ? 'host' : 'member'}
+                        {groupIndex === 0 && mateIndex === 0 ? 'host' : 'member'}
                       </div>
-                      <div className="text-4xl text-left font-Omu">{member.nickname}</div>
+                      <div
+                        className={`text-4xl text-left font-Omu ${
+                          mate.nickname.length > 22
+                            ? 'text-base'
+                            : mate.nickname.length > 12
+                            ? 'text-lg'
+                            : ''
+                        } overflow-x-auto whitespace-nowrap`}
+                        style={{ maxWidth: '200px' }}
+                      >
+                        {mate.nickname}
+                      </div>
                     </div>
                   </div>
-                ))}
-            </div>
-          ))}
+                </div>
+              ))
+            )}
+          </div>
         </div>
 
         <button className="absolute p-4 text-black top-4 right-4" onClick={closeModal}>

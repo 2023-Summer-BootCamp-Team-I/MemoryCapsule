@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import CreateCapsuleNote from '../components/CreateCapsuleNote';
 import CreateTheme from '../components/CreateTheme';
 
@@ -16,10 +15,6 @@ function CreateCapsulePage() {
   const handleGetId = (data: number) => {
     setThemeId(data);
   };
-
-  useEffect(() => {
-    console.log('Current themeId:', themeId);
-  }, [themeId]);
 
   const handleApiSuccess = () => {
     setShowLottie(true);

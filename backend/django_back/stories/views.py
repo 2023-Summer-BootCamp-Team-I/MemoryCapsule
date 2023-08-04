@@ -128,6 +128,7 @@ def story_capsule_func(request, capsule_id):
                 "story_id" : story.story_id,
                 "story_title" : story.story_title,
                 "story_url" : story.story_img_url,
+                "story_content": story.story_content,
                 "is_mine": story.creator_id == user_uuid_obj
             }
 

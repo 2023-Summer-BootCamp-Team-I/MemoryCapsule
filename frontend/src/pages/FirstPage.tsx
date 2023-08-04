@@ -31,6 +31,11 @@ function FirstPage() {
     setIsModalOpen(false);
   };
 
+  const closePasswdModal = () => {
+    setPasswdOpen(false);
+    navigate('/mainunopened');
+  };
+
   const handleClick = () => {
     const storedCapsuleId = sessionStorage.getItem('capsule_id');
 
@@ -42,6 +47,7 @@ function FirstPage() {
       navigate('/mainunopened');
     }
   };
+
   return (
     <div className="h-[42rem] w-[75rem]">
       <div className="flex h-1/4">
@@ -79,9 +85,7 @@ function FirstPage() {
           <img className="relative w-16 h-16 -ml-20" src={flowerImg4} />
         </div>
       </div>
-      {passwdOpen && (
-        <PasswordModal capsuleId={capsuleId} closeModal={() => setPasswdOpen(false)} />
-      )}
+      {passwdOpen && <PasswordModal capsuleId={capsuleId} closeModal={() => closePasswdModal()} />}
     </div>
   );
 }

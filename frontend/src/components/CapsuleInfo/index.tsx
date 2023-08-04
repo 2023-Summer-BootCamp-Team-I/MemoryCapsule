@@ -9,9 +9,10 @@ import { AxiosErrorResponseType, MyCapsuleListType } from '../../utils/types';
 
 interface CapsuleInfoProps {
   capsule_id: string | undefined;
+  userCount: number;
 }
 
-function CapsuleInfo({ capsule_id }: CapsuleInfoProps) {
+function CapsuleInfo({capsule_id, userCount} : CapsuleInfoProps) {
   const navigate = useNavigate();
   const token = useRecoilValue(TokenState);
   const [capsuleData, setCapsuleData] = useState<MyCapsuleListType>();
@@ -19,7 +20,7 @@ function CapsuleInfo({ capsule_id }: CapsuleInfoProps) {
   const handleDelete = async () => {
     try {
       await axios
-        .delete(`/api/v1/capsules/users?jwt_token=${token}&capsule_id=${capsule_id}`)
+        .delete(`https://memorycapsule.co.kr/api/v1/capsules/users?jwt_token=${token}&capsule_id=${capsule_id}`)
         .then((response) => {
           alert(response.data.message);
           navigate('/mainunopened');
@@ -69,7 +70,7 @@ function CapsuleInfo({ capsule_id }: CapsuleInfoProps) {
 
   const capsuleInfoAPI = async () => {
     try {
-      await axios.get(`/api/v1/capsules/${capsule_id}?jwt_token=${token}`).then((response) => {
+      await axios.get(`https://memorycapsule.co.kr/api/v1/capsules/${capsule_id}?jwt_token=${token}`).then((response) => {
         setCapsuleData(response.data.capsule_data);
       });
     } catch (error) {
@@ -151,10 +152,8 @@ function CapsuleInfo({ capsule_id }: CapsuleInfoProps) {
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div className="mt-8 font-Omu">
             <p className="mt-6 ml-12 mr-12 text-3xl">방장 : {capsuleData?.nickname}</p>
-            {/* <p className="mt-6 ml-12 mr-12 text-3xl">인원 수 : {users.length}</p> */}
-            <p className="mt-6 ml-12 mr-12 text-3xl">
-              개봉 날짜 : {capsuleData?.due_date.slice(0, 10)}
-            </p>
+            <p className="mt-6 ml-12 mr-12 text-3xl">인원 수 : {userCount}</p>
+            <p className="mt-6 ml-12 mr-12 text-3xl">개봉 날짜 : {capsuleData?.due_date.slice(0, 10)}</p>
           </div>
         </div>
 

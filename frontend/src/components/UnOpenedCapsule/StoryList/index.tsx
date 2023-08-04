@@ -31,34 +31,23 @@ type StoryModalProps = {
 
 interface StoryListProps {
   capsule_id: string | undefined;
+  capsuleData: MyCapsuleListType | undefined;
 }
 
-function StoryList({ capsule_id }: StoryListProps) {
+function StoryList({ capsule_id, capsuleData }: StoryListProps) {
   const navigate = useNavigate();
   const token = useRecoilValue(TokenState);
   const [storyList, setStoryList] = useState<StoryListType[]>([]);
-  const [capsuleData, setCapsuleData] = useState<MyCapsuleListType>();
+  const [userCount, setUserCount] = useState<number>(0);
   const [ddayString, setDdayString] = useState<string | null>(null);
 
   const storyListAPI = async () => {
     try {
-      await axios.get(`/api/v1/stories/${capsule_id}?jwt_token=${token}`).then((response) => {
-        setStoryList(response.data.story_list);
-      });
-    } catch (error) {
-      const axiosError = error as AxiosErrorResponseType;
-      if (axiosError.response?.data.message) {
-        alert(axiosError.response.data.message);
-      } else {
-        alert('An unknown error occurred.');
-      }
-    }
-  };
-  const capsuleInfoAPI = async () => {
-    try {
-      await axios.get(`/api/v1/capsules/${capsule_id}?jwt_token=${token}`).then((response) => {
-        setCapsuleData(response.data.capsule_data);
-      });
+      await axios
+        .get(`/api/v1/stories/${capsule_id}?jwt_token=${token}`)
+        .then((response) => {
+          setStoryList(response.data.story_list);
+        });
     } catch (error) {
       const axiosError = error as AxiosErrorResponseType;
       if (axiosError.response?.data.message) {
@@ -71,10 +60,10 @@ function StoryList({ capsule_id }: StoryListProps) {
 
   function calculateDday(targetDateString: string) {
     const now = new Date();
-    now.setHours(0, 0, 0, 0);  // 현재 날짜의 시간, 분, 초, 밀리초를 0으로 설정
+    now.setHours(0, 0, 0, 0); // 현재 날짜의 시간, 분, 초, 밀리초를 0으로 설정
 
-    const targetDate = new Date(targetDateString.split(' ')[0]);  // 시간 부분 제거
-    targetDate.setHours(0, 0, 0, 0);  // 목표 날짜의 시간, 분, 초, 밀리초를 0으로 설정
+    const targetDate = new Date(targetDateString.split(' ')[0]); // 시간 부분 제거
+    targetDate.setHours(0, 0, 0, 0); // 목표 날짜의 시간, 분, 초, 밀리초를 0으로 설정
 
     const diff = targetDate.getTime() - now.getTime();
     const diffDays = Math.ceil(diff / (1000 * 60 * 60 * 24));
@@ -86,7 +75,7 @@ function StoryList({ capsule_id }: StoryListProps) {
     } else {
       return `D+${Math.abs(diffDays)}`;
     }
-}
+  }
 
   useEffect(() => {
     if (capsuleData?.due_date) {
@@ -101,7 +90,6 @@ function StoryList({ capsule_id }: StoryListProps) {
 
   useEffect(() => {
     storyListAPI(); //페이지에 처음 접속했을때 capsule 목록을 보여주기 위해
-    capsuleInfoAPI();
   }, []);
 
   useEffect(() => {
@@ -117,8 +105,8 @@ function StoryList({ capsule_id }: StoryListProps) {
       }
       .title {
         position: absolute;
-        width:190px;
-        top: 60%;
+        width:200px;
+        top: 58%;
         left: 50%;
         transform: translate(-50%, -50%);
         color: #fff;
@@ -186,7 +174,9 @@ function StoryList({ capsule_id }: StoryListProps) {
   const storyListOneAPI = async (story_id: number) => {
     try {
       await axios
-        .get(`/api/v1/stories/${capsule_id}/${story_id}?jwt_token=${token}`)
+        .get(
+          `/api/v1/stories/${capsule_id}/${story_id}?jwt_token=${token}`
+        )
         .then((response) => {
           setStoryOne(response.data);
           // console.log('[storyListOneAPI] response: ', response.data);
@@ -226,6 +216,10 @@ function StoryList({ capsule_id }: StoryListProps) {
     setIsOpen(false);
   };
 
+  const trimTitle = (title: string) => {
+    return title.length > 5 ? title.slice(0, 5) + '...' : title;
+  };
+
   // 체크 박스
   const [checked, setChecked] = useState(false);
   const storiesToShow = checked ? storyList.filter((story) => story.is_mine === true) : storyList;
@@ -262,8 +256,8 @@ function StoryList({ capsule_id }: StoryListProps) {
               >
                 &#8203;
               </span>
-              <div className="inline-block overflow-hidden text-left align-bottom transition-all transform rounded-lg sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div className="relative">
+              <div className="inline-block w-full h-full overflow-hidden text-left align-bottom transition-all transform rounded-lg sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div className="relative w-full h-full bg-red-200">
                   <img src={note} className="w-full h-full" />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -271,7 +265,8 @@ function StoryList({ capsule_id }: StoryListProps) {
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
-                    className="absolute cursor-pointer w-7 h-7 right-5 top-7"
+                    // className="absolute cursor-pointer w-7 h-7 right-5 top-7"
+                    className="absolute flex cursor-pointer text-end w-7 h-7 right-5 top-7"
                     type="button"
                     onClick={handleSVGClick}
                   >
@@ -300,10 +295,10 @@ function StoryList({ capsule_id }: StoryListProps) {
           {ddayString}
         </span>
         <img src={titlemark} alt="Title Mark" />
-        <div className="flex title font-Omu">
+        <div className="flex justify-center title">
           {capsuleData?.capsule_name}
           <div>
-            <CapsuleInfo capsule_id={capsule_id} />
+            <CapsuleInfo capsule_id={capsule_id} userCount={userCount} />
           </div>
         </div>
       </div>
@@ -311,8 +306,10 @@ function StoryList({ capsule_id }: StoryListProps) {
       <div className="flex justify-end">
         {/* 참여 유저 확인 모달 */}
         <div className="flex cursor-pointer">
-          <ProfileButton capsule_id={capsule_id} />
-          <span className="mt-1 ml-2 mr-5 font-Omu">mate</span>
+          <ProfileButton
+            capsule_id={capsule_id}
+            onUserCountChange={(count) => setUserCount(count)}
+          />
         </div>
 
         {/* 내 스토리만 보기 체크박스 */}
@@ -350,7 +347,7 @@ function StoryList({ capsule_id }: StoryListProps) {
                     fontSize: 20,
                   }}
                 >
-                  {story.story_title}
+                  {trimTitle(story.story_title)}
                 </p>
                 <img
                   src={story.is_mine === true ? story.story_url : letter}

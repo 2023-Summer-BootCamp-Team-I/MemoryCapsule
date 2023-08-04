@@ -3,9 +3,11 @@ import { StoryListType } from '../../../utils/types';
 
 interface PhotoCardProps {
   data: StoryListType;
+  // eslint-disable-next-line no-unused-vars
+  wrapTextEveryNCharacters: (str: string, n: number) => string;
 }
 
-function PhotoCard5({ data }: PhotoCardProps) {
+function PhotoCard5({ data, wrapTextEveryNCharacters }: PhotoCardProps) {
   const [isClicked, setIsClicked] = useState(false);
 
   const handleClick = () => {
@@ -47,7 +49,9 @@ function PhotoCard5({ data }: PhotoCardProps) {
           <div className={imageStyles} style={{ backgroundImage: `url(${data.story_url})` }}></div>
           <div className={textStyles}>
             <div className="pb-4 text-xl border-b">{data.story_title}</div>
-            <div className="pt-4 text-lg ">{data.story_title}</div>
+            <div className="pt-4 text-lg whitespace-pre-line">
+              {wrapTextEveryNCharacters(data.story_content, 23)}
+            </div>
           </div>
         </div>
       </div>

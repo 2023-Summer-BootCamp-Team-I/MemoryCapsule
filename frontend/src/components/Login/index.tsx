@@ -29,12 +29,16 @@ function Login({ onSignUp, handleClick }: LoginProps) {
 
   const LoginAPI = async () => {
     try {
-      const response = await axios.post('/api/v1/users/sign-in', formData, {
-        // const response = await axios.post('/api/v1/users/sign-in', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.post(
+        'https://memorycapsule.co.kr/api/v1/users/sign-in',
+        formData,
+        {
+          // const response = await axios.post('/api/v1/users/sign-in', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
       setToken(response.data.jwt_token);
       setUserData(response.data.data);
 
